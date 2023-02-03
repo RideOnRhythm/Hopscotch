@@ -3,4 +3,4 @@ yt-dlp
 PyNaCl
 google-api-python-client
 requests
-pymongo[srv]
+jishaku
