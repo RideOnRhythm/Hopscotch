@@ -55,6 +55,7 @@ async def reload(ctx):
         await bot.reload_extension('cogs.school')
         await bot.reload_extension('cogs.inventory')
         await bot.reload_extension('cogs.ai')
+        await bot.reload_extension('jishaku')
     except Exception as e:
         raise e
     bot.database = await database.load_json()
@@ -83,6 +84,7 @@ async def main():
     await bot.load_extension('cogs.school')
     await bot.load_extension('cogs.inventory')
     await bot.load_extension('cogs.ai')
+    await bot.load_extension('jishaku')
     bot.database = await database.load_json()
     await bot.start(os.getenv('token'))
 
