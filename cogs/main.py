@@ -4,7 +4,9 @@ import asyncio
 import logging
 import os
 from assets import database
+from dotenv import load_dotenv
 
+load_dotenv()
 discord.utils.setup_logging(level=logging.INFO, root=False)
 bot = commands.Bot(command_prefix=('j.', 'J.', 'j,', 'J,', 'j', 'J'),
                    case_insensitive=True,
