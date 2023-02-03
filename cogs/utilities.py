@@ -13,7 +13,9 @@ from googleapiclient.discovery import build
 from assets import database
 from bs4 import BeautifulSoup
 from bs4 import NavigableString
+from dotenv import load_dotenv
 
+load_dotenv()
 cached_forecast = None
 cache_time = None
 
