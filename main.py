@@ -8,7 +8,7 @@ from dotenv import load_dotenv
 
 load_dotenv()
 discord.utils.setup_logging(level=logging.INFO, root=False)
-bot = commands.Bot(command_prefix=('j.', 'J.', 'j,', 'J,', 'j', 'J'),
+bot = commands.Bot(command_prefix=('j.', 'J.', 'j,', 'J,'),
                    case_insensitive=True,
                    intents=discord.Intents.all(),
                    help_command=None)
