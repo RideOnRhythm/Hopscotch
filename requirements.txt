@@ -9,3 +9,4 @@ tweepy
 bs4
 beautifulsoup4
 openai
+python-dotenv
