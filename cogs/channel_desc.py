@@ -23,7 +23,7 @@ class ChannelDesc(commands.Cog):
         last_unix = await database.get_other_attribute(self.bot.database,
                                                        'last_lottery_unix')
         if last_unix is not None:
-            dt = datetime.datetime.fromtimestamp(last_unix + 28800)
+            dt = datetime.datetime.fromtimestamp(last_unix)
             if dt.date() == datetime.datetime.now().date():
                 return
 
