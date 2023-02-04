@@ -65,7 +65,7 @@ async def section_reminders(self, section):
             when = ' — __**TOMORROW**__'
         else:
             when = ''
-        if int(time.mktime(group.timetuple())) == 9999936000:
+        if int(time.mktime(group.timetuple())) == 9999999999:
             field_name = 'Unknown'
         else:
             field_name = f'<t:{int(time.mktime(group.timetuple())) - 28800}:D>{when}'
