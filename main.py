@@ -42,28 +42,6 @@ async def sync_tree(ctx):
     await ctx.send('Synced')
 
 
-@bot.command()
-async def reload(ctx):
-    if ctx.author.id not in (748388929631289436, 556307832241389581,
-                             994223267462258688):
-        return
-    try:
-        await bot.reload_extension('cogs.user_profile')
-        await bot.reload_extension('cogs.stats')
-        await bot.reload_extension('cogs.minigames')
-        await bot.reload_extension('cogs.role_organizer')
-        # await bot.reload_extension('cogs.utilities')
-        await bot.reload_extension('cogs.grab_fun')
-        await bot.reload_extension('cogs.school')
-        await bot.reload_extension('cogs.inventory')
-        await bot.reload_extension('cogs.ai')
-        await bot.reload_extension('jishaku')
-    except Exception as e:
-        raise e
-    bot.database = await database.load_json()
-    await ctx.send('Done reloading')
-
-
 @bot.event
 async def on_command_error(ctx, error):
     if isinstance(error, commands.CommandOnCooldown):
@@ -76,17 +54,18 @@ async def on_command_error(ctx, error):
 
 
 async def main():
+    await bot.load_extension('jishaku')
+    await bot.load_extension('cogs.utilities')
     await bot.load_extension('cogs.user_profile')
     await bot.load_extension('cogs.stats')
     await bot.load_extension('cogs.minigames')
     await bot.load_extension('cogs.role_organizer')
-    await bot.load_extension('cogs.utilities')
     await bot.load_extension('cogs.channel_desc')
     await bot.load_extension('cogs.grab_fun')
     await bot.load_extension('cogs.school')
     await bot.load_extension('cogs.inventory')
     await bot.load_extension('cogs.ai')
-    await bot.load_extension('jishaku')
+    await bot.load_extension('cogs.music')
     bot.database = await database.load_json()
     await bot.start(os.getenv('token'))
 
