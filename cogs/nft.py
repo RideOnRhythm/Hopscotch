@@ -19,7 +19,7 @@ class Nft(commands.Cog):
             async with session.get(url) as resp:
                 img = await resp.read()
                 with io.BytesIO(img) as file: 
-                    await channel.send(file=discord.File(file, "generated_nft.png"))
+                    await ctx.send(file=discord.File(file, "generated_nft.png"))
 
 
 
