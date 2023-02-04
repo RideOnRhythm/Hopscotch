@@ -59,7 +59,7 @@ async def section_reminders(self, section):
         dates[key] = list(group)
 
     for group in dates:
-        saved_unix = int(time.mktime(group.timetuple())) - 28800
+        saved_unix = int(time.mktime(group.timetuple()))
         if saved_unix - int(time.time()) <= 86400 and saved_unix - int(
                 time.time()) > 0:
             when = ' — __**TOMORROW**__'
@@ -68,7 +68,7 @@ async def section_reminders(self, section):
         if int(time.mktime(group.timetuple())) == 9999936000:
             field_name = 'Unknown'
         else:
-            field_name = f'<t:{int(time.mktime(group.timetuple())) - 28800}:D>{when}'
+            field_name = f'<t:{int(time.mktime(group.timetuple()))}:D>{when}'
         embed.add_field(name=field_name,
                         value='\n'.join(
                             [reminder['text'] for reminder in dates[group]]),
