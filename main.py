@@ -66,6 +66,7 @@ async def main():
     await bot.load_extension('cogs.inventory')
     await bot.load_extension('cogs.ai')
     await bot.load_extension('cogs.music')
+    await bot.load_extension('cogs.nft')
     bot.database = await database.load_json()
     await bot.start(os.getenv('token'))
 
