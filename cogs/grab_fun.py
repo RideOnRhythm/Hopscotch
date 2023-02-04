@@ -95,8 +95,7 @@ def generate_message():
         '{subject} fell on the auditorium stairs. Quick, type the command `j.grab` to steal {possessive_pronoun} wallet!',
         "{subject} got scolded by the librarian for dragging the chair. Quick, type `j.grab` to steal the librarian's wallet!"
     ]
-    dt = datetime.datetime.now(tz=datetime.timezone(datetime.timedelta(
-        hours=8)))
+    dt = datetime.datetime.now()
     if dt.hour == 23 and random.randint(1, 69) == 69:
         return 'While Childe and Ganyu were fighting each other, Ganyu\'s wallet fell. Quick, type the command `j.grab` to steal it!'
     return random.choice(subjects).apply_action(random.choice(actions))
