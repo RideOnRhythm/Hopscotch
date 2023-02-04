@@ -163,7 +163,7 @@ class SelectMemberView(discord.ui.View):
                 embed.add_field(
                     name='Game:',
                     value=self.cog.games[self.ctx.author].print_board())
-            embed.set_footer(text='type "end" to end the game')
+            embed.set_footer(text=f'Move Count: {self.cog.games[self.ctx.author]}')
             await self.ctx.send(
                 content=self.cog.games[self.ctx.author].turn.mention,
                 embed=embed)
@@ -342,7 +342,7 @@ class SelectMemberView(discord.ui.View):
                         embed.add_field(name='Game:',
                                         value=self.cog.games[
                                             self.ctx.author].print_board())
-                    embed.set_footer(text='type "end" to end the game')
+                    embed.set_footer(text=f'Move Count: {self.cog.games[self.ctx.author]}')
                     if self.cog.games[
                             self.ctx.author].gamemode == Gamemode.SWIFTPLAY:
                         embed.description = f'**TIME LEFT:** {str(discord.utils.get(self.cog.bot.emojis, name="5secondtimer"))}'
