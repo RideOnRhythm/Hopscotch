@@ -16,13 +16,15 @@ class Ai(commands.Cog):
 
     @commands.hybrid_command()
     async def ai(self, ctx, *, prompt):
-        response = openai.Completion.create(model='text-davinci-003',
-                                            prompt=f'\n\nFriend: {prompt}',
-                                            temperature=0.9,
-                                            max_tokens=150,
-                                            top_p=1,
-                                            frequency_penalty=0.0,
-                                            presence_penalty=0.6)
+        response = openai.Completion.create(
+                model='text-davinci-003',
+                prompt=f'\n\nFriend: {prompt}\nYou:',
+                temperature=0.5,
+                max_tokens=60,
+                top_p=1.0,
+                frequency_penalty=0.5,
+                presence_penalty=0.0,
+                stop=["You:"])
         async with aiohttp.ClientSession() as session:
             webhook = discord.Webhook.from_url(
                 os.getenv('webhook'),
