@@ -53,7 +53,7 @@ class Music(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
         if not hasattr(bot, 'lavalink'):
-            bot.lavalink = lavalink.Client(794226468858101760)
+            bot.lavalink = lavalink.Client(1001668250951753738)
             bot.lavalink.add_node('127.0.0.1', 2333, 'youshallnotpass', 'eu',
                                   'default-node')
         lavalink.add_event_hook(self.track_hook)
