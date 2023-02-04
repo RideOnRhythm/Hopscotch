@@ -191,14 +191,14 @@ class School(commands.Cog):
         await ctx.send('Reminder added.')
 
     @commands.command(aliases=('rrm', 'remove rm'))
-    async def remove_reminder(self, ctx, text):
+    async def remove_reminder(self, ctx, section, text):
         if ctx.author.id not in (748388929631289436, 556307832241389581,
                                  994223267462258688):
             return
         reminders = await database.get_other_attribute(self.bot.database,
                                                        'reminders')
         for i in reminders:
-            if text in i['text']:
+            if text in i['text'] and section == i['section']:
                 await database.remove_reminder(self.bot.database, i)
                 await ctx.send('Reminder removed.')
                 return
