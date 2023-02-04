@@ -346,7 +346,7 @@ class Utilities(commands.Cog):
 
     @commands.command()
     async def ping(self, ctx):
-        await ctx.send(f'{int(self.bot.latency * 1000)}ms ― **Replit**')
+        await ctx.send(f'{int(self.bot.latency * 1000)}ms ― **VPS**')
 
     @commands.hybrid_command()
     async def help(self, ctx):
