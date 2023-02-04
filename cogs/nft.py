@@ -9,7 +9,7 @@ class Nft(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command
+    @commands.command()
     async def nft(self, ctx):
         with open('../assets/nft_list.txt', 'r') as f:
             urls = f.read().split('\n')
