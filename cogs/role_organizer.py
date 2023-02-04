@@ -44,8 +44,8 @@ class RoleOrganizer(commands.Cog):
         hops_dev = after.guild.get_role(934678477825802270)
         if added_role is not None:
             if added_role.id in exclusive_roles:
-                entries = [entry async for entry in guild.audit_logs(limit=10, action=discord.AuditLogAction.member_role_update)]
-                role_entry = next((entry for entry in entries if hops_dev in entry.user.roles and target == after), None)
+                entries = [entry async for entry in after.guild.audit_logs(limit=10, action=discord.AuditLogAction.member_role_update)]
+                role_entry = next((entry for entry in entries if hops_dev in entry.user.roles and entry.target == after), None)
                 if not role_entry:
                     await after.remove_roles(added_role)
         else:
@@ -53,8 +53,8 @@ class RoleOrganizer(commands.Cog):
             if removed_role is None:
                 return
             if removed_role.id in exclusive_roles:
-                entries = [entry async for entry in guild.audit_logs(limit=10, action=discord.AuditLogAction.member_role_update)]
-                role_entry = next((entry for entry in entries if hops_dev in entry.user.roles and target == after), None)
+                entries = [entry async for entry in after.guild.audit_logs(limit=10, action=discord.AuditLogAction.member_role_update)]
+                role_entry = next((entry for entry in entries if hops_dev in entry.user.roles and entry.target == after), None)
                 if not role_entry:
                     await after.add_roles(removed_role)
 
