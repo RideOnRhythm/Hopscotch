@@ -120,6 +120,34 @@ async def schedule(self, section):
     return embed
 
 
+async def contacts(category):
+    strs = {
+        'Admins': '**Alimpolo, Merriam**: meriamalimpolo1217@sshs.edu.ph\n**Belton, Margaret**: mbelton@sshs.edu.ph\n**Belton, James**: jbelton@sshs.edu.ph\n**Chen, Jane**: jpc@sshs.edh.ph\n**Chu, Jocelyn**: jpchu@sshs.edu.ph\n**Chua, Lilan**: lanpchua@sshs.edu.ph\n**Dueñas, Joy**: jmduenas@sshs.edu.ph\n**Endo, Milagros**: maendo@sshs.edu.ph\n**Gutierrez, Antonio Angelo**: agutierrez@sshs.esu.ph\n**Keng, Elizabeth**: eckeeng@sshs.edu.ph\n**Lim, Conchita**: conchitalim@sshs.edu.ph / clim@sshs.edu.ph\n**Lim, Natalie**: lizalim@sshs.edu.ph\n**Lim, Liza Lynn**: nlim@sshs.edu.ph\n**Ngo, Wilson**: coachwngo@sshs.edu.ph\n**Recosana, Ma. Christina**: trecosana@sshs.edu.ph\n**So, Freddie**: coachfso@sshs.edu.ph\n**Sy, Judith**: juoungsy@sshs.edu.ph\n**Tacus, Josie**: jo_tacus@sshs.edu.ph\n**Tan, Judy**: jtan@sshs.edu.ph\n**Yu, Brenda**: brendsyu@sshs.edu.ph\n**Yu, Ulysses**: dr.ulyyu@sshs.edu.ph',
+        'HS English': '**\\*Adonis, Abigail Elinor N.**: aeadonis@sshs.edu.ph\n**\\*Aguila, Alan Betuel O.**: abaguila@sshs.edu.ph\n**Barbo, Randy B.**: rbarbo@sshs.edu.ph\n**Berdan, Rene Daniel**: daniel.berdan.kr@gmail.com\n**Bonifacio, Renz Hector**: troysophia5@gmail.com\n**Briones, Chariza A.**: cbriones@sshs.edu.ph\n**Bunagan, Ferlie**: fbunagan@sshs.edu.ph\n**\\*Cabansag, Henry**: hcabansag@sshs.edu.ph\n**\\*Ching, Elwin B.**: eching@sshs.edu.ph\n**Dela Cruz, Maribeth**: mdelacruz@sshs.edu.ph\n**Dy. Kathleen Dianne K.**: kddy@sshs.edu.ph\n**\\*Garcia, Isaiah F.**: igarcia@sshs.edu.ph\n**\\*Gayares, Joseph D.**: igayares@sshs.edu.ph\n**Ibasco, Anna Paula A.**: apibasco@sshs.edu.ph\n**\\*Laude, Sherylou Dela Torre**: slaude@sshs.edu.ph\n**Lee, Chester Howard**: leechesterhoward@gmail.com\n**\\*Liwanag, Katrine S.**: kliwanag@sshs.edu.ph\n**\\*Lopez, Ramon**: rlopez@sshs.edu.ph\n**\\*Lumbang, Geenross Ashley**: galumbang@sshs.edu.ph\n**\\*Mallari, Rosalita O.**: rmallari@sshs.edu.ph\n**Manalili, Trina Arrianne C.**: tmanalili@sshs.edu.ph\n**\\*Ong. Stefhanie Kaye**: skong@sshs.edu.ph\n**\\*Panes, Agnes C.**: apanes@sshs.edu.ph\n**Ping, Arniel V.**: aping@sshs.edu.ph\n**\\*Ramos, Jonah Leigh**: jlramos@sshs.edu.ph\n**\\*Recosana Jr. Leonardo P.**: lirecosana@sshs.edu.ph\n**Romo, Anne-Louie Chua Dy**: alromo@sshs.edu.ph\n**Roncal, James**: jroncal@sshs.edu.ph \n**\\*Serrato, Jamielyn**: jserrato@sshs.edu.ph\n**Simon, Rhenish**: rcsimon@sshs.edu.ph\n**Sy, Jiko Aldrei**: jsy@sshs.edu.ph\n**Sy, Marie Ann Michelle B.**: msy@sshs.edu.ph\n**Tabuclao, Criselda O.**: ctabuclao@sshs.edu.ph\n**Tan. Anne Carleen**: atan@sshs.edu.ph\n**Torres, Eleazar**: etorres@sshs.edu.ph\n**\\*Yap. Sharmagne Alison**: syap@sshs.edu.ph\n**Albano, Menelyn**: menelynalbano@sshs.edu.ph\n**Sablaya, Mylene M**: mylenesablaya@sshs.edu.ph',
+        'ELEM Chinese': '**Cham, Aniceto**: acham@sshs.edu.ph\n**Chia, Susan**: schia@sshs.edu.ph\n**Choi, Man Ngar**: ichoi@sshs.edu.ph\n**Chong, Getheline**: gchong@sshs.edu.ph\n**Lim, Mimi**: mlim@sshs.edu.ph\n**Malubag, Colleene**: cmalubag@sshs.edu.ph\n**Ong, Chun Chun Sally**: song@sshs.edu.ph\n**Tao, Ling**: tling@sshs.edu.ph\n**Yu, Ming Lai**: ymlai@sshs.edu.ph',
+        'HS Chinese': '**Chong, Ellen**: echong@sshs.edu.ph\n**Dy Un Hua**: uhdy@sshs.edu.ph\n**Francisco, Gabriel Marie**: gfrancisco@sshs.edu.ph\n**Liao Chiu Lan**: sliao@sshs.edu.ph\n**Sy, Henry**: hsy@sshs.edu.ph\n**Sy, Sally**: ssy@sshs.edu.ph\n**Wang Yang**: ywang@sshs.edu.ph\n**Yao, Liging**: Iqyao@sshs.edu.ph\n**Zhou Yue**: yzhou@sshs.edu.ph',
+        'HS Chinese (Taiwan Teachers)': '**Yi-Shan Yang**: ysyang@sshs.edu.ph\n**Liang-Yu Chen**: lychen@sshs.edu.ph\n**Yi-Hsuan Lai**: yhlai@sshs.edu.ph\n**Feng Hsuan Liang**: fhliang@sshs.edu.ph\n**Cheh Yu Wu**: cywu@sshs.edu.ph\n**Hsi Mei Chiang**: hmchiang@sshs.edu.ph\n**Shing-Jen Tsai**: sjtsai@sshs.edu.ph'
+    }
+    embed = discord.Embed(title=category, description=strs[category], color=discord.Color.random(seed=category))
+    return embed
+
+
+class ContactsView(discord.ui.View):
+
+    def __init__(self, timeout=180):
+        super().__init__(timeout=timeout)
+
+    @discord.ui.select(cls=discord.ui.Select,
+                       options=[
+                           discord.SelectOption(label=label)
+                           for label in ('Admins', 'HS English', 'ELEM Chinese', 'HS Chinese', 'HS Chinese (Taiwan Teachers)')
+                       ])
+    async def category_select(self, interaction: discord.Interaction,
+                             select: discord.ui.Select):
+        embed = await contacts(select.values[0])
+        await interaction.response.edit_message(embed=embed)
+
+
 class School(commands.Cog):
 
     def __init__(self, bot):
@@ -307,6 +335,11 @@ class School(commands.Cog):
                                                last_nails + 604800,
                                                'last_nails')
             await chit_chat.send(f'{nails_mention} Reminder: cut nails')
+
+    @commands.command(aliases=('ci', 'cinfo', 'contactinfo', 'c_info', 'contact_info'))
+    async def contact_information(self, ctx):
+        embed = await contacts('Admins')
+        await ctx.send(embed=embed, view=ContactsView())
 
 
 async def setup(bot):
