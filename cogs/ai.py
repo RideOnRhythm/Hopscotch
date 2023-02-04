@@ -25,7 +25,7 @@ class Ai(commands.Cog):
                                             presence_penalty=0.6)
         async with aiohttp.ClientSession() as session:
             webhook = discord.Webhook.from_url(
-                'https://discord.com/api/webhooks/1069966968108626031/dOzeEiWCh016hjKsw0fNh_L-foKYYIxyFV_HQgFGNeltoOmRTXnSxUkxxA6kILUQHcQB',
+                os.getenv('webhook'),
                 session=session)
             await webhook.send(content=response['choices'][0]['text'])
 
