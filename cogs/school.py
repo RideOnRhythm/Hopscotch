@@ -105,8 +105,8 @@ class Schedule(discord.ui.View):
 
 async def schedule(self, section):
     titles = {
-        'violet': 'Reminders — 8 - Violet',
-        'aqua': 'Reminders — 8 - Aqua'
+        'violet': 'Schedule — 8 - Violet',
+        'aqua': 'Schedule — 8 - Aqua'
     }
     colors = {'violet': 0x8f00ff, 'aqua': 0x00ffff}
     image = {
