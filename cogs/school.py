@@ -156,6 +156,7 @@ class School(commands.Cog):
         self.bot = bot
         self.auto_remove.start()
         self.nails_check.start()
+        self.auto_gone.start()
 
     @tasks.loop(hours=1)
     async def auto_remove(self):
@@ -172,6 +173,22 @@ class School(commands.Cog):
             if total_seconds > 86400 or now.timetuple(
             ).tm_yday > reminder_dt.timetuple().tm_yday:
                 await database.remove_reminder(self.bot.database, reminder)
+
+    @tasks.loop(hours=1)
+    async def auto_gone(self):
+        calendars = await database.get_other_attribute(self.bot.database,
+                                                       'calendar')
+        for calendar in calendars:
+            calendar_dt = datetime.datetime.fromtimestamp(
+                calendar['unix'],
+                tz=datetime.timezone(datetime.timedelta(hours=8)))
+            now = datetime.datetime.now(
+                tz=datetime.timezone(datetime.timedelta(hours=8)))
+            total_seconds = now - calendar_dt
+            total_seconds = total_seconds.total_seconds()
+            if total_seconds > 86400 or now.timetuple(
+            ).tm_yday > calendar_dt.timetuple().tm_yday:
+                await database.remove_calendar(self.bot.database, calendar)
 
     @commands.command(aliases=('sc', 'sched'))
     async def schedule(self, ctx, section=None):
@@ -343,6 +360,61 @@ class School(commands.Cog):
         embed = await contacts('Admins')
         await ctx.send(embed=embed, view=ContactsView())
 
+    @commands.command(aliases=('cal', 'cr', 'ca'))
+    async def calendar(self, ctx):
+      embed = discord.Embed(title='**Calendar**')
+      calendar = await database.get_other_attribute(self.bot.database,
+                                                     'calendar')
+      calendar = list(calendar)
+      calendar.sort(key=lambda r: r['unix'], reverse=True)
+      dates = {}
+      for key, group in groupby(
+              calendar, lambda r: datetime.date.fromtimestamp(r['unix'])):
+          dates[key] = list(group)
+  
+      for group in dates:
+          if int(time.mktime(group.timetuple())) == 9999993600:
+              field_name = 'Unknown'
+          else:
+              field_name = f'<t:{int(time.mktime(group.timetuple()))}:D> (<t:{int(time.mktime(group.timetuple()))}:R>)'
+          embed.add_field(name=field_name,
+                          value='\n'.join(
+                              [calendar['text'] for calendar in dates[group]]),
+                          inline=False)
+      await ctx.send(embed=embed)
+        
+    @commands.command(aliases=('aca', 'add cal', 'acal', 'acl'))
+    async def add_calendar(self, ctx, month, day, text):
+        if ctx.author.id not in (748388929631289436, 556307832241389581,
+                                 994223267462258688):
+            return
+        if month == 'unknown':
+            unix = 9999999999
+            day = text
+        else:
+            date_time = datetime.datetime(2023, int(month), int(day), 0, 0)
+            unix = int(time.mktime(date_time.timetuple()))
+        await database.add_calendar(
+            self.bot.database,
+            {
+                'unix': unix,
+                'text': text
+            },
+        )
+        await ctx.send('Calendar added.')
+
+    @commands.command(aliases=('rca', 'remove cal', 'rcal', 'rcl'))
+    async def remove_calendar(self, ctx, *, text):
+        if ctx.author.id not in (748388929631289436, 556307832241389581,
+                                 994223267462258688):
+            return
+        calendar = await database.get_other_attribute(self.bot.database,
+                                                       'calendar')
+        for i in calendar:
+            if text in i['text']:
+                await database.remove_calendar(self.bot.database, i)
+                await ctx.send('Calendar removed.')
+                return
 
 async def setup(bot):
     await bot.add_cog(School(bot))
