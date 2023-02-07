@@ -6,9 +6,22 @@ import os
 from assets import database
 from dotenv import load_dotenv
 
+
+class HopscotchBot(commands.Bot):
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+    async def is_owner(self, user: discord.User):
+        if user.id in [member.id for member in self.application.team.members]:
+            return True
+
+        return await super().is_owner(user)
+
+
 load_dotenv()
 discord.utils.setup_logging(level=logging.INFO, root=False)
-bot = commands.Bot(command_prefix=('j.', 'J.', 'j,', 'J,', 'j', 'J'),
+bot = HopscotchBot(command_prefix=('j.', 'J.', 'j,', 'J,', 'j', 'J'),
                    case_insensitive=True,
                    intents=discord.Intents.all(),
                    help_command=None)
