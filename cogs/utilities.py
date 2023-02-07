@@ -8,7 +8,6 @@ import datetime
 import requests
 import time
 import os
-import tweepy
 from googleapiclient.discovery import build
 from assets import database
 from bs4 import BeautifulSoup
@@ -18,10 +17,6 @@ from dotenv import load_dotenv
 load_dotenv()
 cached_forecast = None
 cache_time = None
-
-auth = tweepy.OAuthHandler(os.getenv('ckey'), os.getenv('secret'))
-auth.set_access_token(os.getenv('access'), os.getenv('atsecret'))
-client = tweepy.API(auth)
 
 
 def minigames_embed():
