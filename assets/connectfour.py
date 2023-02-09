@@ -123,6 +123,7 @@ def is_terminal_node(board):
 
 
 def minimax(board, depth, alpha, beta, maximizingPlayer):
+    x = 7
     valid_locations = get_valid_locations(board)
     is_terminal = is_terminal_node(board)
     if depth == 0 or is_terminal:
@@ -143,14 +144,36 @@ def minimax(board, depth, alpha, beta, maximizingPlayer):
             b_copy = board.copy()
             drop_piece(b_copy, row, col, AI_PIECE)
             if hash(tuple([tuple(row) for row in b_copy])) not in transpo:
-                new_score = minimax(b_copy, depth - 1, alpha, beta, False)[1]
+                new_score = minimax(b_copy, depth - 1, alpha, beta,
+                                    False)[1] + random.randint(-x, x)
             else:
-                new_score = transpo[hash(tuple([tuple(row)
-                                                for row in b_copy]))]
+                new_score = transpo[hash(tuple([tuple(row) for row in b_copy
+                                                ]))] + random.randint(-x, x)
             if new_score > value:
                 value = new_score
                 column = col
             alpha = max(alpha, value)
+            if alpha >= beta:
+                break
+        return column, value
+
+    else:  # Minimizing player
+        value = math.inf
+        column = random.choice(valid_locations)
+        for col in valid_locations:
+            row = get_next_open_row(board, col)
+            b_copy = board.copy()
+            drop_piece(b_copy, row, col, PLAYER_PIECE)
+            if hash(tuple([tuple(row) for row in b_copy])) not in transpo:
+                new_score = minimax(b_copy, depth - 1, alpha, beta,
+                                    True)[1] + random.randint(-x, x)
+            else:
+                new_score = transpo[hash(tuple([tuple(row) for row in b_copy
+                                                ]))] + random.randint(-x, x)
+            if new_score < value:
+                value = new_score
+                column = col
+            beta = min(beta, value)
             if alpha >= beta:
                 break
         return column, value
