@@ -69,7 +69,7 @@ class UserProfile(commands.Cog):
         self.bot = bot
         self.member_last_message = {}
 
-    async def first_page(self, member):
+    async def profile_summary(self, member):
         embed = discord.Embed(color=discord.Colour.random(
             seed=member.display_name))
         if member.avatar is not None:
