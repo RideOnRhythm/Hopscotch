@@ -19,7 +19,7 @@ async def get_mee6_level(member):
             return player_level
 
 
-class FirstPageView(discord.ui.View):
+class DefaultSelectView(discord.ui.View):
 
     def __init__(self,
                  author: typing.Union[discord.Member, discord.User],
@@ -31,17 +31,29 @@ class FirstPageView(discord.ui.View):
         self.cog = cog
         super().__init__(timeout=timeout)
 
-    @discord.ui.button(label="← Back", style=discord.ButtonStyle.primary)
-    async def first_button(self, interaction: discord.Interaction,
-                           button: discord.ui.Button):
-        embed = await UserProfile.first_page(self.cog, self.member)
-        await interaction.response.edit_message(embed=embed,
-                                                view=SecondPageView(
-                                                    self.author, self.member,
-                                                    self.cog))
+    @discord.ui.select(cls=discord.ui.Select,
+                       options=[
+                           discord.SelectOption(label=label)
+                           for label in ('Profile Summary',
+                                         '[BOT] C4 Statistics',
+                                         '[BOT] CF Statistics')
+                       ])
+    async def page_select(self, interaction: discord.Interaction,
+                          select: discord.ui.Select):
+        if select.values[0] == 'Profile Summary':
+            embed = await UserProfile.profile_summary(self.cog, self.member)
+            view = DefaultSelectView(self.author, self.member, self.cog)
+        elif select.values[0] == '[BOT] C4 Statistics':
+            embed = await UserProfile.first_page_c4_statistics(
+                self.cog, self.member)
+            view = C4FirstPageView(self.author, self.member, self.cog)
+        elif select.values[0] == '[BOT] CF Statistics':
+            embed = await UserProfile.cf_statistics(self.cog, self.member)
+            view = DefaultSelectView(self.author, self.member, self.cog)
+        await interaction.response.edit_message(embed=embed, view=view)
 
 
-class SecondPageView(discord.ui.View):
+class C4FirstPageView(discord.ui.View):
 
     def __init__(self,
                  author: typing.Union[discord.Member, discord.User],
@@ -53,14 +65,76 @@ class SecondPageView(discord.ui.View):
         self.cog = cog
         super().__init__(timeout=timeout)
 
-    @discord.ui.button(label="Next Page →", style=discord.ButtonStyle.primary)
-    async def second_button(self, interaction: discord.Interaction,
-                            button: discord.ui.Button):
-        embed = await UserProfile.second_page(self.cog, self.member)
-        await interaction.response.edit_message(embed=embed,
-                                                view=FirstPageView(
-                                                    self.author, self.member,
-                                                    self.cog))
+    @discord.ui.button(label='Next →', style=discord.ButtonStyle.primary)
+    async def next_page(self, interaction: discord.Interaction,
+                        button: discord.ui.Button):
+        embed = await UserProfile.second_page_c4_statistics(
+            self.cog, self.member)
+        view = C4SecondPageView(self.author, self.member, self.cog)
+        await interaction.response.edit_message(embed=embed, view=view)
+
+    @discord.ui.select(cls=discord.ui.Select,
+                       options=[
+                           discord.SelectOption(label=label)
+                           for label in ('Profile Summary',
+                                         '[BOT] C4 Statistics',
+                                         '[BOT] CF Statistics')
+                       ])
+    async def page_select(self, interaction: discord.Interaction,
+                          select: discord.ui.Select):
+        if select.values[0] == 'Profile Summary':
+            embed = await UserProfile.profile_summary(self.cog, self.member)
+            view = DefaultSelectView(self.author, self.member, self.cog)
+        elif select.values[0] == '[BOT] C4 Statistics':
+            embed = await UserProfile.first_page_c4_statistics(
+                self.cog, self.member)
+            view = C4FirstPageView(self.author, self.member, self.cog)
+        elif select.values[0] == '[BOT] CF Statistics':
+            embed = await UserProfile.cf_statistics(self.cog, self.member)
+            view = DefaultSelectView(self.author, self.member, self.cog)
+        await interaction.response.edit_message(embed=embed, view=view)
+
+
+class C4SecondPageView(discord.ui.View):
+
+    def __init__(self,
+                 author: typing.Union[discord.Member, discord.User],
+                 member,
+                 cog,
+                 timeout=180):
+        self.author = author
+        self.member = member
+        self.cog = cog
+        super().__init__(timeout=timeout)
+
+    @discord.ui.button(label='← Back', style=discord.ButtonStyle.primary)
+    async def isekai_page(self, interaction: discord.Interaction,
+                          button: discord.ui.Button):
+        embed = await UserProfile.first_page_c4_statistics(
+            self.cog, self.member)
+        view = C4FirstPageView(self.author, self.member, self.cog)
+        await interaction.response.edit_message(embed=embed, view=view)
+
+    @discord.ui.select(cls=discord.ui.Select,
+                       options=[
+                           discord.SelectOption(label=label)
+                           for label in ('Profile Summary',
+                                         '[BOT] C4 Statistics',
+                                         '[BOT] CF Statistics')
+                       ])
+    async def page_select(self, interaction: discord.Interaction,
+                          select: discord.ui.Select):
+        if select.values[0] == 'Profile Summary':
+            embed = await UserProfile.profile_summary(self.cog, self.member)
+            view = DefaultSelectView(self.author, self.member, self.cog)
+        elif select.values[0] == '[BOT] C4 Statistics':
+            embed = await UserProfile.first_page_c4_statistics(
+                self.cog, self.member)
+            view = C4FirstPageView(self.author, self.member, self.cog)
+        elif select.values[0] == '[BOT] CF Statistics':
+            embed = await UserProfile.cf_statistics(self.cog, self.member)
+            view = DefaultSelectView(self.author, self.member, self.cog)
+        await interaction.response.edit_message(embed=embed, view=view)
 
 
 class UserProfile(commands.Cog):
@@ -170,9 +244,9 @@ class UserProfile(commands.Cog):
 **[🤖] __Bot Statistics__**
 - You have sent a total of **{command_count}** Hopscotch commands. 
 - You have earned **{positive_coin_count}** :coin: and **{positive_gem_count}** 💎 but lost **{negative_coin_count}** :coin: and **{negative_gem_count}** 💎.
-> **[!] Information here may not be accurate.**'''
+> **[!] Information here may not be accurate.**
 
-        #**Roles Last Saved**: <t:{int(last_saved)}>'''
+**Roles Last Saved**: <t:{int(last_saved)}>'''
         return embed
 
     async def first_page_c4_statistics(self, member):
@@ -418,15 +492,9 @@ class UserProfile(commands.Cog):
                 )
                 return
 
-        if member == 2:
-            member = ctx.author
-            embed = await self.second_page(member)
-            await ctx.send(embed=embed,
-                           view=FirstPageView(ctx.author, member, self))
-        else:
-            embed = await self.first_page(member)
-            await ctx.send(embed=embed,
-                           view=SecondPageView(ctx.author, member, self))
+        embed = await self.profile_summary(member)
+        await ctx.send(embed=embed,
+                       view=DefaultSelectView(ctx.author, member, self))
         await database.set_attribute(self.bot.database, ctx.author, 1,
                                      'command_count')
         await database.set_xp(self.bot.database, ctx.author, 1)
