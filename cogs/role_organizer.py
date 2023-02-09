@@ -61,6 +61,5 @@ class RoleOrganizer(commands.Cog):
         await self.update_roles(after)
 
 
-
 async def setup(bot):
     await bot.add_cog(RoleOrganizer(bot))
