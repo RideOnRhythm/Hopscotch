@@ -178,26 +178,6 @@ def minimax(board, depth, alpha, beta, maximizingPlayer):
                 break
         return column, value
 
-    else:  # Minimizing player
-        value = math.inf
-        column = random.choice(valid_locations)
-        for col in valid_locations:
-            row = get_next_open_row(board, col)
-            b_copy = board.copy()
-            drop_piece(b_copy, row, col, PLAYER_PIECE)
-            if hash(tuple([tuple(row) for row in b_copy])) not in transpo:
-                new_score = minimax(b_copy, depth - 1, alpha, beta, True)[1]
-            else:
-                new_score = transpo[hash(tuple([tuple(row)
-                                                for row in b_copy]))]
-            if new_score < value:
-                value = new_score
-                column = col
-            beta = min(beta, value)
-            if alpha >= beta:
-                break
-        return column, value
-
 
 def get_valid_locations(board):
     valid_locations = []
