@@ -82,8 +82,7 @@ class ChannelDesc(commands.Cog):
                                        'lottery_ticket')
 
         if len(winners) == 0:
-            embed.add_field(name='Winners',
-                            value='Nobody won today\'s lottery.')
+            return
         else:
             embed.add_field(name='Winners', value='\n'.join(winners))
         await database.set_other_attribute(self.bot.database, time.time(),
