@@ -147,6 +147,23 @@ async def set_coins(database, member, value, increment=True):
                     member.id)]['negative_coin_count'] + -1 * value
     else:
         database['members'][str(member.id)]['coins'] = value
+        
+
+async def set_gems(database, member, value, increment=True):
+    await initialize_member(database, member)
+    if increment:
+        database['members'][str(member.id)]['gems'] = database['members'][str(
+            member.id)]['gems'] + value
+        if value >= 0:
+            database['members'][str(
+                member.id)]['positive_gem_count'] = database['members'][str(
+                    member.id)]['positive_gem_count'] + value
+        else:
+            database['members'][str(
+                member.id)]['negative_gem_count'] = database['members'][str(
+                    member.id)]['negative_gem_count'] + -1 * value
+    else:
+        database['members'][str(member.id)]['gem'] = value
 
 
 async def lottery_coins(database, member, value, increment=True):
