@@ -163,7 +163,7 @@ class SelectMemberView(discord.ui.View):
                 embed.add_field(
                     name='Game:',
                     value=self.cog.games[self.ctx.author].print_board())
-            embed.set_footer(text=f'Move Count: {self.cog.games[self.ctx.author].move_count}')
+            embed.set_footer(text='type "end" to end the game')
             await self.ctx.send(
                 content=self.cog.games[self.ctx.author].turn.mention,
                 embed=embed)
@@ -342,7 +342,7 @@ class SelectMemberView(discord.ui.View):
                         embed.add_field(name='Game:',
                                         value=self.cog.games[
                                             self.ctx.author].print_board())
-                    embed.set_footer(text=f'Move Count: {self.cog.games[self.ctx.author].move_count}')
+                    embed.set_footer(text='type "end" to end the game')
                     if self.cog.games[
                             self.ctx.author].gamemode == Gamemode.SWIFTPLAY:
                         embed.description = f'**TIME LEFT:** {str(discord.utils.get(self.cog.bot.emojis, name="5secondtimer"))}'
@@ -933,13 +933,10 @@ class Minigames(commands.Cog):
         self.coinflips.remove(winner)
         self.coinflips.remove(loser)
         await database.set_attribute(self.bot.database, winner, 1, 'cf_count')
-        await database.set_attribute(self.bot.database, winner, 1, 'cf_win_count')
-        await database.set_attribute(self.bot.database, winner, 1, 'cf_win_streak')
         await database.set_attribute(self.bot.database, winner, 1,
                                      'command_count')
         await database.set_xp(self.bot.database, winner, 20)
         await database.set_attribute(self.bot.database, loser, 1, 'cf_count')
-        await database.set_attribute(self.bot.database, loser, 0, 'cf_win_streak', increment=False)
         await database.set_attribute(self.bot.database, loser, 1,
                                      'command_count')
         await database.set_xp(self.bot.database, loser, 15)

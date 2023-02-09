@@ -213,7 +213,6 @@ class ConnectFour:
                 break
         else:
             self.gameboard[5][num - 1] = color
-        self.move_count += 1
 
     def extreme_explosion(self):
         coords = (random.randint(0, 5), random.randint(0, 6))
