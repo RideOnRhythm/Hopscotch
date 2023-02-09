@@ -228,6 +228,14 @@ class UserProfile(commands.Cog):
                                                       member, 'total_vc_hours')
         command_count = await database.get_attribute(self.bot.database, member,
                                                      'command_count')
+        positive_coin_count = await database.get_attribute(
+            self.bot.database, member, 'positive_coin_count')
+        negative_coin_count = await database.get_attribute(
+            self.bot.database, member, 'negative_coin_count')
+        positive_gem_count = await database.get_attribute(
+            self.bot.database, member, 'positive_gem_count')
+        negative_gem_count = await database.get_attribute(
+            self.bot.database, member, 'negative_gem_count')
 
         embed.description = f'**Rank**: {rank}\n**Icons**: {icon}\n'
         embed.description += f'''{active_string}
