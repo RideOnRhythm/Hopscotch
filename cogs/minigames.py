@@ -933,10 +933,13 @@ class Minigames(commands.Cog):
         self.coinflips.remove(winner)
         self.coinflips.remove(loser)
         await database.set_attribute(self.bot.database, winner, 1, 'cf_count')
+        await database.set_attribute(self.bot.database, winner, 1, 'cf_win_count')
+        await database.set_attribute(self.bot.database, winner, 1, 'cf_win_streak')
         await database.set_attribute(self.bot.database, winner, 1,
                                      'command_count')
         await database.set_xp(self.bot.database, winner, 20)
         await database.set_attribute(self.bot.database, loser, 1, 'cf_count')
+        await database.set_attribute(self.bot.database, loser, 0, 'cf_win_streak', increment=False)
         await database.set_attribute(self.bot.database, loser, 1,
                                      'command_count')
         await database.set_xp(self.bot.database, loser, 15)
