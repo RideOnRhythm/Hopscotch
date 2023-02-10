@@ -218,8 +218,6 @@ class UserProfile(commands.Cog):
             mee6_level = await get_mee6_level(member)
         except IndexError:
             mee6_level = 0
-        current_xp = await database.get_attribute(self.bot.database, member,
-                                                  'current_xp')
         total_messages = await database.get_attribute(self.bot.database,
                                                       member, 'total_messages')
         if total_messages >= 1000:
@@ -240,21 +238,23 @@ class UserProfile(commands.Cog):
         embed.description = f'**Rank**: {rank}\n**Icons**: {icon}\n'
         embed.description += f'''{active_string}
         
-**[✨] __Levels__**
-**HOPS LEVEL**: Level {hopscotch_level} ({current_xp}XP/{5 * hopscotch_level ** 2}XP)
+**__Levels__**
+**HOPS LEVEL**: Level {hopscotch_level}
 **MEE6 LEVEL**: Level {mee6_level}
 
-**[💬] __Server Statistics__**
+**__Server Statistics__**
 - You have sent approximately **{total_messages}** messages. 
-- You have spent a total of **{total_vc_hours}** hours in voice channels. 
-> **[!] Information here may not be accurate.**
+- You have spent **{total_vc_hours}** hours in voice channels. (1/7/23 onwards) 
+> **Information listed above may not be accurate.**
 
-**[🤖] __Bot Statistics__**
+**__Hopscotch Statistics__**
 - You have sent a total of **{command_count}** Hopscotch commands. 
-- You have earned **{positive_coin_count}** :coin: and **{positive_gem_count}** 💎 but lost **{negative_coin_count}** :coin: and **{negative_gem_count}** 💎.
-> **[!] Information here may not be accurate.**
+- You have spent **₱0** on Hopscotch Purchases.
+- You have earned **{positive_coin_count}** :coin: and **{positive_gem_count}** 💎.
+- You have spent/lost **{negative_coin_count}** :coin: and **{negative_gem_count}** 💎.
 
-**Roles Last Saved**: <t:{int(last_saved)}>'''
+**Roles Last Saved**: <t:{int(last_saved)}>
+*Your roles will be automtically added back upon re-joining!'''
         return embed
 
     async def first_page_c4_statistics(self, member):

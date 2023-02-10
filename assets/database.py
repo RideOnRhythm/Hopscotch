@@ -53,6 +53,8 @@ async def initialize_member(database, member):
             'impossible_ai_count': 0,
             'impossible_ai_win': 0,
             'impossible_ai_win_streak': 0,
+            'ai_coin_count': 0,
+            'ai_gem_count': 0,
             'total_vc_minutes': 0,
             'last_message_unix': None,
             'last_message_channel_id': None,
@@ -231,6 +233,14 @@ async def add_reminder(database, value):
 
 async def remove_reminder(database, value):
     database['reminders'].remove(value)
+
+
+async def add_calendar(database, value):
+    database['calendar'].append(value)
+
+
+async def remove_calendar(database, value):
+    database['calendar'].remove(value)
 
 
 async def add_tdl(database, member, value, attribute):

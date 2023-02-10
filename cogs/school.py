@@ -403,6 +403,7 @@ class School(commands.Cog):
         )
         await ctx.send('Calendar added.')
 
+
     @commands.command(aliases=('rca', 'remove cal', 'rcal', 'rcl'))
     async def remove_calendar(self, ctx, *, text):
         if ctx.author.id not in (748388929631289436, 556307832241389581,
