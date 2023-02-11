@@ -34,16 +34,8 @@ async def fix_database(ctx):
         return
     await ctx.send('Fixing database...')
     await database.create_nonexistent_keys(bot.database)
+    await database.create_settings(bot.database)
     await ctx.send('Done')
-
-
-@bot.command(aliases=('eval', '÷*', 'calc', 'calculate'))
-async def evaluate(ctx, *, expression):
-    if ctx.author.id not in (748388929631289436, 556307832241389581,
-                             994223267462258688):
-        return
-    b = eval(expression)
-    await ctx.send(b)
 
 
 @bot.command()
@@ -80,6 +72,7 @@ async def main():
     await bot.load_extension('cogs.ai')
     await bot.load_extension('cogs.music')
     await bot.load_extension('cogs.nft')
+    await bot.load_extension('cogs.settings')
     bot.database = await database.load_json()
     await bot.start(os.getenv('token'))
 

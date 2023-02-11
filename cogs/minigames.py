@@ -1,12 +1,12 @@
 import asyncio
+import random
 import time
-from assets import database
 import discord
 from discord.ext import commands
+from assets import database
 from assets.connectfour import ConnectFour
 from assets.connectfour import ConnectFourAI
 from assets.connectfour import Gamemode
-import random
 
 
 class SelectMemberView(discord.ui.View):
@@ -118,12 +118,11 @@ class SelectMemberView(discord.ui.View):
             if gamemode in (Gamemode.NORMAL, Gamemode.INVISIBLE,
                             Gamemode.SWIFTPLAY):
                 self.cog.games[self.ctx.author] = ConnectFour(
-                    ':blue_square:', [self.ctx.author, member])
+                    '', [self.ctx.author, member])
             elif gamemode == Gamemode.EXTREME:
                 self.cog.games[self.ctx.author] = ConnectFour(
-                    str(discord.utils.get(self.cog.bot.emojis,
-                                          name='c4_fire')),
-                    [self.ctx.author, member])
+                    '', [self.ctx.author, member])
+            self.cog.games[self.ctx.author].bot = self.cog.bot
             self.cog.games[self.ctx.author].gamemode = gamemode
             self.cog.games[self.ctx.author].channel = self.ctx.channel
             self.cog.games[member] = self.cog.games[self.ctx.author]
@@ -141,29 +140,20 @@ class SelectMemberView(discord.ui.View):
                 embed.add_field(name='Game:',
                                 value=((':black_large_square:' * 7) + '\n') *
                                 6)
-            elif self.cog.games[self.ctx.author].gamemode == Gamemode.EXTREME:
-                embed = discord.Embed(
-                    title=
-                    f'{self.ctx.author.display_name} and {member.display_name}\'s game:',
-                    description=
-                    f'🔵 ― {self.cog.games[self.ctx.author].red.mention}\n🟡 ― {self.cog.games[self.ctx.author].yellow.mention}\n\n**Game:**\n{self.cog.games[self.ctx.author].print_board()}',
-                    color=self.cog.hexes[self.cog.colors[self.cog.games[
-                        self.ctx.author].turn]])
             else:
                 embed = discord.Embed(
                     title=
                     f'{self.ctx.author.display_name} and {member.display_name}\'s game:',
-                    description=
-                    f'🔴 ― {self.cog.games[self.ctx.author].red.mention}\n🟡 ― {self.cog.games[self.ctx.author].yellow.mention}',
+                    description='',
                     color=self.cog.hexes[self.cog.colors[self.cog.games[
                         self.ctx.author].turn]])
                 if self.cog.games[
                         self.ctx.author].gamemode == Gamemode.SWIFTPLAY:
                     embed.description += f'\n**TIME LEFT:** {str(discord.utils.get(self.cog.bot.emojis, name="5secondtimer"))}'
-                embed.add_field(
-                    name='Game:',
-                    value=self.cog.games[self.ctx.author].print_board())
-            embed.set_footer(text=f'Move Count: {self.cog.games[self.ctx.author].move_count}')
+                embed.description += f'🔵 ― {self.cog.games[self.ctx.author].red.mention}\n🟡 ― {self.cog.games[self.ctx.author].yellow.mention}\n\n**Game:**\n{self.cog.games[self.ctx.author].print_board()}'
+            embed.set_footer(
+                text=f'Move Count: {self.cog.games[self.ctx.author].move_count}'
+            )
             await self.ctx.send(
                 content=self.cog.games[self.ctx.author].turn.mention,
                 embed=embed)
@@ -201,9 +191,7 @@ class SelectMemberView(discord.ui.View):
                             self.cog.games[self.ctx.author].players[1],
                             self.cog.games[self.ctx.author].players[0], rng,
                             'swift')
-                        embed.add_field(name='Game:',
-                                        value=self.cog.games[
-                                            self.ctx.author].print_board())
+                        embed.description += f'Game:\n{self.cog.games[self.ctx.author].print_board()}'
                         await self.ctx.send(embed=embed)
                     temp = self.cog.games[self.ctx.author]
                     gamemode = self.cog.games[self.ctx.author].gamemode
@@ -250,14 +238,12 @@ class SelectMemberView(discord.ui.View):
                                 author].gamemode == Gamemode.INVISIBLE:
                             embed = discord.Embed(
                                 title=
-                                f'{self.cog.games[msg.author].players[0].display_name} and {self.cog.games[msg.author].players[1].display_name}\'s game:',
+                                f'{self.ctx.author.display_name} and {member.display_name}\'s game:',
                                 description=
-                                f'🔴 ― {self.cog.games[self.ctx.author].red.mention}\n🟡 ― {self.cog.games[self.ctx.author].yellow.mention}\n\n{msg.author.display_name} has **won!**\n{rng:,} :coin: has been added to your account.',
+                                f'{msg.author.display_name} has **won!**\n{rng:,} :coin: has been added to your account.\n\n**Game:**\n{self.cog.games[self.ctx.author].print_board()}',
                                 color=self.cog.hexes[self.cog.colors[
                                     self.cog.games[self.ctx.author].turn]])
-                            embed.add_field(name='Game:',
-                                            value=self.cog.games[
-                                                self.ctx.author].print_board())
+
                             await self.cog.database_operations(
                                 self.cog.games[msg.author].players[1],
                                 self.cog.games[msg.author].players[0], rng,
@@ -279,9 +265,9 @@ class SelectMemberView(discord.ui.View):
                             rng = random.randint(300, 400)
                             embed = discord.Embed(
                                 title=
-                                f'{self.cog.games[msg.author].players[0].display_name} and {self.cog.games[msg.author].players[1].display_name}\'s game:',
+                                f'{self.ctx.author.display_name} and {member.display_name}\'s game:',
                                 description=
-                                f'{msg.author.display_name} has **won!**\n{rng:,} :coin: has been added to your account.',
+                                f'{msg.author.display_name} has **won!**\n{rng:,} :coin: has been added to your account.\n\n**Game:**\n{self.cog.games[self.ctx.author].print_board()}',
                                 color=self.cog.hexes[self.cog.colors[
                                     self.cog.games[self.ctx.author].turn]])
                             if self.cog.games[
@@ -297,9 +283,6 @@ class SelectMemberView(discord.ui.View):
                                     self.cog.games[msg.author].players[1],
                                     self.cog.games[msg.author].players[0], rng,
                                     'normal')
-                            embed.add_field(
-                                name='Game:',
-                                value=self.cog.games[msg.author].print_board())
                         await msg.channel.send(embed=embed)
 
                         temp = self.cog.games[msg.author]
@@ -315,9 +298,7 @@ class SelectMemberView(discord.ui.View):
                             f'🔴 ― {self.cog.games[self.ctx.author].red.mention}\n🟡 ― {self.cog.games[self.ctx.author].yellow.mention}\n\nThe game has ended in a tie.',
                             color=self.cog.hexes[self.cog.colors[
                                 self.cog.games[self.ctx.author].turn]])
-                        embed.add_field(name='Game:',
-                                        value=self.cog.games[
-                                            self.ctx.author].print_board())
+                        embed.description += f'Game:\n{self.cog.games[self.ctx.author].print_board()}'
                         await msg.channel.send(embed=embed)
 
                         temp = self.cog.games[msg.author]
@@ -335,14 +316,12 @@ class SelectMemberView(discord.ui.View):
                         embed.add_field(
                             name='Game:',
                             value=((':black_large_square:' * 7) + '\n') * 6)
-                    elif self.cog.games[
-                            self.ctx.author].gamemode == Gamemode.EXTREME:
-                        embed.description = f'**Game:**\n{self.cog.games[self.ctx.author].print_board()}'
                     else:
-                        embed.add_field(name='Game:',
-                                        value=self.cog.games[
-                                            self.ctx.author].print_board())
-                    embed.set_footer(text=f'Move Count: {self.cog.games[self.ctx.author].move_count}')
+                        embed.description = f'**Game:**\n{self.cog.games[self.ctx.author].print_board()}'
+                    embed.set_footer(
+                        text=
+                        f'Move Count: {self.cog.games[self.ctx.author].move_count}'
+                    )
                     if self.cog.games[
                             self.ctx.author].gamemode == Gamemode.SWIFTPLAY:
                         embed.description = f'**TIME LEFT:** {str(discord.utils.get(self.cog.bot.emojis, name="5secondtimer"))}'
@@ -421,9 +400,9 @@ class SelectMemberView(discord.ui.View):
                     else:
                         embed = discord.Embed(
                             title=
-                            f'{self.cog.games[msg.author].players[0].display_name} and {self.cog.games[msg.author].players[1].display_name}\'s game:',
+                            f'{self.ctx.author.display_name} and {member.display_name}\'s game:',
                             description=
-                            f'{self.cog.games[msg.author].players[1].display_name} has **won!**\n{rng:,} :coin: has been added to your account.',
+                            f'{self.cog.games[msg.author].players[1].display_name} has **won!**\n{rng:,} :coin: has been added to your account.\n\n**Game:**\n{self.cog.games[self.ctx.author].print_board()}',
                             color=self.cog.hexes[self.cog.colors[
                                 self.cog.games[self.ctx.author].turn]])
                         if self.cog.games[
@@ -438,9 +417,6 @@ class SelectMemberView(discord.ui.View):
                                 self.cog.games[msg.author].players[1],
                                 self.cog.games[msg.author].players[0], rng,
                                 'normal')
-                        embed.add_field(
-                            name='Game:',
-                            value=self.cog.games[msg.author].print_board())
                     await msg.channel.send(embed=embed)
 
                     temp = self.cog.games[msg.author]
@@ -510,18 +486,27 @@ class RelationshipStatusView(discord.ui.View):
                 break
 
         if self.ctx.author not in self.cog.aigames:
+            game_theme = await database.get_settings(self.cog.bot.database,
+                                                     self.ctx.author,
+                                                     'c4gametheme')
+            theme_map = {
+                'Default': ':blue_square:',
+                'Sakura Theme': '<:THEME_sakura:1065929561419825162>',
+                'Color Changing Theme':
+                '<a:THEME_colorful:1065931156685606973>',
+                'Anika In Space': '<:THEME_anika:1073873897360982076>',
+                'Galaxy': '<:THEME_galaxy:1073875133925699624>'
+            }
             self.cog.aigames[self.ctx.author] = ConnectFourAI(
-                ':blue_square:', difficulty)
+                theme_map[game_theme], difficulty)
+            self.cog.aigames[self.ctx.author].bot = self.cog.bot
             self.cog.aigames[self.ctx.author].channel = self.ctx.channel
-            self.cog.aigames[self.ctx.author].turn = self.ctx.author
+            self.cog.aigames[self.ctx.author].user = self.ctx.author
 
             embed = discord.Embed(
                 title=f'{self.ctx.author.display_name}\'s AI game:',
-                description=f'🔴 ― {self.ctx.author.mention}\n🟡 ― AI',
+                description=f'🔴 ― {self.ctx.author.mention}\n🟡 ― AI\n\n Game:\n{self.cog.aigames[self.ctx.author].print_board()}',
                 color=0xff0000)
-            embed.add_field(
-                name='Game:',
-                value=self.cog.aigames[self.ctx.author].print_board())
             if self.cog.aigames[self.ctx.author].difficulty == 6:
                 embed.set_footer(text='Difficulty: Impossible (6)')
             if self.cog.aigames[self.ctx.author].difficulty == 7:
@@ -563,11 +548,8 @@ class RelationshipStatusView(discord.ui.View):
                 if self.cog.aigames[msg.author].win_check(1):
                     embed = discord.Embed(
                         title=f'{msg.author.display_name}\'s game:',
-                        description=f'{msg.author.display_name} has **won!**',
+                        description=f'{msg.author.display_name} has **won!**\n\nGame:\n{self.cog.aigames[self.ctx.author].print_board()}',
                         color=0xff0000)
-                    embed.add_field(
-                        name='Game:',
-                        value=self.cog.aigames[msg.author].print_board())
                     await msg.channel.send(embed=embed)
 
                     self.cog.aigames.pop(msg.author)
@@ -577,11 +559,8 @@ class RelationshipStatusView(discord.ui.View):
                     embed = discord.Embed(
                         title=f'{msg.author.display_name}\'s game:',
                         description=
-                        f'🔴 ― {msg.author.display_name}\n🟡 ― AI\nThe game has ended in a tie.',
+                        f'🔴 ― {msg.author.display_name}\n🟡 ― AI\nThe game has ended in a tie.\n\nGame:\n{self.cog.aigames[self.ctx.author].print_board()}',
                         color=0xff0000)
-                    embed.add_field(
-                        name='Game:',
-                        value=self.cog.aigames[self.ctx.author].print_board())
                     await msg.channel.send(embed=embed)
 
                     self.cog.aigames.pop(msg.author)
@@ -601,11 +580,8 @@ class RelationshipStatusView(discord.ui.View):
                     embed = discord.Embed(
                         title=f'{msg.author.display_name}\'s game:',
                         description=
-                        f'> The AI placed on column {col + 1} and has **won!**',
+                        f'> The AI placed on column {col + 1} and has **won!**\n\nGame:\n{self.cog.aigames[self.ctx.author].print_board()}',
                         color=0xff0000)
-                    embed.add_field(
-                        name='Game:',
-                        value=self.cog.aigames[msg.author].print_board())
                     if message is None:
                         await msg.channel.send(embed=embed)
                     else:
@@ -618,11 +594,8 @@ class RelationshipStatusView(discord.ui.View):
                     embed = discord.Embed(
                         title=f'{msg.author.display_name}\'s game:',
                         description=
-                        f'🔴 ― {msg.author.display_name}\n🟡 ― AI\nThe game has ended in a tie.',
+                        f'🔴 ― {msg.author.display_name}\n🟡 ― AI\nThe game has ended in a tie.\n\nGame:\n{self.cog.aigames[self.ctx.author].print_board()}',
                         color=0xff0000)
-                    embed.add_field(
-                        name='Game:',
-                        value=self.cog.aigames[ctx.author].print_board())
                     if message is None:
                         await msg.channel.send(embed=embed)
                     else:
@@ -638,11 +611,8 @@ class RelationshipStatusView(discord.ui.View):
                   ):
                 embed = discord.Embed(
                     title=f'{msg.author.display_name}\'s game:',
-                    description='> The AI has **won!**',
+                    description=f'> The AI has **won!**\n\nGame:\n{self.cog.aigames[self.ctx.author].print_board()}',
                     color=0xff0000)
-                embed.add_field(
-                    name='Game:',
-                    value=self.cog.aigames[msg.author].print_board())
                 await msg.channel.send(embed=embed)
 
                 self.cog.aigames.pop(msg.author)
@@ -662,11 +632,8 @@ class RelationshipStatusView(discord.ui.View):
                 color = 0xffff00
             embed = discord.Embed(
                 title=f'{msg.author.display_name}\'s game:',
-                description=f'> The AI placed on column {col + 1}.',
+                description=f'> The AI placed on column {col + 1}.\n\nGame:\n{self.cog.aigames[self.ctx.author].print_board()}',
                 color=color)
-            embed.add_field(
-                name='Game:',
-                value=self.cog.aigames[self.ctx.author].print_board())
             embed.set_footer(
                 text=
                 f'Difficulty: {self.cog.aigames[self.ctx.author].difficulty}')
@@ -771,8 +738,11 @@ class Minigames(commands.Cog):
                 '> To lessen the spam, minigame commands have been **disabled** in this channel. Please try it in a bot channel.'
             )
             return
-        embed = discord.Embed(title='Gamemode Selection',
-                              color=discord.Color.random())
+        embed = discord.Embed(
+            title='Connect Four: Gamemode Selection',
+            description=
+            'Select a gamemode by clicking on the buttons below. Click on singleplayer if you want to compete against an AI and click on multiplayer if you want to compete against others.',
+            color=discord.Color.random())
         await ctx.send(embed=embed,
                        view=RelationshipStatusView(self, ctx, embed))
 
@@ -933,13 +903,19 @@ class Minigames(commands.Cog):
         self.coinflips.remove(winner)
         self.coinflips.remove(loser)
         await database.set_attribute(self.bot.database, winner, 1, 'cf_count')
-        await database.set_attribute(self.bot.database, winner, 1, 'cf_win_count')
-        await database.set_attribute(self.bot.database, winner, 1, 'cf_win_streak')
+        await database.set_attribute(self.bot.database, winner, 1,
+                                     'cf_win_count')
+        await database.set_attribute(self.bot.database, winner, 1,
+                                     'cf_win_streak')
         await database.set_attribute(self.bot.database, winner, 1,
                                      'command_count')
         await database.set_xp(self.bot.database, winner, 20)
         await database.set_attribute(self.bot.database, loser, 1, 'cf_count')
-        await database.set_attribute(self.bot.database, loser, 0, 'cf_win_streak', increment=False)
+        await database.set_attribute(self.bot.database,
+                                     loser,
+                                     0,
+                                     'cf_win_streak',
+                                     increment=False)
         await database.set_attribute(self.bot.database, loser, 1,
                                      'command_count')
         await database.set_xp(self.bot.database, loser, 15)

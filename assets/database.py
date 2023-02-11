@@ -1,136 +1,90 @@
 import json
 
+presets = {
+    'hopscotch_level': 1,
+    'current_xp': 0,
+    'total_messages': 0,
+    'total_vc_hours': 0,
+    'command_count': 0,
+    'coins': 0,
+    'gems': 0,
+    'positive_coin_count': 0,
+    'negative_coin_count': 0,
+    'positive_gem_count': 0,
+    'negative_gem_count': 0,
+    'normal_c4_count': 0,
+    'normal_c4_win_count': 0,
+    'normal_c4_coin_count': 0,
+    'normal_c4_win_streak': 0,
+    'extreme_c4_count': 0,
+    'extreme_c4_win_count': 0,
+    'extreme_c4_coin_count': 0,
+    'extreme_c4_win_streak': 0,
+    'invisible_c4_count': 0,
+    'invisible_c4_win_count': 0,
+    'invisible_c4_coin_count': 0,
+    'invisible_c4_win_streak': 0,
+    'swift_c4_count': 0,
+    'swift_c4_win_count': 0,
+    'swift_c4_coin_count': 0,
+    'swift_c4_win_streak': 0,
+    'cf_count': 0,
+    'cf_win_count': 0,
+    'cf_coin_count': 0,
+    'cf_win_streak': 0,
+    'easy_ai_count': 0,
+    'easy_ai_win': 0,
+    'easy_ai_win_streak': 0,
+    'normal_ai_count': 0,
+    'normal_ai_win': 0,
+    'normal_ai_win_streak': 0,
+    'medium_ai_count': 0,
+    'medium_ai_win': 0,
+    'medium_ai_win_streak': 0,
+    'hard_ai_count': 0,
+    'hard_ai_win': 0,
+    'hard_ai_win_streak': 0,
+    'expert_ai_count': 0,
+    'expert_ai_win': 0,
+    'expert_ai_win_streak': 0,
+    'impossible_ai_count': 0,
+    'impossible_ai_win': 0,
+    'impossible_ai_win_streak': 0,
+    'total_vc_minutes': 0,
+    'last_message_unix': None,
+    'last_message_channel_id': None,
+    'roles': [],
+    'last_saved_roles_unix': None,
+    'inventory': [],
+    'to_do_list': [],
+    'nails_check': False,
+    'settings': {
+        'c4gametheme': 'Default',
+        'c4extremetheme': 'Default',
+        'number_row': 'Disabled'
+    }
+}
+
 
 async def initialize_member(database, member):
     if str(member.id) not in database['members']:
-        database['members'][str(member.id)] = {
-            'hopscotch_level': 1,
-            'current_xp': 0,
-            'total_messages': 0,
-            'total_vc_hours': 0,
-            'command_count': 0,
-            'coins': 0,
-            'gems': 0,
-            'positive_coin_count': 0,
-            'negative_coin_count': 0,
-            'positive_gem_count': 0,
-            'negative_gem_count': 0,
-            'normal_c4_count': 0,
-            'normal_c4_win_count': 0,
-            'normal_c4_coin_count': 0,
-            'normal_c4_win_streak': 0,
-            'extreme_c4_count': 0,
-            'extreme_c4_win_count': 0,
-            'extreme_c4_coin_count': 0,
-            'extreme_c4_win_streak': 0,
-            'invisible_c4_count': 0,
-            'invisible_c4_win_count': 0,
-            'invisible_c4_coin_count': 0,
-            'invisible_c4_win_streak': 0,
-            'swift_c4_count': 0,
-            'swift_c4_win_count': 0,
-            'swift_c4_coin_count': 0,
-            'swift_c4_win_streak': 0,
-            'cf_count': 0,
-            'cf_win_count': 0,
-            'cf_coin_count': 0,
-            'cf_win_streak': 0,
-            'easy_ai_count': 0,
-            'easy_ai_win': 0,
-            'easy_ai_win_streak': 0,
-            'normal_ai_count': 0,
-            'normal_ai_win': 0,
-            'normal_ai_win_streak': 0,
-            'medium_ai_count': 0,
-            'medium_ai_win': 0,
-            'medium_ai_win_streak': 0,
-            'hard_ai_count': 0,
-            'hard_ai_win': 0,
-            'hard_ai_win_streak': 0,
-            'expert_ai_count': 0,
-            'expert_ai_win': 0,
-            'expert_ai_win_streak': 0,
-            'impossible_ai_count': 0,
-            'impossible_ai_win': 0,
-            'impossible_ai_win_streak': 0,
-            'ai_coin_count': 0,
-            'ai_gem_count': 0,
-            'total_vc_minutes': 0,
-            'last_message_unix': None,
-            'last_message_channel_id': None,
-            'roles': [],
-            'last_saved_roles_unix': None,
-            'inventory': [],
-            'to_do_list': [],
-            'nails_check': False
-        }
+        database['members'][str(member.id)] = presets
 
 
 async def create_nonexistent_keys(database):
     # Creates keys that are not found in each member's user data
-    presets = {
-        'hopscotch_level': 1,
-        'current_xp': 0,
-        'total_messages': 0,
-        'total_vc_hours': 0,
-        'command_count': 0,
-        'coins': 0,
-        'gems': 0,
-        'positive_coin_count': 0,
-        'negative_coin_count': 0,
-        'positive_gem_count': 0,
-        'negative_gem_count': 0,
-        'normal_c4_count': 0,
-        'normal_c4_win_count': 0,
-        'normal_c4_coin_count': 0,
-        'normal_c4_win_streak': 0,
-        'extreme_c4_count': 0,
-        'extreme_c4_win_count': 0,
-        'extreme_c4_coin_count': 0,
-        'extreme_c4_win_streak': 0,
-        'invisible_c4_count': 0,
-        'invisible_c4_win_count': 0,
-        'invisible_c4_coin_count': 0,
-        'invisible_c4_win_streak': 0,
-        'swift_c4_count': 0,
-        'swift_c4_win_count': 0,
-        'swift_c4_coin_count': 0,
-        'swift_c4_win_streak': 0,
-        'cf_count': 0,
-        'cf_win_count': 0,
-        'cf_coin_count': 0,
-        'cf_win_streak': 0,
-        'easy_ai_count': 0,
-        'easy_ai_win': 0,
-        'easy_ai_win_streak': 0,
-        'normal_ai_count': 0,
-        'normal_ai_win': 0,
-        'normal_ai_win_streak': 0,
-        'medium_ai_count': 0,
-        'medium_ai_win': 0,
-        'medium_ai_win_streak': 0,
-        'hard_ai_count': 0,
-        'hard_ai_win': 0,
-        'hard_ai_win_streak': 0,
-        'expert_ai_count': 0,
-        'expert_ai_win': 0,
-        'expert_ai_win_streak': 0,
-        'impossible_ai_count': 0,
-        'impossible_ai_win': 0,
-        'impossible_ai_win_streak': 0,
-        'total_vc_minutes': 0,
-        'last_message_unix': None,
-        'last_message_channel_id': None,
-        'roles': [],
-        'last_saved_roles_unix': None,
-        'inventory': [],
-        'to_do_list': [],
-        'nails_check': False
-    }
     for member in database['members']:
         for key in presets:
             if key not in database['members'][member]:
                 database['members'][member][key] = presets[key]
+
+
+async def create_settings(database):
+    for member in database['members']:
+        for key in presets['settings']:
+            if key not in database['members'][member]['settings']:
+                database['members'][member]['settings'][key] = presets[
+                    'settings'][key]
 
 
 async def set_coins(database, member, value, increment=True):
@@ -149,23 +103,6 @@ async def set_coins(database, member, value, increment=True):
                     member.id)]['negative_coin_count'] + -1 * value
     else:
         database['members'][str(member.id)]['coins'] = value
-        
-
-async def set_gems(database, member, value, increment=True):
-    await initialize_member(database, member)
-    if increment:
-        database['members'][str(member.id)]['gems'] = database['members'][str(
-            member.id)]['gems'] + value
-        if value >= 0:
-            database['members'][str(
-                member.id)]['positive_gem_count'] = database['members'][str(
-                    member.id)]['positive_gem_count'] + value
-        else:
-            database['members'][str(
-                member.id)]['negative_gem_count'] = database['members'][str(
-                    member.id)]['negative_gem_count'] + -1 * value
-    else:
-        database['members'][str(member.id)]['gem'] = value
 
 
 async def lottery_coins(database, member, value, increment=True):
@@ -219,6 +156,16 @@ async def get_attribute(database, member, attribute):
     return database['members'][str(member.id)][attribute]
 
 
+async def set_settings(database, member, value, attribute):
+    await initialize_member(database, member)
+    database['members'][str(member.id)]['settings'][attribute] = value
+
+
+async def get_settings(database, member, attribute):
+    await initialize_member(database, member)
+    return database['members'][str(member.id)]['settings'][attribute]
+
+
 async def set_other_attribute(database, value, attribute):
     database[attribute] = value
 
@@ -233,14 +180,6 @@ async def add_reminder(database, value):
 
 async def remove_reminder(database, value):
     database['reminders'].remove(value)
-
-
-async def add_calendar(database, value):
-    database['calendar'].append(value)
-
-
-async def remove_calendar(database, value):
-    database['calendar'].remove(value)
 
 
 async def add_tdl(database, member, value, attribute):

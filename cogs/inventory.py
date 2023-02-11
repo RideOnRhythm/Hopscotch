@@ -128,7 +128,7 @@ class Inventory(commands.Cog):
                 'icon': '<:THEME_sakura:1065929561419825162>',
                 'category': 'C4 Themes',
                 'price': 5000,
-                'quantity': None,
+                'quantity': None
             },
             'colorchanging': {
                 'name': 'Color Changing Theme',
@@ -137,7 +137,25 @@ class Inventory(commands.Cog):
                 'icon': '<a:THEME_colorful:1065931156685606973>',
                 'category': 'C4 Themes',
                 'price': 20000,
-                'quantity': None,
+                'quantity': None
+            },
+            'anikainspace': {
+                'name': 'Anika In Space',
+                'id': 'anikainspace',
+                'description': 'Adventure!',
+                'icon': '<:THEME_anika:1073873897360982076>',
+                'category': 'C4 Themes',
+                'price': 10000,
+                'quantity': None
+            },
+            'galaxy': {
+                'name': 'Galaxy',
+                'id': 'galaxy',
+                'description': 'wow ang sarap sarap!',
+                'icon': '<:THEME_galaxy:1073875133925699624>',
+                'category': 'C4 Themes',
+                'price': 15000,
+                'quantity': None
             }
         }
 

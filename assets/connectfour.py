@@ -201,11 +201,40 @@ class ConnectFour:
         self.move_count = 0
 
     def print_board(self):
+        if self.gamemode == Gamemode.EXTREME:
+            game_theme = self.bot.database['members'][str(
+                self.turn.id)]['settings']['c4extremetheme']
+            theme_map = {
+                'Default': ':c4_fire:',
+                'Sakura Theme': '<:THEME_sakura:1065929561419825162>',
+                'Color Changing Theme':
+                '<a:THEME_colorful:1065931156685606973>',
+                'Anika In Space': '<:THEME_anika:1073873897360982076>',
+                'Galaxy': '<:THEME_galaxy:1073875133925699624>'
+            }
+        else:
+            game_theme = self.bot.database['members'][str(
+                self.turn.id)]['settings']['c4gametheme']
+            theme_map = {
+                'Default': ':blue_square:',
+                'Sakura Theme': '<:THEME_sakura:1065929561419825162>',
+                'Color Changing Theme':
+                '<a:THEME_colorful:1065931156685606973>',
+                'Anika In Space': '<:THEME_anika:1073873897360982076>',
+                'Galaxy': '<:THEME_galaxy:1073875133925699624>'
+            }
         text = ''
         for ind, row in enumerate(self.gameboard):
             for ind2, col in enumerate(row):
-                text += col
+                if col == self.empty:  # fix for custom board theme
+                    text += theme_map[game_theme]
+                else:
+                    text += col
             text += '\n'
+        number_row = self.bot.database['members'][str(
+            self.turn.id)]['settings']['number_row']
+        if number_row == 'Enabled':
+            text += ':one::two::three::four::five::six::seven:'
         return text
 
     def place(self, num, color):
@@ -274,13 +303,13 @@ class ConnectFourAI:
         text = ''
         for ind, row in enumerate(self.gameboard[::-1]):
             for ind2, col in enumerate(row):
-                d = {
-                    0: ':blue_square:',
-                    1: ':red_circle:',
-                    2: ':yellow_circle:'
-                }
+                d = {0: self.empty, 1: ':red_circle:', 2: ':yellow_circle:'}
                 text += d[col]
             text += '\n'
+        number_row = self.bot.database['members'][str(
+            self.user.id)]['settings']['number_row']
+        if number_row == 'Enabled':
+            text += ':one::two::three::four::five::six::seven:'
         return text
 
     def place(self, num, color):
