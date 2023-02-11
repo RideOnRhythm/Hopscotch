@@ -38,7 +38,7 @@ async def category_shop(ctx, cog, category):
                     name=
                     f'{cog.items[item]["icon"]} {cog.items[item]["name"]} - Unavailable!',
                     value=
-                    f'`ID: {item}`\nWin {100 - sum(wins)} more games to unlock this in the shop.'
+                    f'`ID: {item}`\nWin **{100 - sum(wins)}** more games to unlock this in the shop.'
                 )
         else:
             embed.add_field(
