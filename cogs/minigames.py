@@ -732,12 +732,6 @@ class Minigames(commands.Cog):
 
     @commands.command(aliases=('connect4', 'c4'))
     async def connectfour(self, ctx):
-        if ctx.channel.id not in (994580160219201606, 994580255446671371,
-                                  994580274216181810, 1055816426172203068):
-            await ctx.send(
-                '> To lessen the spam, minigame commands have been **disabled** in this channel. Please try it in a bot channel.'
-            )
-            return
         embed = discord.Embed(
             title='Connect Four: Gamemode Selection',
             description=
@@ -748,12 +742,6 @@ class Minigames(commands.Cog):
 
     @commands.command(aliases=('cf', 'candace', 'coinfuck'))  #LOL
     async def coinflip(self, ctx, member: discord.Member):
-        if ctx.channel.id not in (994580160219201606, 994580255446671371,
-                                  994580274216181810):
-            await ctx.send(
-                '> To lessen the spam, minigame commands have been **disabled** in this channel. Please try it in a bot channel.'
-            )
-            return
         if member.bot:
             await ctx.send(
                 f'{ctx.author.mention}, the right command is \"j.cf {{your opponent}}.\"'
