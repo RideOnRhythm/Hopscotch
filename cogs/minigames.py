@@ -445,7 +445,8 @@ class RelationshipStatusView(discord.ui.View):
     async def interaction_check(self, interaction: discord.Interaction):
         return interaction.user.id == self.ctx.author.id
 
-    @discord.ui.button(label="Singleplayer", style=discord.ButtonStyle.secondary)
+    @discord.ui.button(label="Singleplayer",
+                       style=discord.ButtonStyle.secondary)
     async def single(self, interaction: discord.Interaction,
                      button: discord.ui.Button):
         embed = discord.Embed(title='Select a Difficulty',
@@ -491,9 +492,8 @@ class RelationshipStatusView(discord.ui.View):
                                                      'c4gametheme')
             theme_map = {
                 'Default': ':blue_square:',
-                'Sakura Theme': '<:THEME_sakura:1065929561419825162>',
-                'Color Changing Theme':
-                '<a:THEME_colorful:1065931156685606973>',
+                'Sakura': '<:THEME_sakura:1065929561419825162>',
+                'Pink-Blue': '<a:THEME_colorful:1065931156685606973>',
                 'Anika In Space': '<:THEME_anika:1073873897360982076>',
                 'Galaxy': '<:THEME_galaxy:1073875133925699624>',
                 'Charles': '<:THEME_charles:1073876973824266351>'
@@ -665,7 +665,8 @@ class RelationshipStatusView(discord.ui.View):
             else:
                 await message.edit(content=msg.author.mention, embed=embed)
 
-    @discord.ui.button(label="Multiplayer", style=discord.ButtonStyle.secondary)
+    @discord.ui.button(label="Multiplayer",
+                       style=discord.ButtonStyle.secondary)
     async def multi(self, interaction: discord.Interaction,
                     button: discord.ui.Button):
         embed = self.embed
