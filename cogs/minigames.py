@@ -445,7 +445,7 @@ class RelationshipStatusView(discord.ui.View):
     async def interaction_check(self, interaction: discord.Interaction):
         return interaction.user.id == self.ctx.author.id
 
-    @discord.ui.button(label="Singleplayer", style=discord.ButtonStyle.primary)
+    @discord.ui.button(label="Singleplayer", style=discord.ButtonStyle.secondary)
     async def single(self, interaction: discord.Interaction,
                      button: discord.ui.Button):
         embed = discord.Embed(title='Select a Difficulty',
@@ -495,26 +495,37 @@ class RelationshipStatusView(discord.ui.View):
                 'Color Changing Theme':
                 '<a:THEME_colorful:1065931156685606973>',
                 'Anika In Space': '<:THEME_anika:1073873897360982076>',
-                'Galaxy': '<:THEME_galaxy:1073875133925699624>'
+                'Galaxy': '<:THEME_galaxy:1073875133925699624>',
+                'Charles': '<:THEME_charles:1073876973824266351>'
             }
             self.cog.aigames[self.ctx.author] = ConnectFourAI(
                 theme_map[game_theme], difficulty)
             self.cog.aigames[self.ctx.author].bot = self.cog.bot
             self.cog.aigames[self.ctx.author].channel = self.ctx.channel
             self.cog.aigames[self.ctx.author].user = self.ctx.author
+            self.cog.aigames[self.ctx.author].turn = self.ctx.author
 
             embed = discord.Embed(
                 title=f'{self.ctx.author.display_name}\'s AI game:',
-                description=f'🔴 ― {self.ctx.author.mention}\n🟡 ― AI\n\n Game:\n{self.cog.aigames[self.ctx.author].print_board()}',
+                description=
+                f'🔴 ― {self.ctx.author.mention}\n🟡 ― AI\n\n Game:\n{self.cog.aigames[self.ctx.author].print_board()}',
                 color=0xff0000)
             if self.cog.aigames[self.ctx.author].difficulty == 6:
                 embed.set_footer(text='Difficulty: Impossible (6)')
             if self.cog.aigames[self.ctx.author].difficulty == 7:
                 embed.set_footer(text='Difficulty: 7 (Experimental!)')
             else:
+                difficulty_mapping = {
+                    1: 'Easy',
+                    2: 'Normal',
+                    3: 'Medium',
+                    4: 'Hard',
+                    5: 'Expert',
+                    6: 'Impossible'
+                }
                 embed.set_footer(
                     text=
-                    f'Difficulty: {self.cog.aigames[self.ctx.author].difficulty}'
+                    f'Difficulty: {difficulty_mapping[self.cog.aigames[self.ctx.author].difficulty]}'
                 )
             await self.ctx.send(
                 content=self.cog.aigames[self.ctx.author].turn.mention,
@@ -548,7 +559,8 @@ class RelationshipStatusView(discord.ui.View):
                 if self.cog.aigames[msg.author].win_check(1):
                     embed = discord.Embed(
                         title=f'{msg.author.display_name}\'s game:',
-                        description=f'{msg.author.display_name} has **won!**\n\nGame:\n{self.cog.aigames[self.ctx.author].print_board()}',
+                        description=
+                        f'{msg.author.display_name} has **won!**\n\nGame:\n{self.cog.aigames[self.ctx.author].print_board()}',
                         color=0xff0000)
                     await msg.channel.send(embed=embed)
 
@@ -611,7 +623,8 @@ class RelationshipStatusView(discord.ui.View):
                   ):
                 embed = discord.Embed(
                     title=f'{msg.author.display_name}\'s game:',
-                    description=f'> The AI has **won!**\n\nGame:\n{self.cog.aigames[self.ctx.author].print_board()}',
+                    description=
+                    f'> The AI has **won!**\n\nGame:\n{self.cog.aigames[self.ctx.author].print_board()}',
                     color=0xff0000)
                 await msg.channel.send(embed=embed)
 
@@ -632,17 +645,27 @@ class RelationshipStatusView(discord.ui.View):
                 color = 0xffff00
             embed = discord.Embed(
                 title=f'{msg.author.display_name}\'s game:',
-                description=f'> The AI placed on column {col + 1}.\n\nGame:\n{self.cog.aigames[self.ctx.author].print_board()}',
+                description=
+                f'> The AI placed on column {col + 1}.\n\nGame:\n{self.cog.aigames[self.ctx.author].print_board()}',
                 color=color)
+            difficulty_mapping = {
+                1: 'Easy',
+                2: 'Normal',
+                3: 'Medium',
+                4: 'Hard',
+                5: 'Expert',
+                6: 'Impossible'
+            }
             embed.set_footer(
                 text=
-                f'Difficulty: {self.cog.aigames[self.ctx.author].difficulty}')
+                f'Difficulty: {difficulty_mapping[self.cog.aigames[self.ctx.author].difficulty]}'
+            )
             if message is None:
                 await msg.channel.send(content=msg.author.mention, embed=embed)
             else:
                 await message.edit(content=msg.author.mention, embed=embed)
 
-    @discord.ui.button(label="Multiplayer", style=discord.ButtonStyle.primary)
+    @discord.ui.button(label="Multiplayer", style=discord.ButtonStyle.secondary)
     async def multi(self, interaction: discord.Interaction,
                     button: discord.ui.Button):
         embed = self.embed
@@ -742,6 +765,12 @@ class Minigames(commands.Cog):
 
     @commands.command(aliases=('cf', 'candace', 'coinfuck'))  #LOL
     async def coinflip(self, ctx, member: discord.Member):
+        if ctx.channel.id not in (994580160219201606, 994580255446671371,
+                                  994580274216181810):
+            await ctx.send(
+                '> To lessen the spam, minigame commands have been **disabled** in this channel. Please try it in a bot channel.'
+            )
+            return
         if member.bot:
             await ctx.send(
                 f'{ctx.author.mention}, the right command is \"j.cf {{your opponent}}.\"'

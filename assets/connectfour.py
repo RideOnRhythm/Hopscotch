@@ -210,7 +210,8 @@ class ConnectFour:
                 'Color Changing Theme':
                 '<a:THEME_colorful:1065931156685606973>',
                 'Anika In Space': '<:THEME_anika:1073873897360982076>',
-                'Galaxy': '<:THEME_galaxy:1073875133925699624>'
+                'Galaxy': '<:THEME_galaxy:1073875133925699624>',
+                'Charles': '<:THEME_charles:1073876973824266351>'
             }
         else:
             game_theme = self.bot.database['members'][str(
@@ -221,7 +222,8 @@ class ConnectFour:
                 'Color Changing Theme':
                 '<a:THEME_colorful:1065931156685606973>',
                 'Anika In Space': '<:THEME_anika:1073873897360982076>',
-                'Galaxy': '<:THEME_galaxy:1073875133925699624>'
+                'Galaxy': '<:THEME_galaxy:1073875133925699624>',
+                'Charles': '<:THEME_charles:1073876973824266351>'
             }
         text = ''
         for ind, row in enumerate(self.gameboard):

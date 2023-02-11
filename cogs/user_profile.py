@@ -65,7 +65,7 @@ class C4FirstPageView(discord.ui.View):
         self.cog = cog
         super().__init__(timeout=timeout)
 
-    @discord.ui.button(label='Next →', style=discord.ButtonStyle.primary)
+    @discord.ui.button(label='Next →', style=discord.ButtonStyle.secondary)
     async def next_page(self, interaction: discord.Interaction,
                         button: discord.ui.Button):
         embed = await UserProfile.second_page_c4_statistics(
@@ -107,7 +107,7 @@ class C4SecondPageView(discord.ui.View):
         self.cog = cog
         super().__init__(timeout=timeout)
 
-    @discord.ui.button(label='← Back', style=discord.ButtonStyle.primary)
+    @discord.ui.button(label='← Back', style=discord.ButtonStyle.secondary)
     async def isekai_page(self, interaction: discord.Interaction,
                           button: discord.ui.Button):
         embed = await UserProfile.first_page_c4_statistics(

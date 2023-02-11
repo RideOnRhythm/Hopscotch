@@ -14,7 +14,7 @@ async def category_shop(ctx, cog, category):
         for member_item in member_items:
             if item == member_item['id']:
                 if member_item['category'] == 'C4 Themes':
-                    amount = '\n*- You own this theme.*\n'
+                    amount = '- ***You own this theme.***\n'
                     break
                 else:
                     quantity = member_item['quantity']
@@ -22,10 +22,31 @@ async def category_shop(ctx, cog, category):
                     break
         else:
             amount = ''
-        embed.add_field(
-            name=
-            f'{cog.items[item]["icon"]} {cog.items[item]["name"]} - {cog.items[item]["price"]:,} :coin:',
-            value=f'`ID: {item}`\n{amount}{cog.items[item]["description"]}')
+
+        if item == 'charles':
+            wins = []
+            for attribute in ('normal_c4_win_count', 'extreme_c4_win_count',
+                              'invisible_c4_win_count', 'swift_c4_win_count',
+                              'cf_win_count', 'easy_ai_win', 'normal_ai_win',
+                              'medium_ai_win', 'hard_ai_win', 'expert_ai_win',
+                              'impossible_ai_win'):
+                wins.append(await
+                            database.get_attribute(cog.bot.database,
+                                                   ctx.author, attribute))
+            if sum(wins) < 100:
+                embed.add_field(
+                    name=
+                    f'{cog.items[item]["icon"]} {cog.items[item]["name"]} - Unavailable!',
+                    value=
+                    f'`ID: {item}`\nWin {100 - sum(wins)} more games to unlock this in the shop.'
+                )
+        else:
+            embed.add_field(
+                name=
+                f'{cog.items[item]["icon"]} {cog.items[item]["name"]} - {cog.items[item]["price"]:,} :coin:',
+                value=f'`ID: {item}`\n{amount}{cog.items[item]["description"]}'
+            )
+
     return embed
 
 
@@ -120,41 +141,50 @@ class Inventory(commands.Cog):
                 'quantity': None,
                 'special': []
             },
-            'sakura': {
-                'name': 'Sakura Theme',
-                'id': 'sakura',
-                'description':
-                'A beautiful pink sakura theme for your C4 games!',
-                'icon': '<:THEME_sakura:1065929561419825162>',
-                'category': 'C4 Themes',
-                'price': 5000,
-                'quantity': None
-            },
-            'colorchanging': {
-                'name': 'Color Changing Theme',
-                'id': 'colorchanging',
-                'description': 'Colorful!',
-                'icon': '<a:THEME_colorful:1065931156685606973>',
-                'category': 'C4 Themes',
-                'price': 20000,
-                'quantity': None
-            },
             'anikainspace': {
                 'name': 'Anika In Space',
                 'id': 'anikainspace',
-                'description': 'Adventure!',
+                'description': 'Its time to go on an adventure!',
                 'icon': '<:THEME_anika:1073873897360982076>',
                 'category': 'C4 Themes',
-                'price': 10000,
+                'price': 5000,
                 'quantity': None
             },
             'galaxy': {
                 'name': 'Galaxy',
                 'id': 'galaxy',
-                'description': 'wow ang sarap sarap!',
+                'description':
+                'Held together by gravity, a beautiful purple galaxy theme for your C4 games!',
                 'icon': '<:THEME_galaxy:1073875133925699624>',
                 'category': 'C4 Themes',
+                'price': 10000,
+                'quantity': None
+            },
+            'sakura': {
+                'name': 'Sakura',
+                'id': 'sakura',
+                'description': 'A pink sakura theme for your C4 games!',
+                'icon': '<:THEME_sakura:1065929561419825162>',
+                'category': 'C4 Themes',
                 'price': 15000,
+                'quantity': None
+            },
+            'colorchanging': {
+                'name': 'Pink-Blue',
+                'id': 'pinkblue',
+                'description': 'Why are the colors changing?',
+                'icon': '<a:THEME_colorful:1065931156685606973>',
+                'category': 'C4 Themes',
+                'price': 20000,
+                'quantity': None
+            },
+            'charles': {
+                'name': 'Charles',
+                'id': 'charles',
+                'description': 'ummm...',
+                'icon': '<:THEME_charles:1073876973824266351>',
+                'category': 'C4 Themes',
+                'price': 69420,
                 'quantity': None
             }
         }
@@ -175,11 +205,31 @@ class Inventory(commands.Cog):
         coins = await database.get_attribute(self.bot.database, ctx.author,
                                              'coins')
         price = item['price'] * quantity
+        if item['id'] == 'charles':
+            wins = []
+            for attribute in ('normal_c4_win_count', 'extreme_c4_win_count',
+                              'invisible_c4_win_count', 'swift_c4_win_count',
+                              'cf_win_count', 'easy_ai_win', 'normal_ai_win',
+                              'medium_ai_win', 'hard_ai_win', 'expert_ai_win',
+                              'impossible_ai_win'):
+                wins.append(await
+                            database.get_attribute(self.bot.database,
+                                                   ctx.author, attribute))
+            if sum(wins) < 100:
+                await ctx.send('You are currently unworthy of this item.')
+                return
         if coins < price:
             await ctx.send('You don\'t have enough coins to buy this item.')
             return
 
-        item_limits = {'lottery_ticket': 100, 'sakura': 1, 'colorchanging': 1}
+        item_limits = {
+            'lottery_ticket': 100,
+            'sakura': 1,
+            'colorchanging': 1,
+            'anikainspace': 1,
+            'galaxy': 1,
+            'charles': 1
+        }
         original_q = await database.get_items(self.bot.database, ctx.author)
         existing = None
         for i in original_q:
