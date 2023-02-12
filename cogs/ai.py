@@ -1,7 +1,6 @@
 from discord.ext import commands
 import os
 import discord
-import aiohttp
 import time
 import asyncio
 from dotenv import load_dotenv
@@ -16,6 +15,10 @@ class Ai(commands.Cog):
         self.bot = bot
         self.ai_list = []
         self.gpt = ChatGPT()
+    
+    @commands.Cog.listener()
+    async def on_ready(self):
+        await self.gpt.async_init()
 
     @commands.hybrid_command()
     async def enable_ai(self, ctx):
@@ -28,24 +31,22 @@ class Ai(commands.Cog):
                 return m.channel == ctx.channel and m.author == ctx.author and m.author in self.ai_list
 
             try:
-                msg = await client.wait_for('message', check=check, timeout=300.0)
+                msg = await self.bot.wait_for('message', check=check, timeout=300.0)
             except asyncio.TimeoutError:
                 await ctx.send('No messages have been sent within 5 minutes. Ending conversation.')
                 return
             else:
-                async with aiohttp.ClientSession() as session:
-                    webhook = discord.Webhook.from_url(os.getenv('webhook'),
-                                                    session=session)
-                    response = ''
-                    temp = await webhook.send(content='> Generating response...')
-                    timer = time.time()
+                response = ''
+                temp = await ctx.send(content='> Generating response...')
+                timer = time.time()
 
-                    for chunk in self.gpt.ask_stream(msg.content):
-                        response += chunk
-                        if time.time() - timer >= 5:
-                            await temp.edit(content=f'> Generating response...\n\n{response}')
+                async for chunk in self.gpt.ask_stream(msg.content):
+                    response += chunk
+                    if time.time() - timer >= 3:
+                        timer = time.time()
+                        await temp.edit(content=f'> Generating response...\n\n{response}')
                     
-                    await temp.edit(content=response)
+                await temp.edit(content=response)
 
     @commands.hybrid_command()
     async def disable_ai(self, ctx):
