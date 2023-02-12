@@ -16,6 +16,9 @@ async def category_shop(ctx, cog, category):
                 if member_item['category'] == 'C4 Themes':
                     amount = '- ***You own this theme.***\n'
                     break
+                elif member_item['category'] == 'Name Colors':
+                    amount = '- ***You have this name color.***\n'
+                    break
                 else:
                     quantity = member_item['quantity']
                     amount = f'\n*- You have **{quantity}** of this item.*\n'
@@ -43,7 +46,7 @@ async def category_shop(ctx, cog, category):
         else:
             embed.add_field(
                 name=
-                f'{cog.items[item]["icon"]} {cog.items[item]["name"]} - {cog.items[item]["price"]:,} :coin:',
+                f'{cog.items[item]["icon"] if cog.items[item]["icon"] is not None else ""} {cog.items[item]["name"]} - {cog.items[item]["price"]:,} :coin:',
                 value=f'`ID: {item}`\n{amount}{cog.items[item]["description"]}'
             )
 
@@ -93,7 +96,7 @@ class ShopView(discord.ui.View):
     @discord.ui.select(cls=discord.ui.Select,
                        options=[
                            discord.SelectOption(label=label)
-                           for label in ('Items', 'C4 Themes')
+                           for label in ('Items', 'C4 Themes', 'Name Colors')
                        ])
     async def category_select(self, interaction: discord.Interaction,
                               select: discord.ui.Select):
@@ -114,7 +117,7 @@ class InventoryView(discord.ui.View):
     @discord.ui.select(cls=discord.ui.Select,
                        options=[
                            discord.SelectOption(label=label)
-                           for label in ('Items', 'C4 Themes')
+                           for label in ('Items', 'C4 Themes', 'Name Colors')
                        ])
     async def category_select(self, interaction: discord.Interaction,
                               select: discord.ui.Select):
@@ -186,7 +189,97 @@ class Inventory(commands.Cog):
                 'category': 'C4 Themes',
                 'price': 69420,
                 'quantity': None
-            }
+            },
+            'aqua': {
+                'name': 'Aqua',
+                'id': 'aqua',
+                'description': '',
+                'icon': None,
+                'category': 'Name Colors',
+                'price': 500,
+                'quantity': None
+            },
+            'darkblue': {
+                'name': 'Dark Blue',
+                'id': 'darkblue',
+                'description': '',
+                'icon': None,
+                'category': 'Name Colors',
+                'price': 500,
+                'quantity': None
+            },
+            'lightmaroon': {
+                'name': 'Light Maroon',
+                'id': 'lightmaroon',
+                'description': '',
+                'icon': None,
+                'category': 'Name Colors',
+                'price': 500,
+                'quantity': None
+            },
+            'lightpurple': {
+                'name': 'Light Purple',
+                'id': 'lightpurple',
+                'description': '',
+                'icon': None,
+                'category': 'Name Colors',
+                'price': 500,
+                'quantity': None
+            },
+            'lightred': {
+                'name': 'Light Red',
+                'id': 'lightred',
+                'description': '',
+                'icon': None,
+                'category': 'Name Colors',
+                'price': 500,
+                'quantity': None
+            },
+            'lightyellow': {
+                'name': 'Light Yellow',
+                'id': 'lightyellow',
+                'description': '',
+                'icon': None,
+                'category': 'Name Colors',
+                'price': 500,
+                'quantity': None
+            },
+            'lightgreen': {
+                'name': 'Light Green',
+                'id': 'lightgreen',
+                'description': '',
+                'icon': None,
+                'category': 'Name Colors',
+                'price': 500,
+                'quantity': None
+            },
+            'lightpink': {
+                'name': 'Light Pink',
+                'id': 'lightpink',
+                'description': '',
+                'icon': None,
+                'category': 'Name Colors',
+                'price': 1000,
+                'quantity': None
+            },
+            'rosegold': {
+                'name': 'Rose Gold',
+                'id': 'rosegold',
+                'description': '',
+                'icon': None,
+                'category': 'Name Colors',
+                'price': 1000,
+                'quantity': None
+            },
+            'Legend': {
+                'name': 'Legend',
+                'id': 'legend',
+                'description': '',
+                'icon': None,
+                'category': 'Name Colors',
+                'price': 30000,
+                'quantity': None
+            },
         }
 
     @commands.command()
