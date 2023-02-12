@@ -10,3 +10,6 @@ bs4
 beautifulsoup4
 openai
 python-dotenv
+readline
+rich
+playwright
