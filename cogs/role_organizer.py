@@ -4,13 +4,11 @@ import discord
 import datetime
 import string
 
-locks = {
-    'name_colors': [],
-    'school_roles': [],
-    'pronouns': [],
-    'gaming': [],
-    'server': []
-}
+name_colors_locks = set([])
+school_locks = set([])
+pronoun_locks = set([])
+gaming_locks = set([])
+server_locks = set([])
 
 
 async def roles_embed():
@@ -160,6 +158,13 @@ class DefaultView(discord.ui.View):
                        style=discord.ButtonStyle.secondary)
     async def name_colors(self, interaction: discord.Interaction,
                           button: discord.ui.Button):
+        if self.ctx.author in name_colors_locks:
+            name_colors_locks.remove(self.ctx.author)
+        school_locks.add(self.ctx.author)
+        pronoun_locks.add(self.ctx.author)
+        gaming_locks.add(self.ctx.author)
+        server_locks.add(self.ctx.author)
+
         embed = await name_colors_embed(self.cog, self.ctx)
         await interaction.response.edit_message(embed=embed)
         temp = await interaction.original_response()
@@ -170,6 +175,9 @@ class DefaultView(discord.ui.View):
                 return m.author == self.ctx.author and m.channel == self.ctx.channel
 
             msg = await self.cog.bot.wait_for('message', check=check)
+
+            if self.ctx.author in name_colors_locks:
+                return
 
             valid_letters = 'ABCDEFGH'
             inventory = await database.get_attribute(self.cog.bot.database,
@@ -226,12 +234,19 @@ class DefaultView(discord.ui.View):
                 )
             embed = await name_colors_embed(self.cog, self.ctx)
             await temp.edit(embed=embed)
-            return
+            continue
 
     @discord.ui.button(label='Section/Honors Class/Special PE',
                        style=discord.ButtonStyle.secondary)
     async def school_roles(self, interaction: discord.Interaction,
                            button: discord.ui.Button):
+        name_colors_locks.add(self.ctx.author)
+        if self.ctx.author in school_locks:
+            school_locks.remove(self.ctx.author)
+        pronoun_locks.add(self.ctx.author)
+        gaming_locks.add(self.ctx.author)
+        server_locks.add(self.ctx.author)
+
         embed = await school_roles_embed(self.cog, self.ctx)
         await interaction.response.edit_message(embed=embed)
         temp = await interaction.original_response()
@@ -242,6 +257,9 @@ class DefaultView(discord.ui.View):
                 return m.author == self.ctx.author and m.channel == self.ctx.channel
 
             msg = await self.cog.bot.wait_for('message', check=check)
+
+            if self.ctx.author in school_locks:
+                return
 
             valid_letters = 'ABCDEFGH'
             if msg.content.upper() not in valid_letters:
@@ -278,7 +296,7 @@ class DefaultView(discord.ui.View):
                     )
                     embed = await school_roles_embed(self.cog, self.ctx)
                     await temp.edit(embed=embed)
-                    return
+                    continue
                 elif msg.content.upper() == string.ascii_uppercase[
                         all_roles.index(honors_current)]:
                     await self.ctx.author.remove_roles(
@@ -288,7 +306,7 @@ class DefaultView(discord.ui.View):
                     )
                     embed = await school_roles_embed(self.cog, self.ctx)
                     await temp.edit(embed=embed)
-                    return
+                    continue
                 elif msg.content.upper() == string.ascii_uppercase[
                         all_roles.index(special_current)]:
                     await self.ctx.author.remove_roles(
@@ -298,7 +316,7 @@ class DefaultView(discord.ui.View):
                     )
                     embed = await school_roles_embed(self.cog, self.ctx)
                     await temp.edit(embed=embed)
-                    return
+                    continue
             except ValueError:
                 pass
             if string.ascii_uppercase.index(
@@ -317,7 +335,7 @@ class DefaultView(discord.ui.View):
                     )
                     embed = await school_roles_embed(self.cog, self.ctx)
                     await temp.edit(embed=embed)
-                    return
+                    continue
                 elif new_role.id in special_pe and special_current is not None:
                     await self.ctx.author.remove_roles(
                         self.ctx.guild.get_role(special_current))
@@ -328,7 +346,7 @@ class DefaultView(discord.ui.View):
                     )
                     embed = await school_roles_embed(self.cog, self.ctx)
                     await temp.edit(embed=embed)
-                    return
+                    continue
             new_role = self.ctx.guild.get_role(
                 all_roles[string.ascii_uppercase.index(msg.content.upper())])
             await self.ctx.author.add_roles(new_role)
@@ -336,11 +354,18 @@ class DefaultView(discord.ui.View):
 
             embed = await school_roles_embed(self.cog, self.ctx)
             await temp.edit(embed=embed)
-            return
+            continue
 
     @discord.ui.button(label='Pronouns', style=discord.ButtonStyle.secondary)
     async def pronouns(self, interaction: discord.Interaction,
                        button: discord.ui.Button):
+        name_colors_locks.add(self.ctx.author)
+        school_locks.add(self.ctx.author)
+        if self.ctx.author in pronoun_locks:
+            pronoun_locks.remove(self.ctx.author)
+        gaming_locks.add(self.ctx.author)
+        server_locks.add(self.ctx.author)
+
         embed = await pronouns_embed(self.cog, self.ctx)
         await interaction.response.edit_message(embed=embed)
         temp = await interaction.original_response()
@@ -351,6 +376,9 @@ class DefaultView(discord.ui.View):
                 return m.author == self.ctx.author and m.channel == self.ctx.channel
 
             msg = await self.cog.bot.wait_for('message', check=check)
+
+            if self.ctx.author in pronoun_locks:
+                return
 
             valid_letters = 'ABC'
             if msg.content.upper() not in valid_letters:
@@ -374,7 +402,7 @@ class DefaultView(discord.ui.View):
                     )
                     embed = await pronouns_embed(self.cog, self.ctx)
                     await temp.edit(embed=embed)
-                    return
+                    continue
             except ValueError:
                 pass
             new_role = self.ctx.guild.get_role(
@@ -384,11 +412,18 @@ class DefaultView(discord.ui.View):
 
             embed = await pronouns_embed(self.cog, self.ctx)
             await temp.edit(embed=embed)
-            return
+            continue
 
     @discord.ui.button(label='Gaming', style=discord.ButtonStyle.secondary)
     async def gaming(self, interaction: discord.Interaction,
                      button: discord.ui.Button):
+        name_colors_locks.add(self.ctx.author)
+        school_locks.add(self.ctx.author)
+        pronoun_locks.add(self.ctx.author)
+        if self.ctx.author in gaming_locks:
+            gaming_locks.remove(self.ctx.author)
+        server_locks.add(self.ctx.author)
+
         embed = await gaming_embed(self.cog, self.ctx)
         await interaction.response.edit_message(embed=embed)
         temp = await interaction.original_response()
@@ -399,6 +434,9 @@ class DefaultView(discord.ui.View):
                 return m.author == self.ctx.author and m.channel == self.ctx.channel
 
             msg = await self.cog.bot.wait_for('message', check=check)
+
+            if self.ctx.author in gaming_locks:
+                return
 
             valid_letters = 'ABCDE'
             if msg.content.upper() not in valid_letters:
@@ -424,7 +462,7 @@ class DefaultView(discord.ui.View):
                     )
                     embed = await gaming_embed(self.cog, self.ctx)
                     await temp.edit(embed=embed)
-                    return
+                    continue
             except ValueError:
                 pass
             new_role = self.ctx.guild.get_role(
@@ -434,12 +472,19 @@ class DefaultView(discord.ui.View):
 
             embed = await gaming_embed(self.cog, self.ctx)
             await temp.edit(embed=embed)
-            return
+            continue
 
     @discord.ui.button(label='Announcements/Events/and more',
                        style=discord.ButtonStyle.secondary)
     async def server(self, interaction: discord.Interaction,
                      button: discord.ui.Button):
+        name_colors_locks.add(self.ctx.author)
+        school_locks.add(self.ctx.author)
+        pronoun_locks.add(self.ctx.author)
+        gaming_locks.add(self.ctx.author)
+        if self.ctx.author in server_locks:
+            server_locks.remove(self.ctx.author)
+
         embed = await server_embed(self.cog, self.ctx)
         await interaction.response.edit_message(embed=embed)
         temp = await interaction.original_response()
@@ -450,6 +495,9 @@ class DefaultView(discord.ui.View):
                 return m.author == self.ctx.author and m.channel == self.ctx.channel
 
             msg = await self.cog.bot.wait_for('message', check=check)
+
+            if self.ctx.author in server_locks:
+                return
 
             valid_letters = 'ABCDEFGHIJKLM'
             if msg.content.upper() not in valid_letters:
@@ -477,7 +525,7 @@ class DefaultView(discord.ui.View):
                     )
                     embed = await server_embed(self.cog, self.ctx)
                     await temp.edit(embed=embed)
-                    return
+                    continue
             except ValueError:
                 pass
             new_role = self.ctx.guild.get_role(
@@ -487,7 +535,7 @@ class DefaultView(discord.ui.View):
 
             embed = await server_embed(self.cog, self.ctx)
             await temp.edit(embed=embed)
-            return
+            continue
 
 
 class RoleOrganizer(commands.Cog):
