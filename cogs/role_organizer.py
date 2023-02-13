@@ -160,6 +160,8 @@ class DefaultView(discord.ui.View):
                           button: discord.ui.Button):
         if self.ctx.author in name_colors_locks:
             name_colors_locks.remove(self.ctx.author)
+        else:
+            name_colors_locks.add(self.ctx.author)
         school_locks.add(self.ctx.author)
         pronoun_locks.add(self.ctx.author)
         gaming_locks.add(self.ctx.author)
@@ -243,6 +245,8 @@ class DefaultView(discord.ui.View):
         name_colors_locks.add(self.ctx.author)
         if self.ctx.author in school_locks:
             school_locks.remove(self.ctx.author)
+        else:
+            school_locks.add(self.ctx.author)
         pronoun_locks.add(self.ctx.author)
         gaming_locks.add(self.ctx.author)
         server_locks.add(self.ctx.author)
@@ -363,6 +367,8 @@ class DefaultView(discord.ui.View):
         school_locks.add(self.ctx.author)
         if self.ctx.author in pronoun_locks:
             pronoun_locks.remove(self.ctx.author)
+        else:
+            pronoun_locks.add(self.ctx.author)
         gaming_locks.add(self.ctx.author)
         server_locks.add(self.ctx.author)
 
@@ -422,6 +428,8 @@ class DefaultView(discord.ui.View):
         pronoun_locks.add(self.ctx.author)
         if self.ctx.author in gaming_locks:
             gaming_locks.remove(self.ctx.author)
+        else:
+            gaming_locks.add(self.ctx.author)
         server_locks.add(self.ctx.author)
 
         embed = await gaming_embed(self.cog, self.ctx)
@@ -484,6 +492,8 @@ class DefaultView(discord.ui.View):
         gaming_locks.add(self.ctx.author)
         if self.ctx.author in server_locks:
             server_locks.remove(self.ctx.author)
+        else:
+            server_locks.add(self.ctx.author)
 
         embed = await server_embed(self.cog, self.ctx)
         await interaction.response.edit_message(embed=embed)
