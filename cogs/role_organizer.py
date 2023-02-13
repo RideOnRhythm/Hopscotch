@@ -62,7 +62,7 @@ async def name_colors_embed(cog, ctx):
 
 async def school_roles_embed(cog, ctx):
     embed = discord.Embed(title='Roles', timestamp=datetime.datetime.now())
-    embed.description = '**__Editing Section/Honors Class/Special PE__**\n\nSections: (You can only have 1 Section role)\n\n'
+    embed.description = '**__Editing Section/Honors Class/Special PE__**\n\n'
 
     sections = [858224685686325268, 858224260856938518, 858224148248788996]
     honors_class = [1027097851119013908, 1044512060379254805]
@@ -82,14 +82,16 @@ async def school_roles_embed(cog, ctx):
         embed.description += f'{string.ascii_uppercase[3:][ind]} ― <@&{role}>'
         if role in [r.id for r in ctx.author.roles]:
             embed.description += ' **CURRENTLY USING**'
+        embed.description += '\n'
 
     embed.description += '\n**Special PE**: (You can only have 1 Special PE role)**:\n'
     for ind, role in enumerate(special_pe):
         embed.description += f'{string.ascii_uppercase[5:][ind]} ― <@&{role}>'
         if role in [r.id for r in ctx.author.roles]:
-            embed.description += ' **CURRENTLY USING**'
+            embed.description += ' **CURRENTLY USING'
+        embed.description += '\n'
 
-    embed.description += '> To add Section/Honors Class/Special PE roles, type and send the letter of the Section/Honors Class/Special PE roles you want. Note that Sections and Special PE roles can only have ONE role at once. Selecting another one will change the current one you\'re using.'
+    embed.description += '\n> To add Section/Honors Class/Special PE roles, type and send the letter of the Section/Honors Class/Special PE roles you want. Note that Sections and Special PE roles can only have ONE role at once. Selecting another one will change the current one you\'re using.'
     return embed
 
 
@@ -257,38 +259,80 @@ class DefaultView(discord.ui.View):
             current_role = next(
                 (item for item in [role.id for role in self.ctx.author.roles]
                  if item in all_roles), None)
-            if msg.content.upper() == string.ascii_uppercase[
-                    all_roles.index(current_role)]:
-                await self.ctx.author.remove_roles(
-                    self.ctx.guild.get_role(current_role))
-                await self.ctx.send(
-                    f'Successfully removed role: {self.ctx.guild.get_role(current_role).name}!'
-                )
-            elif string.ascii_uppercase.index(
+            section_current = next(
+                (item for item in [role.id for role in self.ctx.author.roles]
+                 if item in sections), None)
+            honors_current = next(
+                (item for item in [role.id for role in self.ctx.author.roles]
+                 if item in honors_class), None)
+            special_current = next(
+                (item for item in [role.id for role in self.ctx.author.roles]
+                 if item in special_pe), None)
+            try:
+                if msg.content.upper() == string.ascii_uppercase[
+                        all_roles.index(section_current)]:
+                    await self.ctx.author.remove_roles(
+                        self.ctx.guild.get_role(section_current))
+                    await self.ctx.send(
+                        f'Successfully removed role: {self.ctx.guild.get_role(section_current).name}!'
+                    )
+                    embed = await school_roles_embed(self.cog, self.ctx)
+                    await temp.edit(embed=embed)
+                    return
+                elif msg.content.upper() == string.ascii_uppercase[
+                        all_roles.index(honors_current)]:
+                    await self.ctx.author.remove_roles(
+                        self.ctx.guild.get_role(honors_current))
+                    await self.ctx.send(
+                        f'Successfully removed role: {self.ctx.guild.get_role(honors_current).name}!'
+                    )
+                    embed = await school_roles_embed(self.cog, self.ctx)
+                    await temp.edit(embed=embed)
+                    return
+                elif msg.content.upper() == string.ascii_uppercase[
+                        all_roles.index(special_current)]:
+                    await self.ctx.author.remove_roles(
+                        self.ctx.guild.get_role(special_current))
+                    await self.ctx.send(
+                        f'Successfully removed role: {self.ctx.guild.get_role(special_current).name}!'
+                    )
+                    embed = await school_roles_embed(self.cog, self.ctx)
+                    await temp.edit(embed=embed)
+                    return
+            except ValueError:
+                pass
+            if string.ascii_uppercase.index(
                     msg.content.upper()) < 3 or string.ascii_uppercase.index(
-                        msg.content.upper()) > 4:
+                        msg.content.upper()) > 4 and current_role is not None:
                 new_role = self.ctx.guild.get_role(
                     all_roles[string.ascii_uppercase.index(
                         msg.content.upper())])
-                await self.ctx.author.remove_roles(
-                    self.ctx.guild.get_role(current_role))
-                await self.ctx.author.add_roles(new_role)
-                if current_role in sections:
+                if new_role.id in sections and section_current is not None:
+                    await self.ctx.author.remove_roles(
+                        self.ctx.guild.get_role(section_current))
                     category = 'Section'
-                elif current_role in honors_class:
-                    category = 'Honors Class'
-                elif current_role in special_pe:
+                    await self.ctx.author.add_roles(new_role)
+                    await self.ctx.send(
+                        f'Successfully changed your {category} to {new_role.name}!'
+                    )
+                    embed = await school_roles_embed(self.cog, self.ctx)
+                    await temp.edit(embed=embed)
+                    return
+                elif new_role.id in special_pe and special_current is not None:
+                    await self.ctx.author.remove_roles(
+                        self.ctx.guild.get_role(special_current))
                     category = 'Special PE'
-                await self.ctx.send(
-                    f'Successfully changed your {category} to {new_role.name}!'
-                )
-            else:
-                new_role = self.ctx.guild.get_role(
-                    all_roles[string.ascii_uppercase.index(
-                        msg.content.upper())])
-                await self.ctx.author.add_roles(new_role)
-                await self.ctx.send(
-                    f'Successfully added role: {new_role.name}!')
+                    await self.ctx.author.add_roles(new_role)
+                    await self.ctx.send(
+                        f'Successfully changed your {category} to {new_role.name}!'
+                    )
+                    embed = await school_roles_embed(self.cog, self.ctx)
+                    await temp.edit(embed=embed)
+                    return
+            new_role = self.ctx.guild.get_role(
+                all_roles[string.ascii_uppercase.index(msg.content.upper())])
+            await self.ctx.author.add_roles(new_role)
+            await self.ctx.send(f'Successfully added role: {new_role.name}!')
 
             embed = await school_roles_embed(self.cog, self.ctx)
             await temp.edit(embed=embed)
