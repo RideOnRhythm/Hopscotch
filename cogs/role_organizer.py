@@ -230,7 +230,7 @@ class DefaultView(discord.ui.View):
                        style=discord.ButtonStyle.secondary)
     async def school_roles(self, interaction: discord.Interaction,
                            button: discord.ui.Button):
-        embed = await name_colors_embed(self.cog, self.ctx)
+        embed = await school_roles_embed(self.cog, self.ctx)
         await interaction.response.edit_message(embed=embed)
         temp = await interaction.original_response()
 
