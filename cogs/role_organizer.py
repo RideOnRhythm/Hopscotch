@@ -360,24 +360,27 @@ class DefaultView(discord.ui.View):
             pronouns = [
                 858166817938997248, 858166818615197696, 858166819046031381
             ]
-            current_role = next(
-                (item for item in [role.id for role in self.ctx.author.roles]
-                 if item in pronouns), None)
-
-            if msg.content.upper() == string.ascii_uppercase[
-                    pronouns.index(current_role)]:
-                await self.ctx.author.remove_roles(
-                    self.ctx.guild.get_role(current_role))
-                await self.ctx.send(
-                    f'Successfully removed role: {self.ctx.guild.get_role(current_role).name}!'
-                )
-            else:
-                new_role = self.ctx.guild.get_role(
-                    pronouns[string.ascii_uppercase.index(
-                        msg.content.upper())])
-                await self.ctx.author.add_roles(new_role)
-                await self.ctx.send(
-                    f'Successfully added role: {new_role.name}!')
+            try:
+                if pronouns[string.ascii_uppercase.index(
+                        msg.content.upper())] in [
+                            role.id for role in self.ctx.author.roles
+                        ]:
+                    await self.ctx.author.remove_roles(
+                        self.ctx.guild.get_role(
+                            pronouns[string.ascii_uppercase.index(
+                                msg.content.upper())]))
+                    await self.ctx.send(
+                        f'Successfully removed role: {self.ctx.guild.get_role(pronouns[string.ascii_uppercase.index(msg.content.upper())]).name}!'
+                    )
+                    embed = await pronouns_embed(self.cog, self.ctx)
+                    await temp.edit(embed=embed)
+                    return
+            except ValueError:
+                pass
+            new_role = self.ctx.guild.get_role(
+                pronouns[string.ascii_uppercase.index(msg.content.upper())])
+            await self.ctx.author.add_roles(new_role)
+            await self.ctx.send(f'Successfully added role: {new_role.name}!')
 
             embed = await pronouns_embed(self.cog, self.ctx)
             await temp.edit(embed=embed)
@@ -406,23 +409,28 @@ class DefaultView(discord.ui.View):
                 858228412894937109, 858228515455762462, 947794021600870410,
                 858228860214312990, 937291486549135390
             ]
-            current_role = next(
-                (item for item in [role.id for role in self.ctx.author.roles]
-                 if item in gaming), None)
 
-            if msg.content.upper() == string.ascii_uppercase[
-                    gaming.index(current_role)]:
-                await self.ctx.author.remove_roles(
-                    self.ctx.guild.get_role(current_role))
-                await self.ctx.send(
-                    f'Successfully removed role: {self.ctx.guild.get_role(current_role).name}!'
-                )
-            else:
-                new_role = self.ctx.guild.get_role(
-                    gaming[string.ascii_uppercase.index(msg.content.upper())])
-                await self.ctx.author.add_roles(new_role)
-                await self.ctx.send(
-                    f'Successfully added role: {new_role.name}!')
+            try:
+                if gaming[string.ascii_uppercase.index(
+                        msg.content.upper())] in [
+                            role.id for role in self.ctx.author.roles
+                        ]:
+                    await self.ctx.author.remove_roles(
+                        self.ctx.guild.get_role(
+                            gaming[string.ascii_uppercase.index(
+                                msg.content.upper())]))
+                    await self.ctx.send(
+                        f'Successfully removed role: {self.ctx.guild.get_role(gaming[string.ascii_uppercase.index(msg.content.upper())]).name}!'
+                    )
+                    embed = await gaming_embed(self.cog, self.ctx)
+                    await temp.edit(embed=embed)
+                    return
+            except ValueError:
+                pass
+            new_role = self.ctx.guild.get_role(
+                gaming[string.ascii_uppercase.index(msg.content.upper())])
+            await self.ctx.author.add_roles(new_role)
+            await self.ctx.send(f'Successfully added role: {new_role.name}!')
 
             embed = await gaming_embed(self.cog, self.ctx)
             await temp.edit(embed=embed)
@@ -455,22 +463,27 @@ class DefaultView(discord.ui.View):
                 858166828194201640, 858228761955008533, 1015233233333538847,
                 858166829847543859
             ]
-            current_role = next(
-                (item for item in [role.id for role in self.ctx.author.roles]
-                 if item in server), None)
-
-            if msg.content.upper() == server.index(current_role):
-                await self.ctx.author.remove_roles(
-                    self.ctx.guild.get_role(current_role))
-                await self.ctx.send(
-                    f'Successfully removed role: {self.ctx.guild.get_role(current_role).name}!'
-                )
-            else:
-                new_role = self.ctx.guild.get_role(
-                    server[string.ascii_uppercase.index(msg.content.upper())])
-                await self.ctx.author.add_roles(new_role)
-                await self.ctx.send(
-                    f'Successfully added role: {new_role.name}!')
+            try:
+                if server[string.ascii_uppercase.index(
+                        msg.content.upper())] in [
+                            role.id for role in self.ctx.author.roles
+                        ]:
+                    await self.ctx.author.remove_roles(
+                        self.ctx.guild.get_role(
+                            server[string.ascii_uppercase.index(
+                                msg.content.upper())]))
+                    await self.ctx.send(
+                        f'Successfully removed role: {self.ctx.guild.get_role(server[string.ascii_uppercase.index(msg.content.upper())]).name}!'
+                    )
+                    embed = await server_embed(self.cog, self.ctx)
+                    await temp.edit(embed=embed)
+                    return
+            except ValueError:
+                pass
+            new_role = self.ctx.guild.get_role(
+                server[string.ascii_uppercase.index(msg.content.upper())])
+            await self.ctx.author.add_roles(new_role)
+            await self.ctx.send(f'Successfully added role: {new_role.name}!')
 
             embed = await server_embed(self.cog, self.ctx)
             await temp.edit(embed=embed)
