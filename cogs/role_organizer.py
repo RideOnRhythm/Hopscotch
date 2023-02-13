@@ -159,7 +159,8 @@ class DefaultView(discord.ui.View):
     async def name_colors(self, interaction: discord.Interaction,
                           button: discord.ui.Button):
         embed = await name_colors_embed(self.cog, self.ctx)
-        temp = await interaction.response.edit_message(embed=embed)
+        await interaction.response.edit_message(embed=embed)
+        temp = await interaction.original_response()
 
         while True:
 
@@ -222,7 +223,7 @@ class DefaultView(discord.ui.View):
                     f'Successfully changed your name color to {new_role.name}!'
                 )
             embed = await name_colors_embed(self.cog, self.ctx)
-            await temp.edit_message(embed=embed)
+            await temp.edit(embed=embed)
             return
 
     @discord.ui.button(label='Section/Honors Class/Special PE',
@@ -410,8 +411,7 @@ class DefaultView(discord.ui.View):
                 (item for item in [role.id for role in self.ctx.author.roles]
                  if item in server), None)
 
-            if msg.content.upper() ==   
-                    server.index(current_role)]:
+            if msg.content.upper() == server.index(current_role)]:
                 await self.ctx.author.remove_roles(
                     self.ctx.guild.get_role(current_role))
                 await self.ctx.send(
