@@ -371,7 +371,7 @@ class DefaultView(discord.ui.View):
                 )
             else:
                 new_role = self.ctx.guild.get_role(
-                    gaming[string.ascii_uppercase[msg.content.upper()]])
+                    gaming[string.ascii_uppercase.index(msg.content.upper())])
                 await self.ctx.author.add_roles(new_role)
                 await self.ctx.send(
                     f'Successfully added role: {new_role.name}!')
@@ -419,7 +419,7 @@ class DefaultView(discord.ui.View):
                 )
             else:
                 new_role = self.ctx.guild.get_role(
-                    server[string.ascii_uppercase[msg.content.upper()]])
+                    server[string.ascii_uppercase.index(msg.content.upper())])
                 await self.ctx.author.add_roles(new_role)
                 await self.ctx.send(
                     f'Successfully added role: {new_role.name}!')
