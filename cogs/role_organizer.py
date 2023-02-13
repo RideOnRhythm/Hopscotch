@@ -231,7 +231,8 @@ class DefaultView(discord.ui.View):
     async def school_roles(self, interaction: discord.Interaction,
                            button: discord.ui.Button):
         embed = await name_colors_embed(self.cog, self.ctx)
-        temp = await interaction.response.edit_message(embed=embed)
+        await interaction.response.edit_message(embed=embed)
+        temp = await interaction.original_response()
 
         while True:
 
@@ -290,14 +291,15 @@ class DefaultView(discord.ui.View):
                     f'Successfully added role: {new_role.name}!')
 
             embed = await school_roles_embed(self.cog, self.ctx)
-            await temp.edit_message(embed=embed)
+            await temp.edit(embed=embed)
             return
 
     @discord.ui.button(label='Pronouns', style=discord.ButtonStyle.secondary)
     async def pronouns(self, interaction: discord.Interaction,
                        button: discord.ui.Button):
         embed = await pronouns_embed(self.cog, self.ctx)
-        temp = await interaction.response.edit_message(embed=embed)
+        await interaction.response.edit_message(embed=embed)
+        temp = await interaction.original_response()
 
         while True:
 
@@ -334,14 +336,15 @@ class DefaultView(discord.ui.View):
                     f'Successfully added role: {new_role.name}!')
 
             embed = await pronouns_embed(self.cog, self.ctx)
-            await temp.edit_message(embed=embed)
+            await temp.edit(embed=embed)
             return
 
     @discord.ui.button(label='Gaming', style=discord.ButtonStyle.secondary)
     async def gaming(self, interaction: discord.Interaction,
                      button: discord.ui.Button):
         embed = await gaming_embed(self.cog, self.ctx)
-        temp = await interaction.response.edit_message(embed=embed)
+        await interaction.response.edit_message(embed=embed)
+        temp = await interaction.original_response()
 
         while True:
 
@@ -378,7 +381,7 @@ class DefaultView(discord.ui.View):
                     f'Successfully added role: {new_role.name}!')
 
             embed = await gaming_embed(self.cog, self.ctx)
-            await temp.edit_message(embed=embed)
+            await temp.edit(embed=embed)
             return
 
     @discord.ui.button(label='Announcements/Events/and more',
@@ -386,7 +389,8 @@ class DefaultView(discord.ui.View):
     async def server(self, interaction: discord.Interaction,
                      button: discord.ui.Button):
         embed = await server_embed(self.cog, self.ctx)
-        temp = await interaction.response.edit_message(embed=embed)
+        await interaction.response.edit_message(embed=embed)
+        temp = await interaction.original_response()
 
         while True:
 
@@ -411,7 +415,7 @@ class DefaultView(discord.ui.View):
                 (item for item in [role.id for role in self.ctx.author.roles]
                  if item in server), None)
 
-            if msg.content.upper() == server.index(current_role)]:
+            if msg.content.upper() == server.index(current_role):
                 await self.ctx.author.remove_roles(
                     self.ctx.guild.get_role(current_role))
                 await self.ctx.send(
@@ -425,7 +429,7 @@ class DefaultView(discord.ui.View):
                     f'Successfully added role: {new_role.name}!')
 
             embed = await server_embed(self.cog, self.ctx)
-            await temp.edit_message(embed=embed)
+            await temp.edit(embed=embed)
             return
 
 
