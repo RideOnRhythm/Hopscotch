@@ -166,7 +166,7 @@ class DefaultView(discord.ui.View):
             def check(m):
                 return m.author == self.ctx.author and m.channel == self.ctx.channel
 
-            msg = await self.bot.wait_for('message', check=check)
+            msg = await self.cog.bot.wait_for('message', check=check)
 
             valid_letters = 'ABCDEFGH'
             inventory = await database.get_attribute(self.cog.bot.database,
@@ -201,8 +201,8 @@ class DefaultView(discord.ui.View):
             current_role = next(
                 (item for item in [role.id for role in self.ctx.author.roles]
                  if item in colors), None)
-            if msg.content.upper() == string.ascii_uppercase.index(
-                    colors.index(current_role)):
+            if msg.content.upper() == string.ascii_uppercase[
+                    colors.index(current_role)]:
                 await self.ctx.author.remove_roles(
                     self.ctx.guild.get_role(current_role))
                 await self.ctx.author.add_roles(
@@ -213,8 +213,8 @@ class DefaultView(discord.ui.View):
             else:
                 all_roles = colors + inventory_roles
                 new_role = self.ctx.guild.get_role(
-                    all_roles[string.ascii_uppercase.index(
-                        msg.content.upper())])
+                    all_roles[string.ascii_uppercase[
+                        msg.content.upper()]])
                 await self.ctx.author.remove_roles(
                     self.ctx.guild.get_role(current_role))
                 await self.ctx.author.add_roles(new_role)
@@ -237,7 +237,7 @@ class DefaultView(discord.ui.View):
             def check(m):
                 return m.author == self.ctx.author and m.channel == self.ctx.channel
 
-            msg = await self.bot.wait_for('message', check=check)
+            msg = await self.cog.bot.wait_for('message', check=check)
 
             valid_letters = 'ABCDEFGH'
             if msg.content.upper() not in valid_letters:
@@ -255,19 +255,19 @@ class DefaultView(discord.ui.View):
             current_role = next(
                 (item for item in [role.id for role in self.ctx.author.roles]
                  if item in all_roles), None)
-            if msg.content.upper() == string.ascii_uppercase.index(
-                    all_roles.index(current_role)):
+            if msg.content.upper() == string.ascii_uppercase[
+                    all_roles.index(current_role)]:
                 await self.ctx.author.remove_roles(
                     self.ctx.guild.get_role(current_role))
                 await self.ctx.send(
                     f'Successfully removed role: {self.ctx.guild.get_role(current_role).name}!'
                 )
-            elif string.ascii_uppercase.index(
-                    msg.content.upper()) < 3 or string.ascii_uppercase.index(
-                        msg.content.upper()) > 4:
+            elif string.ascii_uppercase[
+                    msg.content.upper()] < 3 or string.ascii_uppercase[
+                        msg.content.upper()] > 4:
                 new_role = self.ctx.guild.get_role(
-                    all_roles[string.ascii_uppercase.index(
-                        msg.content.upper())])
+                    all_roles[string.ascii_uppercase[
+                        msg.content.upper()]])
                 await self.ctx.author.remove_roles(
                     self.ctx.guild.get_role(current_role))
                 await self.ctx.author.add_roles(new_role)
@@ -282,8 +282,8 @@ class DefaultView(discord.ui.View):
                 )
             else:
                 new_role = self.ctx.guild.get_role(
-                    all_roles[string.ascii_uppercase.index(
-                        msg.content.upper())])
+                    all_roles[string.ascii_uppercase[
+                        msg.content.upper()]])
                 await self.ctx.author.add_roles(new_role)
                 await self.ctx.send(
                     f'Successfully added role: {new_role.name}!')
@@ -303,7 +303,7 @@ class DefaultView(discord.ui.View):
             def check(m):
                 return m.author == self.ctx.author and m.channel == self.ctx.channel
 
-            msg = await self.bot.wait_for('message', check=check)
+            msg = await self.cog.bot.wait_for('message', check=check)
 
             valid_letters = 'ABC'
             if msg.content.upper() not in valid_letters:
@@ -317,8 +317,8 @@ class DefaultView(discord.ui.View):
                 (item for item in [role.id for role in self.ctx.author.roles]
                  if item in pronouns), None)
 
-            if msg.content.upper() == string.ascii_uppercase.index(
-                    pronouns.index(current_role)):
+            if msg.content.upper() == string.ascii_uppercase[
+                    pronouns.index(current_role)]:
                 await self.ctx.author.remove_roles(
                     self.ctx.guild.get_role(current_role))
                 await self.ctx.send(
@@ -326,8 +326,8 @@ class DefaultView(discord.ui.View):
                 )
             else:
                 new_role = self.ctx.guild.get_role(
-                    pronouns[string.ascii_uppercase.index(
-                        msg.content.upper())])
+                    pronouns[string.ascii_uppercase[
+                        msg.content.upper()]])
                 await self.ctx.author.add_roles(new_role)
                 await self.ctx.send(
                     f'Successfully added role: {new_role.name}!')
@@ -347,7 +347,7 @@ class DefaultView(discord.ui.View):
             def check(m):
                 return m.author == self.ctx.author and m.channel == self.ctx.channel
 
-            msg = await self.bot.wait_for('message', check=check)
+            msg = await self.cog.bot.wait_for('message', check=check)
 
             valid_letters = 'ABCDE'
             if msg.content.upper() not in valid_letters:
@@ -362,8 +362,8 @@ class DefaultView(discord.ui.View):
                 (item for item in [role.id for role in self.ctx.author.roles]
                  if item in gaming), None)
 
-            if msg.content.upper() == string.ascii_uppercase.index(
-                    gaming.index(current_role)):
+            if msg.content.upper() == string.ascii_uppercase[
+                    gaming.index(current_role)]:
                 await self.ctx.author.remove_roles(
                     self.ctx.guild.get_role(current_role))
                 await self.ctx.send(
@@ -371,7 +371,7 @@ class DefaultView(discord.ui.View):
                 )
             else:
                 new_role = self.ctx.guild.get_role(
-                    gaming[string.ascii_uppercase.index(msg.content.upper())])
+                    gaming[string.ascii_uppercase[msg.content.upper()]])
                 await self.ctx.author.add_roles(new_role)
                 await self.ctx.send(
                     f'Successfully added role: {new_role.name}!')
@@ -392,7 +392,7 @@ class DefaultView(discord.ui.View):
             def check(m):
                 return m.author == self.ctx.author and m.channel == self.ctx.channel
 
-            msg = await self.bot.wait_for('message', check=check)
+            msg = await self.cog.bot.wait_for('message', check=check)
 
             valid_letters = 'ABCDEFGHIJKLM'
             if msg.content.upper() not in valid_letters:
@@ -410,8 +410,8 @@ class DefaultView(discord.ui.View):
                 (item for item in [role.id for role in self.ctx.author.roles]
                  if item in server), None)
 
-            if msg.content.upper() == string.ascii_uppercase.index(
-                    server.index(current_role)):
+            if msg.content.upper() == string.ascii_uppercase[
+                    server.index(current_role)]:
                 await self.ctx.author.remove_roles(
                     self.ctx.guild.get_role(current_role))
                 await self.ctx.send(
@@ -419,7 +419,7 @@ class DefaultView(discord.ui.View):
                 )
             else:
                 new_role = self.ctx.guild.get_role(
-                    server[string.ascii_uppercase.index(msg.content.upper())])
+                    server[string.ascii_uppercase[msg.content.upper()]])
                 await self.ctx.author.add_roles(new_role)
                 await self.ctx.send(
                     f'Successfully added role: {new_role.name}!')
