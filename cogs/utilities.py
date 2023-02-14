@@ -70,6 +70,9 @@ def minigames_embed():
 `j.shop`
 > To buy: `j.buy (item) (quantity *OPTIONAL)` 
 
+**Quests** - Check available quests and earn rewards!
+`j.quest`
+
 **"NFT" Generator** - Send a funny image from over 700+ "nfts"!
 `j.nft`''',
                           color=discord.Color.red())
@@ -85,11 +88,17 @@ def school_embed():
 **Reminders** - Sends the list of homeworks, requirements, exams, and so much more!
 `j.reminders`, `j.rm`,
 
+**Cut Nails Reminder** - Get reminded to cut your nails!
+`j.nails`
+
 **School Staff List and Contact Information** - Sends a list of all the school teachers and staff with their email addresses.
 `j.contact_information`, `j.ci`
 
 **Notes** - Easily access notes provided by server members!
-`j.notes`''',
+`j.notes`
+
+**School Calendar** - Easily access the school calendar without having to visit the school website.
+`j.calendar`''',
                           color=discord.Color.red())
     return embed
 
