@@ -24,6 +24,8 @@ class DailyChallenge(commands.Cog):
         else:
             reward = await database.get_other_attribute(self.bot.database, 'daily_quest_rewards')
             embed.description = f'**__DAILY QUEST__**\n> You have completed the daily quest and earned **{reward[str(ctx.author.id)]}** 🪙. Come back again tomorrow!'
+
+        await ctx.send(embed=embed)
     
     @commands.Cog.listener()
     async def on_message(self, message):
