@@ -56,8 +56,48 @@ async def change_theme(cog, ctx, attribute, interaction):
 
     owned_themes = await database.get_items(cog.bot.database, ctx.author)
     owned_themes = filter(lambda x: x['category'] == 'C4 Themes', owned_themes)
-    if ctx.author.id in (748388929631289436):
-        pass
+    if ctx.author.id in (748388929631289436, 994223267462258688, 556307832241389581):
+        owned_themes = [{
+                'name': 'Anika In Space',
+                'id': 'anikainspace',
+                'description': 'Its time to go on an adventure!',
+                'icon': '<:THEME_anika:1073873897360982076>',
+                'category': 'C4 Themes',
+                'price': 5000,
+                'quantity': None
+            },{
+                'name': 'Galaxy',
+                'id': 'galaxy',
+                'description':
+                'Held together by gravity, a beautiful purple galaxy theme for your C4 games!',
+                'icon': '<:THEME_galaxy:1073875133925699624>',
+                'category': 'C4 Themes',
+                'price': 10000,
+                'quantity': None
+            },{
+                'name': 'Sakura',
+                'id': 'sakura',
+                'description': 'A pink sakura theme for your C4 games!',
+                'icon': '<:THEME_sakura:1065929561419825162>',
+                'category': 'C4 Themes',
+                'price': 15000,
+                'quantity': None
+            },{
+                'name': 'Pink-Blue',
+                'id': 'pinkblue',
+                'description': 'Why are the colors changing?',
+                'icon': '<a:THEME_colorful:1065931156685606973>',
+                'category': 'C4 Themes',
+                'price': 20000,
+                'quantity': None
+            },
+                {'name': 'Charles',
+                'id': 'charles',
+                'description': 'ummm...',
+                'icon': '<:THEME_charles:1073876973824266351>',
+                'category': 'C4 Themes',
+                'price': 69420,
+                'quantity': None}]
     embed.description += '\n**A** - Default'
     letter_map = {'A': 'Default'}
     for ind, theme in enumerate(owned_themes):
