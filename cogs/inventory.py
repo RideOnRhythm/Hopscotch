@@ -43,6 +43,12 @@ async def category_shop(ctx, cog, category):
                     value=
                     f'`ID: {item}`\nWin **{100 - sum(wins)}** more games to unlock this in the shop.'
                 )
+            else:
+                embed.add_field(
+                    name=
+                    f'{cog.items[item]["icon"] if cog.items[item]["icon"] is not None else ""} {cog.items[item]["name"]} - {cog.items[item]["price"]:,} :coin:',
+                    value=f'`ID: {item}`\n{amount}{cog.items[item]["description"]}'
+                )
         else:
             embed.add_field(
                 name=
