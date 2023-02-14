@@ -51,7 +51,7 @@ class Ai(commands.Cog):
                     await temp.edit(content=response)
                 except:
                     response = openai.Completion.create(
-                        model='text-davinci-003'.
+                        model='text-davinci-003',
                         prompt=f'The following is a conversation with an AI chatbot. The chatbot is helpful, creative, clever, very friendly, and also humorous.\n\nHuman: {prompt}\nAI:',
                         temperature=0.9,
                         max_tokens=150,
