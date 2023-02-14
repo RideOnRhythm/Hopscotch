@@ -693,6 +693,7 @@ class RoleOrganizer(commands.Cog):
 
     @commands.command()
     async def roles(self, ctx):
+        name_colors_locks.add(ctx.author)
         embed = await roles_embed()
         await ctx.send(embed=embed, view=DefaultView(self, ctx))
 
