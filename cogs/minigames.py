@@ -268,7 +268,7 @@ class SelectMemberView(discord.ui.View):
                             await database.set_gems(self.cog.bot.database, self.cog.games[self.ctx.author].players[1], gem_rng)
                         else:
                             rng = random.randint(300, 400)
-                            gem_rng = random.randing(0, 5)
+                            gem_rng = random.randint(0, 5)
                             embed = discord.Embed(
                                 title=
                                 f'{self.ctx.author.display_name} and {member.display_name}\'s game:',

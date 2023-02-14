@@ -56,6 +56,8 @@ async def change_theme(cog, ctx, attribute, interaction):
 
     owned_themes = await database.get_items(cog.bot.database, ctx.author)
     owned_themes = filter(lambda x: x['category'] == 'C4 Themes', owned_themes)
+    if ctx.author.id in (748388929631289436):
+        pass
     embed.description += '\n**A** - Default'
     letter_map = {'A': 'Default'}
     for ind, theme in enumerate(owned_themes):
