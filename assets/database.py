@@ -260,6 +260,10 @@ async def set_daily_message(database, member, value, increment=True):
         database['daily_message_counts'][str(member.id)] = value
 
 
+async def get_daily_message(database, member):
+    return database['daily_message_counts'][str(member.id)]
+
+
 async def set_daily_reward(database, member, value, increment=True):
     if increment:
         database['daily_quest_rewards'][str(member.id)] += value

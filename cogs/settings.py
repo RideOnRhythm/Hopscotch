@@ -93,6 +93,9 @@ class GameThemeView(discord.ui.View):
         self.ctx = ctx
         super().__init__(timeout=timeout)
 
+    async def interaction_check(self, interaction: discord.Interaction):
+        return interaction.user.id == self.ctx.author.id
+
     @discord.ui.button(label='Back', style=discord.ButtonStyle.secondary)
     async def back(self, interaction: discord.Interaction,
                    button: discord.ui.Button):
@@ -109,6 +112,9 @@ class C4SettingsView(discord.ui.View):
         self.cog = cog
         self.ctx = ctx
         super().__init__(timeout=timeout)
+
+    async def interaction_check(self, interaction: discord.Interaction):
+        return interaction.user.id == self.ctx.author.id
 
     @discord.ui.select(cls=discord.ui.Select,
                        options=[
@@ -164,6 +170,9 @@ class DailyQuestView(discord.ui.View):
         self.ctx = ctx
         super().__init__(timeout=timeout)
     
+    async def interaction_check(self, interaction: discord.Interaction):
+        return interaction.user.id == self.ctx.author.id
+
     @discord.ui.select(cls=discord.ui.Select,
                        options=[
                            discord.SelectOption(label=label)
@@ -182,7 +191,7 @@ class DailyQuestView(discord.ui.View):
                        style=discord.ButtonStyle.secondary)
     async def switch_quest_completion(self, interaction: discord.Interaction,
                                 button: discord.ui.Button):
-        complete_message = await database.get_settings(cog.bot.database, ctx.author,
+        complete_message = await database.get_settings(self.cog.bot.database, ctx.author,
                                              'complete_message')
         if complete_message == 'Enabled':
             await database.set_settings(self.cog.bot.database, self.ctx.author,
