@@ -4,6 +4,7 @@ import aiohttp
 import random
 import os.path
 import io
+import typing
 
 
 class Nft(commands.Cog):
