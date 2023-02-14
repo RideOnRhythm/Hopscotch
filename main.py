@@ -73,6 +73,8 @@ async def main():
     await bot.load_extension('cogs.music')
     await bot.load_extension('cogs.nft')
     await bot.load_extension('cogs.settings')
+    await bot.load_extension('cogs.hardcode')
+    await bot.load_extension('cogs.daily_challenge')
     bot.database = await database.load_json()
     await bot.start(os.getenv('token'))
 

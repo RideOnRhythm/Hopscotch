@@ -3,10 +3,12 @@ import os
 import discord
 import time
 import asyncio
+import openai
 from dotenv import load_dotenv
 from chatgpt_wrapper import ChatGPT
 
 load_dotenv()
+openai.api_key = os.getenv('openai')
 
 
 class Ai(commands.Cog):
@@ -40,13 +42,25 @@ class Ai(commands.Cog):
                 temp = await ctx.send(content='> Generating response...')
                 timer = time.time()
 
-                async for chunk in self.gpt.ask_stream(msg.content):
-                    response += chunk
-                    if time.time() - timer >= 3:
-                        timer = time.time()
-                        await temp.edit(content=f'> Generating response...\n\n{response}')
-                    
-                await temp.edit(content=response)
+                try:
+                    async for chunk in self.gpt.ask_stream(msg.content):
+                        response += chunk
+                        if time.time() - timer >= 3:
+                            timer = time.time()
+                            await temp.edit(content=f'> Generating response...\n\n{response}')
+                    await temp.edit(content=response)
+                except:
+                    response = openai.Completion.create(
+                        model='text-davinci-003'.
+                        prompt=f'The following is a conversation with an AI chatbot. The chatbot is helpful, creative, clever, very friendly, and also humorous.\n\nHuman: {prompt}\nAI:',
+                        temperature=0.9,
+                        max_tokens=150,
+                        top_p=1,
+                        frequency_penalty=0.0,
+                        presence_penalty=0.6,
+                        stop=['AI:']
+                    )
+                    await temp.edit(content=response)
 
     @commands.hybrid_command()
     async def disable_ai(self, ctx):

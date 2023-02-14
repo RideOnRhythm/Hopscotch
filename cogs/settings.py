@@ -85,11 +85,11 @@ class GameThemeView(discord.ui.View):
         member_locks[self.ctx.author] = True
         embed = await settings_embed(self.cog, self.ctx)
         await interaction.response.edit_message(embed=embed,
-                                                view=SettingsView(
+                                                view=C4SettingsView(
                                                     self.cog, self.ctx))
 
 
-class SettingsView(discord.ui.View):
+class C4SettingsView(discord.ui.View):
 
     def __init__(self, cog, ctx, timeout=180):
         self.cog = cog
@@ -138,7 +138,7 @@ class Settings(commands.Cog):
     @commands.command()
     async def settings(self, ctx):
         embed = await settings_embed(self, ctx)
-        await ctx.send(embed=embed, view=SettingsView(self, ctx))
+        await ctx.send(embed=embed, view=C4SettingsView(self, ctx))
 
 
 async def setup(bot):

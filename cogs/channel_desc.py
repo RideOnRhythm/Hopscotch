@@ -16,6 +16,7 @@ class ChannelDesc(commands.Cog):
         self.vc_counter.start()
         self.role_saver.start()
         self.lottery.start()
+        self.daily_challenge.start()
 
     @tasks.loop(hours=1)
     async def lottery(self):
@@ -195,6 +196,18 @@ class ChannelDesc(commands.Cog):
                                          time.time(),
                                          'last_saved_roles_unix',
                                          increment=False)
+
+    @tasks.loop(hours=1)
+    async def daily_challenge(self):
+        last_unix = await database.get_other_attribute(self.bot.database,
+                                                       'last_daily_challenge_unix')
+        if last_unix is not None:
+            dt = datetime.datetime.fromtimestamp(last_unix)
+            if dt.date() == datetime.datetime.now().date():
+                return
+        
+        await database.set_other_attribute(self.bot.database, 300, 'current_daily_required_msg')
+        await database.set_other_attribute(self.bot.database, time.time(), 'last_daily_challenge_unix')
 
     @commands.command()
     async def save_roles(self, ctx):
