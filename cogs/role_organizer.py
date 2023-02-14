@@ -34,7 +34,7 @@ async def name_colors_embed(cog, ctx):
     role_string = f'<@&{current_role}>'
     if current_role == 1002843836927721522:
         role_string = '<@&1002843836927721522> (Default)'
-    embed.description = f'__**Editing Name Colors**__\n**Currently using**: {role_string}\n\n**A** ― <@&999924337882697728>\n**B** ― <@&999924519592534146>\n**C** ― <@&999924445319798935>\n**D** ― <@&1025730412003209236>\n**E** ― <@&999924808500379739>\n**F** ― <@&1025732223216914473>\n**G** ― <@&999924745069936660>\n**H** ― <@&1026791699361562684>\n**I** ― <@&1002843836927721522>'
+    embed.description = f'__**Editing Name Colors**__\n**Currently using**: {role_string}\n\n**A** ― <@&999924337882697728>\n**B** ― <@&999924519592534146>\n**C** ― <@&999924445319798935>\n**D** ― <@&1025730412003209236>\n**E** ― <@&999924808500379739>\n**F** ― <@&1025732223216914473>\n**G** ― <@&999924745069936660>\n**H** ― <@&1026791699361562684>\n**I** ― <@&1002843836927721522>\n'
 
     inventory = await database.get_attribute(cog.bot.database, ctx.author,
                                              'inventory')
@@ -54,7 +54,7 @@ async def name_colors_embed(cog, ctx):
         for id in filter(lambda item: item['id'] in roles, inventory)
     ]
     for ind, role in enumerate(inventory_roles):
-        embed.description += f'**{string.ascii_uppercase[8:][ind]}** ― <@&{role}>\n'
+        embed.description += f'**{string.ascii_uppercase[9:][ind]}** ― <@&{role}>\n'
 
     embed.description += '\n> To change the name color you are currently using, type and send the letter of the name color you want. Note that you can only have ONE color at once. Selecting another one will change the current one you\'re using.'
     return embed
