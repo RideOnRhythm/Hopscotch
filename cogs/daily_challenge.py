@@ -33,7 +33,7 @@ class DailyChallenge(commands.Cog):
             return
         
         message_counters = await database.get_other_attribute(self.bot.database, 'daily_message_counts')
-        if message.author not in message_counters:
+        if str(message.author.id) not in message_counters:
             await database.set_daily_message(self.bot.database, message.author, 1, increment=False)
         else:
             await database.set_daily_message(self.bot.database, message.author, 1)

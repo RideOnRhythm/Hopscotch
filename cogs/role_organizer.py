@@ -34,7 +34,7 @@ async def name_colors_embed(cog, ctx):
     role_string = f'<@&{current_role}>'
     if current_role == 1002843836927721522:
         role_string = '<@&1002843836927721522> (Default)'
-    embed.description = f'__**Editing Name Colors**__\n**Currently using**: {role_string}\n\n**A** ― <@&999924337882697728>\n**B** ― <@&999924519592534146>\n**C** ― <@&999924445319798935>\n**D** ― <@&1025730412003209236>\n**E** ― <@&999924808500379739>\n**F** ― <@&1025732223216914473>\n**G** ― <@&999924745069936660>\n**H** ― <@&1002843836927721522>\n'
+    embed.description = f'__**Editing Name Colors**__\n**Currently using**: {role_string}\n\n**A** ― <@&999924337882697728>\n**B** ― <@&999924519592534146>\n**C** ― <@&999924445319798935>\n**D** ― <@&1025730412003209236>\n**E** ― <@&999924808500379739>\n**F** ― <@&1025732223216914473>\n**G** ― <@&999924745069936660>\n**H** ― <@&1026791699361562684>\n**I** ― <@&1002843836927721522>'
 
     inventory = await database.get_attribute(cog.bot.database, ctx.author,
                                              'inventory')
@@ -88,7 +88,7 @@ async def school_roles_embed(cog, ctx):
     for ind, role in enumerate(special_pe):
         embed.description += f'{string.ascii_uppercase[5:][ind]} ― <@&{role}>'
         if role in [r.id for r in ctx.author.roles]:
-            embed.description += ' **CURRENTLY USING'
+            embed.description += ' **CURRENTLY USING**'
         embed.description += '\n'
 
     embed.description += '\n> To add Section/Honors Class/Special PE roles, type and send the letter of the Section/Honors Class/Special PE roles you want. Note that Sections and Special PE roles can only have ONE role at once. Selecting another one will change the current one you\'re using.'
@@ -155,6 +155,9 @@ class DefaultView(discord.ui.View):
         self.cog = cog
         self.ctx = ctx
         super().__init__(timeout=timeout)
+
+    async def interaction_check(self, interaction: discord.Interaction):
+        return interaction.user.id == self.ctx.author.id
 
     @discord.ui.button(label='Name Colors',
                        style=discord.ButtonStyle.secondary)
