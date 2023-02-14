@@ -319,6 +319,7 @@ class ConnectFourAI:
                 break
         else:
             self.gameboard[0, num - 1] = color
+        self.move_count += 1
 
     def is_full(self, num):
         return self.gameboard[5, num - 1] != 0
