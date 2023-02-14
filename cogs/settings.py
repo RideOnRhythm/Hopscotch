@@ -8,7 +8,7 @@ from assets import database
 member_locks = {}
 
 
-async def settings_embed(cog, ctx):
+async def c4_settings_embed(cog, ctx):
     embed = discord.Embed(title='Settings',
                           color=discord.Color.random(),
                           timestamp=datetime.datetime.now())
@@ -25,6 +25,20 @@ async def settings_embed(cog, ctx):
 **Show Column Number**: {number_row}
 
 > To change your theme, select a button below.
+        '''
+
+    return embed
+
+
+async def quest_settings_embed(cog, ctx):
+    embed = discord.Embed(title='Settings',
+                          color=discord.Color.random(),
+                          timestamp=datetime.datetime.now())
+
+    complete_message = await database.get_settings(cog.bot.database, ctx.author,
+                                             'complete_message')
+    embed.description = f'''__**Quest Settings**__
+**Send a message when Daily Challenge is completed**: {complete_message}
         '''
 
     return embed
@@ -83,7 +97,7 @@ class GameThemeView(discord.ui.View):
     async def back(self, interaction: discord.Interaction,
                    button: discord.ui.Button):
         member_locks[self.ctx.author] = True
-        embed = await settings_embed(self.cog, self.ctx)
+        embed = await c4_settings_embed(self.cog, self.ctx)
         await interaction.response.edit_message(embed=embed,
                                                 view=C4SettingsView(
                                                     self.cog, self.ctx))
@@ -95,6 +109,20 @@ class C4SettingsView(discord.ui.View):
         self.cog = cog
         self.ctx = ctx
         super().__init__(timeout=timeout)
+
+    @discord.ui.select(cls=discord.ui.Select,
+                       options=[
+                           discord.SelectOption(label=label)
+                           for label in ('C4 Settings', 'Quest Settings')
+                       ])
+    async def select(self, interaction: discord.Interaction,
+                          select: discord.ui.Select):
+        if select.values[0] == 'C4 Settings':
+            embed = await c4_settings_embed(self.cog, self.ctx)
+            await interaction.response.edit_message(embed=embed, view=C4SettingsView(self.cog, self.ctx))
+        elif select.values[0] == 'Quest Settings':
+            embed = await quest_settings_embed(self.cog, self.ctx)
+            await interaction.response.edit_message(embed=embed, view=DailyQuestView(self.cog, self.ctx))
 
     @discord.ui.button(label='Edit Game Theme',
                        style=discord.ButtonStyle.secondary)
@@ -130,6 +158,44 @@ class C4SettingsView(discord.ui.View):
                 'Enabled Show Column Number.')
 
 
+class DailyQuestView(discord.ui.View):
+    def __init__(self, cog, ctx, timeout=180):
+        self.cog = cog
+        self.ctx = ctx
+        super().__init__(timeout=timeout)
+    
+    @discord.ui.select(cls=discord.ui.Select,
+                       options=[
+                           discord.SelectOption(label=label)
+                           for label in ('C4 Settings', 'Quest Settings')
+                       ])
+    async def select(self, interaction: discord.Interaction,
+                          select: discord.ui.Select):
+        if select.values[0] == 'C4 Settings':
+            embed = await c4_settings_embed(self.cog, self.ctx)
+            await interaction.response.edit_message(embed=embed, view=C4SettingsView(self.cog, self.ctx))
+        elif select.values[0] == 'Quest Settings':
+            embed = await quest_settings_embed(self.cog, self.ctx)
+            await interaction.response.edit_message(embed=embed, view=DailyQuestView(self.cog, self.ctx))
+    
+    @discord.ui.button(label='Switch Quest Completion Message',
+                       style=discord.ButtonStyle.secondary)
+    async def switch_quest_completion(self, interaction: discord.Interaction,
+                                button: discord.ui.Button):
+        complete_message = await database.get_settings(cog.bot.database, ctx.author,
+                                             'complete_message')
+        if complete_message == 'Enabled':
+            await database.set_settings(self.cog.bot.database, self.ctx.author,
+                                        'Disabled', 'complete_message')
+            await interaction.response.send_message(
+                'Disabled Quest Completion Message.')
+        elif complete_message == 'Disabled':
+            await database.set_settings(self.cog.bot.database, self.ctx.author,
+                                        'Enabled', 'complete_message')
+            await interaction.response.send_message(
+                'Enabled Quest Completion Message.')
+
+
 class Settings(commands.Cog):
 
     def __init__(self, bot):
@@ -137,7 +203,7 @@ class Settings(commands.Cog):
 
     @commands.command()
     async def settings(self, ctx):
-        embed = await settings_embed(self, ctx)
+        embed = await c4_settings_embed(self, ctx)
         await ctx.send(embed=embed, view=C4SettingsView(self, ctx))
 
 

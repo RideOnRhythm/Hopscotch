@@ -129,4 +129,4 @@ dmypy.json
 .pyre/
 
 database.json
-nft_list.txt
+# nft_list.txt

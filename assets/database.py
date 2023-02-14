@@ -61,7 +61,8 @@ presets = {
     'settings': {
         'c4gametheme': 'Default',
         'c4extremetheme': 'Default',
-        'number_row': 'Disabled'
+        'number_row': 'Disabled',
+        'complete_message': 'Disabled'
     }
 }
 
@@ -259,8 +260,11 @@ async def set_daily_message(database, member, value, increment=True):
         database['daily_message_counts'][str(member.id)] = value
 
 
-async def get_daily_message(database, member):
-    return database['daily_message_counts'][str(member.id)]
+async def set_daily_reward(database, member, value, increment=True):
+    if increment:
+        database['daily_quest_rewards'][str(member.id)] += value
+    else:
+        database['daily_quest_rewards'][str(member.id)] = value
 
 
 async def save_json(data):
