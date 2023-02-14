@@ -205,7 +205,7 @@ class ConnectFour:
             game_theme = self.bot.database['members'][str(
                 self.turn.id)]['settings']['c4extremetheme']
             theme_map = {
-                'Default': ':c4_fire:',
+                'Default': '<a:c4_fire:1056116673419157694>',
                 'Sakura': '<:THEME_sakura:1065929561419825162>',
                 'Pink-Blue': '<a:THEME_colorful:1065931156685606973>',
                 'Anika In Space': '<:THEME_anika:1073873897360982076>',

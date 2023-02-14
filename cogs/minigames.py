@@ -149,7 +149,7 @@ class SelectMemberView(discord.ui.View):
                         self.ctx.author].turn]])
                 if self.cog.games[
                         self.ctx.author].gamemode == Gamemode.SWIFTPLAY:
-                    embed.description += f'\n**TIME LEFT:** {str(discord.utils.get(self.cog.bot.emojis, name="5secondtimer"))}'
+                    embed.description += f'\n**TIME LEFT:** {str(discord.utils.get(self.cog.bot.emojis, name="5secondtimer"))}\n\n**Game:**\n{self.cog.games[self.ctx.author].print_board()}'
                 embed.description += f'🔵 ― {self.cog.games[self.ctx.author].red.mention}\n🟡 ― {self.cog.games[self.ctx.author].yellow.mention}\n\n**Game:**\n{self.cog.games[self.ctx.author].print_board()}'
             embed.set_footer(
                 text=f'Move Count: {self.cog.games[self.ctx.author].move_count}'
