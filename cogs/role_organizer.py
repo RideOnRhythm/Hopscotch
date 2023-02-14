@@ -47,6 +47,7 @@ async def name_colors_embed(cog, ctx):
         'lightyellow': 999924635648938034,
         'lightgreen': 1025732311888711750,
         'darkblue': 1025730320865173635,
+        'lightpink': 1072390959846928494,
         'legend': 1041704006709411880
     }
     inventory_roles = [
@@ -200,6 +201,7 @@ class DefaultView(discord.ui.View):
                 'lightyellow': 999924635648938034,
                 'lightgreen': 1025732311888711750,
                 'darkblue': 1025730320865173635,
+                'lightpink': 1072390959846928494,
                 'legend': 1041704006709411880
             }
             inventory_roles = [
@@ -656,6 +658,7 @@ class RoleOrganizer(commands.Cog):
                     'lightyellow': 999924635648938034,
                     'lightgreen': 1025732311888711750,
                     'darkblue': 1025730320865173635,
+                    'lightpink': 1072390959846928494,
                     'legend': 1041704006709411880
                 }
                 for i in one_at_once_groups:
