@@ -2,6 +2,7 @@ from discord.ext import commands
 from assets import database
 import discord
 import datetime
+import asyncio
 import string
 
 name_colors_locks = set([])
@@ -9,16 +10,17 @@ school_locks = set([])
 pronoun_locks = set([])
 gaming_locks = set([])
 server_locks = set([])
+sleep = 0.5
 
 
 async def roles_embed():
-    embed = discord.Embed(title='Roles', timestamp=datetime.datetime.now())
+    embed = discord.Embed(title='Roles', timestamp=datetime.datetime.now(), color=discord.Color.random())
     embed.description = '__**Select a category:**__\n> Click on a button below to select the category you want to configure.'
     return embed
 
 
 async def name_colors_embed(cog, ctx):
-    embed = discord.Embed(title='Roles', timestamp=datetime.datetime.now())
+    embed = discord.Embed(title='Roles', timestamp=datetime.datetime.now(), color=discord.Color.random())
 
     colors = [
         999924337882697728, 999924519592534146, 999924445319798935,
@@ -59,7 +61,7 @@ async def name_colors_embed(cog, ctx):
 
 
 async def school_roles_embed(cog, ctx):
-    embed = discord.Embed(title='Roles', timestamp=datetime.datetime.now())
+    embed = discord.Embed(title='Roles', timestamp=datetime.datetime.now(), color=discord.Color.random())
     embed.description = '**__Editing Section/Honors Class/Special PE__**\n\n'
 
     sections = [858224685686325268, 858224260856938518, 858224148248788996]
@@ -94,7 +96,7 @@ async def school_roles_embed(cog, ctx):
 
 
 async def pronouns_embed(cog, ctx):
-    embed = discord.Embed(title='Roles', timestamp=datetime.datetime.now())
+    embed = discord.Embed(title='Roles', timestamp=datetime.datetime.now(), color=discord.Color.random())
     embed.description = '**__Editing Pronouns__**\n'
 
     pronouns = [858166817938997248, 858166818615197696, 858166819046031381]
@@ -109,7 +111,7 @@ async def pronouns_embed(cog, ctx):
 
 
 async def gaming_embed(cog, ctx):
-    embed = discord.Embed(title='Roles', timestamp=datetime.datetime.now())
+    embed = discord.Embed(title='Roles', timestamp=datetime.datetime.now(), color=discord.Color.random())
     embed.description = '**__Editing Gaming__**\n'
 
     gaming = [
@@ -127,7 +129,7 @@ async def gaming_embed(cog, ctx):
 
 
 async def server_embed(cog, ctx):
-    embed = discord.Embed(title='Roles', timestamp=datetime.datetime.now())
+    embed = discord.Embed(title='Roles', timestamp=datetime.datetime.now(), color=discord.Color.random())
     embed.description = '**__Editing Announcements/Events/and more__**\n'
 
     server = [
@@ -158,6 +160,7 @@ class DefaultView(discord.ui.View):
                        style=discord.ButtonStyle.secondary)
     async def name_colors(self, interaction: discord.Interaction,
                           button: discord.ui.Button):
+        await asyncio.sleep(sleep)
         if self.ctx.author in name_colors_locks:
             name_colors_locks.remove(self.ctx.author)
         else:
@@ -242,6 +245,7 @@ class DefaultView(discord.ui.View):
                        style=discord.ButtonStyle.secondary)
     async def school_roles(self, interaction: discord.Interaction,
                            button: discord.ui.Button):
+        await asyncio.sleep(sleep)
         name_colors_locks.add(self.ctx.author)
         if self.ctx.author in school_locks:
             school_locks.remove(self.ctx.author)
@@ -363,6 +367,7 @@ class DefaultView(discord.ui.View):
     @discord.ui.button(label='Pronouns', style=discord.ButtonStyle.secondary)
     async def pronouns(self, interaction: discord.Interaction,
                        button: discord.ui.Button):
+        await asyncio.sleep(sleep)
         name_colors_locks.add(self.ctx.author)
         school_locks.add(self.ctx.author)
         if self.ctx.author in pronoun_locks:
@@ -423,6 +428,7 @@ class DefaultView(discord.ui.View):
     @discord.ui.button(label='Gaming', style=discord.ButtonStyle.secondary)
     async def gaming(self, interaction: discord.Interaction,
                      button: discord.ui.Button):
+        await asyncio.sleep(sleep)
         name_colors_locks.add(self.ctx.author)
         school_locks.add(self.ctx.author)
         pronoun_locks.add(self.ctx.author)
@@ -486,6 +492,7 @@ class DefaultView(discord.ui.View):
                        style=discord.ButtonStyle.secondary)
     async def server(self, interaction: discord.Interaction,
                      button: discord.ui.Button):
+        await asyncio.sleep(sleep)
         name_colors_locks.add(self.ctx.author)
         school_locks.add(self.ctx.author)
         pronoun_locks.add(self.ctx.author)

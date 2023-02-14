@@ -321,7 +321,17 @@ class Inventory(commands.Cog):
             'colorchanging': 1,
             'anikainspace': 1,
             'galaxy': 1,
-            'charles': 1
+            'charles': 1,
+            'aqua': 1,
+            'darkblue': 1,
+            'lightmaroon': 1,
+            'lightpurple': 1,
+            'lightred': 1,
+            'lightyellow': 1,
+            'lightgreen': 1,
+            'lightpink': 1,
+            'rosegold': 1,
+            'legend': 1
         }
         original_q = await database.get_items(self.bot.database, ctx.author)
         existing = None
