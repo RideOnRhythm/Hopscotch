@@ -32,19 +32,23 @@ class DailyChallenge(commands.Cog):
         if message.author.bot:
             return
         
+        rewards = await database.get_other_attribute(self.bot.database, 'daily_quest_rewards')
+        required_amount = await database.get_other_attribute(self.bot.database, 'current_daily_required_msg')
         message_counters = await database.get_other_attribute(self.bot.database, 'daily_message_counts')
+        if str(message.author.id) in rewards:
+            return
         if str(message.author.id) not in message_counters:
             await database.set_daily_message(self.bot.database, message.author, 1, increment=False)
         else:
             await database.set_daily_message(self.bot.database, message.author, 1)
 
-        required_amount = await database.get_other_attribute(self.bot.database, 'current_daily_required_msg')
         if await database.get_daily_message(self.bot.database, message.author) >= required_amount:
             rng = random.randint(500, 1000)
             await database.set_daily_reward(self.bot.database, message.author, rng, increment=False)
             await database.set_coins(self.bot.database, message.author, rng)
             complete_message = await database.get_settings(self.bot.database, ctx.author,
-                                             'complete_message')
+                                             'complete_message')    
+            await database.set_daily_message(self.bot.database, message.author, 0, increment=False)
             if complete_message == 'Enabled':
                 await message.reply(f'You have completed today\'s daily challenge and have earned **{rng}** 🪙.')
 
