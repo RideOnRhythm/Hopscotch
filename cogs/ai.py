@@ -49,9 +49,11 @@ class Ai(commands.Cog):
                             timer = time.time()
                             await temp.edit(content=f'> Generating response...\n\n{response}')
                     if 'Your ChatGPT session is not usable.' in response:
+                        await temp.edit(content='Unusable session.')
                         raise Exception
                     await temp.edit(content=response)
-                except:
+                except Exception as e:
+                    await temp.edit(content=str(e))
                     response = openai.Completion.create(
                         model='text-davinci-003',
                         prompt=f'The following is a conversation with an AI chatbot. The chatbot is helpful, creative, clever, very friendly, and humorous.\n\nHuman: {msg.content}\nAI:',
@@ -62,7 +64,7 @@ class Ai(commands.Cog):
                         presence_penalty=0.6,
                         stop=['AI:']
                     )
-                    await temp.edit(content=response)
+                    await temp.edit(content=response['choices'][0]['text'])
 
     @commands.hybrid_command()
     async def disable_ai(self, ctx):
