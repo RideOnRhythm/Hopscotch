@@ -10,7 +10,7 @@ school_locks = set([])
 pronoun_locks = set([])
 gaming_locks = set([])
 server_locks = set([])
-sleep = 0.5
+sleep = 0.75
 
 
 async def roles_embed():
@@ -553,6 +553,18 @@ class DefaultView(discord.ui.View):
             embed = await server_embed(self.cog, self.ctx)
             await temp.edit(embed=embed)
             continue
+            
+    @discord.ui.button(label='Exit', style=discord.ButtonStyle.danger)
+    async def exit(self, interaction: discord.Interaction,
+                   button: discord.ui.Button):
+        name_colors_locks.add(self.ctx.author)
+        school_locks.add(self.ctx.author)
+        pronoun_locks.add(self.ctx.author)
+        gaming_locks.add(self.ctx.author)
+        server_locks.add(self.ctx.author)
+
+        embed = await roles_embed()
+        await interaction.response.edit_message(embed=embed)
 
 
 class RoleOrganizer(commands.Cog):
