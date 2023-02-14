@@ -252,6 +252,17 @@ async def remove_item(database, member, value):
             database['members'][str(member)]['inventory'].remove(i)
 
 
+async def set_daily_message(database, member, value, increment=True):
+    if increment:
+        database['daily_message_counts'][str(member.id)] += value
+    else:
+        database['daily_message_counts'][str(member.id)] = value
+
+
+async def get_daily_message(database, member):
+    return database['daily_message_counts'][str(member.id)]
+
+
 async def save_json(data):
     with open('database.json', 'w') as f:
         json.dump(data, f, indent=4)

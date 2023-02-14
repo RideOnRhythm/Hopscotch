@@ -1,8 +1,7 @@
 from discord.ext import commands
 import discord
 import random
-
-message_counters = {}
+from assets import database
 
 
 class DailyChallenge(commands.Cog):
@@ -12,8 +11,12 @@ class DailyChallenge(commands.Cog):
 
     @commands.command()
     async def quest(self, ctx):
-        embed = discord.Embed(title='Quest')
-        embed.description = 'Required Amount of Messages: '
+        embed = discord.Embed(title='Quest', color=discord.color.og_blurple())
+
+        required_amount = await database.get_other_attribute(self.bot.database, 'current_daily_required_msg')
+        member_amount = await database.get_daily_message(self.bot.database, ctx.author)
+
+        embed.description = f'**__DAILY QUEST__**\n> Send **{required_amount}** messages\n*Resets everyday at 12:00AM'
     
     @commands.Cog.listener()
     async def on_message(self, message):
@@ -21,13 +24,14 @@ class DailyChallenge(commands.Cog):
             return
         
         if message.author not in message_counters:
-            message_counters[message.author] = 1
+            await database.set_daily_message(self.bot.database, message.author, 1, increment=False)
         else:
-            message_counters[message.author] += 1
+            await database.set_daily_message(self.bot.database, message.author, 1)
 
         required_amount = await database.get_other_attribute(self.bot.database, 'current_daily_required_msg')
-        if message_counters[message.author] >= required_amount:
-            pass
+        if await database.get_daily_message(self.bot.database, message.author) >= required_amount:
+            rng = random.randint(500, 1000)
+            await database.set_coins(self.bot.database, message.author, rng)
 
 
 async def setup(bot):

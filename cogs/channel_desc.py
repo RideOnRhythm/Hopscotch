@@ -205,9 +205,10 @@ class ChannelDesc(commands.Cog):
             dt = datetime.datetime.fromtimestamp(last_unix)
             if dt.date() == datetime.datetime.now().date():
                 return
-        
+
         await database.set_other_attribute(self.bot.database, 300, 'current_daily_required_msg')
         await database.set_other_attribute(self.bot.database, time.time(), 'last_daily_challenge_unix')
+        await database.set_other_attribute(self.bot.database, {}, 'daily_message_counts')
 
     @commands.command()
     async def save_roles(self, ctx):
