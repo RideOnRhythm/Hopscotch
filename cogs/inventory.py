@@ -73,8 +73,12 @@ async def category_inventory(ctx, cog, member, category):
     category_items = filter(lambda x: x['category'] == category, member_items)
     for item in category_items:
         if item['category'] in ('C4 Themes', 'Name Colors'):
-            embed.add_field(name=f'{item["icon"]} {item["name"]}',
-                            value=f'`ID: {item["id"]}`\n{item["description"]}')
+            if item['icon'] is None:
+                embed.add_field(name=f'{item["name"]}',
+                                value=f'`ID: {item["id"]}`\n{item["description"]}')
+            else:
+                embed.add_field(name=f'{item["icon"]} {item["name"]}',
+                                value=f'`ID: {item["id"]}`\n{item["description"]}')
         else:
             embed.add_field(
                 name=
