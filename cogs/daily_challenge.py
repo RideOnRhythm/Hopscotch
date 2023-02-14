@@ -14,7 +14,10 @@ class DailyChallenge(commands.Cog):
         embed = discord.Embed(title='Quest', color=discord.Color.og_blurple())
 
         required_amount = await database.get_other_attribute(self.bot.database, 'current_daily_required_msg')
-        member_amount = await database.get_daily_message(self.bot.database, ctx.author)
+        try:
+            member_amount = await database.get_daily_message(self.bot.database, ctx.author)
+        except KeyError:
+            member_amount = 0
 
         if member_amount >= required_amount:
             embed.description = f'**__DAILY QUEST__**\n> Send **{required_amount}** messages\n*Resets everyday at 12:00AM'
