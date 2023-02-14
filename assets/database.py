@@ -51,6 +51,7 @@ presets = {
     'impossible_ai_win': 0,
     'impossible_ai_win_streak': 0,
     'ai_coin_count': 0,
+    'ai_gem_count': 0,
     'total_vc_minutes': 0,
     'last_message_unix': None,
     'last_message_channel_id': None,
