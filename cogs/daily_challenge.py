@@ -11,7 +11,7 @@ class DailyChallenge(commands.Cog):
 
     @commands.command()
     async def quest(self, ctx):
-        embed = discord.Embed(title='Quest', color=discord.color.og_blurple())
+        embed = discord.Embed(title='Quest', color=discord.Color.og_blurple())
 
         required_amount = await database.get_other_attribute(self.bot.database, 'current_daily_required_msg')
         member_amount = await database.get_daily_message(self.bot.database, ctx.author)

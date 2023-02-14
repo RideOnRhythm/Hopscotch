@@ -84,7 +84,7 @@ async def school_roles_embed(cog, ctx):
             embed.description += ' **CURRENTLY USING**'
         embed.description += '\n'
 
-    embed.description += '\n**Special PE**: (You can only have 1 Special PE role)**:\n'
+    embed.description += '\n**Special PE**: (You can only have 1 Special PE role):\n'
     for ind, role in enumerate(special_pe):
         embed.description += f'{string.ascii_uppercase[5:][ind]} ― <@&{role}>'
         if role in [r.id for r in ctx.author.roles]:
@@ -553,7 +553,7 @@ class DefaultView(discord.ui.View):
             embed = await server_embed(self.cog, self.ctx)
             await temp.edit(embed=embed)
             continue
-            
+
     @discord.ui.button(label='Exit', style=discord.ButtonStyle.danger)
     async def exit(self, interaction: discord.Interaction,
                    button: discord.ui.Button):
