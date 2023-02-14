@@ -19,14 +19,86 @@ cached_forecast = None
 cache_time = None
 
 
+def utilities_embed():
+    embed = discord.Embed(title='Hopscotch Commands',
+                          description='''**__Utilities__**
+**Showimage** - Sends an image according to your search query.
+`j.showimage (text)`, `j.showpic (text)`, `j.sp (text)`
+
+**Dictionary** - Defines the word you searched for.
+`j.dictionary (word)`, `j.dict (word)`, `j.dic (word)`, `j.d (word)`
+
+**Weather** - Sends the current weather information.
+`j.weather`
+
+**Active Now** - Shows the active members in the server. 
+`j.activenow`, `j.active_now`, `j.active`, `j.acn`, `j.ac`
+
+**Members** - Shows the list of all the members and if they are active or not.
+`j.members`, `j.member`, `j.m`
+
+**To-Do List** - Edit and customize your own To-Do List!
+`j.todolist`, `j.tdl`
+> To add: `j.tdl (message)`
+> To remove: `jtdld (message)`
+
+**Events** - Sends a list of ongoing and upcoming events.
+`j.events`
+
+**Roles** - Customize and edit the roles you currently have.
+`j.roles`
+
+**Chat w/ an AI** - Ask questions or chat for fun with an AI
+`j.ai (message)`
+
+**Settings** - Customize settings to your fit!
+`j.settings`''',
+                          color=discord.Color.red())
+    return embed
+
+
 def minigames_embed():
     embed = discord.Embed(title='Hopscotch Commands',
-                          description='''**__Minigames__**
-**Connect Four** - Connect four dots to win.
+                          description='''**__Minigames & Fun__**
+**Connect Four** - Play connect four against an AI or with other members!
 `j.connectfour`, `j.c4`, `j.connect4`
 
 **Coinflip** - Make a bet with your opponent using a coin!
-`j.coinflip`, `j.cf`''',
+`j.coinflip`, `j.cf`
+
+**Shop** - Buy something from our shop! (pls uwu)
+`j.shop`
+> To buy: `j.buy (item) (quantity *OPTIONAL)` 
+
+**Quests** - Check available quests and earn rewards!
+`j.quest`
+
+**"NFT" Generator** - Send a funny image from over 700+ "nfts"!
+`j.nft`''',
+                          color=discord.Color.red())
+    return embed
+
+
+def school_embed():
+    embed = discord.Embed(title='Hopscotch Commands',
+                          description='''**__School__**
+**Schedule** - Send the class schedule.
+`j.schedule`, `j.sched`
+
+**Reminders** - Sends the list of homeworks, requirements, exams, and so much more!
+`j.reminders`, `j.rm`,
+
+**Cut Nails Reminder** - Get reminded to cut your nails!
+`j.nails`
+
+**School Staff List and Contact Information** - Sends a list of all the school teachers and staff with their email addresses.
+`j.contact_information`, `j.ci`
+
+**Notes** - Easily access notes provided by server members!
+`j.notes`
+
+**School Calendar** - Easily access the school calendar without having to visit the school website.
+`j.calendar`''',
                           color=discord.Color.red())
     return embed
 
@@ -34,32 +106,17 @@ def minigames_embed():
 def statistics_embed():
     embed = discord.Embed(title='Hopscotch Commands',
                           description='''**__Statistics__**
-**Profile** - shows if you are active, your level, messages, coins, gems, and games
+**Profile** - Sends a summary of your profile.
 `j.profile`,` j.p`
 
-**Coins** - shows your total coins and gems
+**Coins** - Shows your total coins and gems.
 `j.coins`, `j.c`
 
-**Leaderboard** - shows the top 10 members in the server (categories: coins, level, wins; defaults to coins)
-`j.leaderboard`, `j.lb`, `j.top`⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀example: j.leaderboard coins''',
-                          color=discord.Color.red())
-    return embed
+**Inventory** - Shows the items you currently own.
+`j.inventory`
 
-
-def utilities_embed():
-    embed = discord.Embed(title='Hopscotch Commands',
-                          description='''**__Utilities__**
-**Showimage** - shows an image according to your search
-`j.showimage (text)`, `j.showpic (text)`, `j.sp (text)`
-
-**Dictionary** - tells the definition of a word
-`j.dictionary (word)`, `j.dict (word)`, `j.dic (word)`, `j.d (word)`
-
-**Active Now** - shows the active members and what channel they are in
-`j.activenow`, `j.active_now`, `j.active`, `j.acn`, `j.ac`
-
-**Members** - shows the list of all the chit chatters and eggs and if they are active or not
-`j.members`, `j.member`, `j.m`''',
+**Leaderboard** - Shows the top 10 members in the server.
+`j.leaderboard`, `j.lb`, `j.top`''',
                           color=discord.Color.red())
     return embed
 
@@ -75,20 +132,26 @@ class HelpButtons(discord.ui.View):
     async def interaction_check(self, interaction: discord.Interaction):
         return interaction.user.id == self.author.id
 
-    @discord.ui.button(label="Minigames", style=discord.ButtonStyle.primary)
+    @discord.ui.button(label="Utilities", style=discord.ButtonStyle.secondary)
+    async def utilities_button(self, interaction: discord.Interaction,
+                               button: discord.ui.Button):
+        await interaction.response.edit_message(embed=utilities_embed())
+
+    @discord.ui.button(label="Minigames & Fun",
+                       style=discord.ButtonStyle.secondary)
     async def minigames_button(self, interaction: discord.Interaction,
                                button: discord.ui.Button):
         await interaction.response.edit_message(embed=minigames_embed())
 
-    @discord.ui.button(label="Statistics", style=discord.ButtonStyle.primary)
+    @discord.ui.button(label="School", style=discord.ButtonStyle.secondary)
+    async def school_button(self, interaction: discord.Interaction,
+                            button: discord.ui.Button):
+        await interaction.response.edit_message(embed=school_embed())
+
+    @discord.ui.button(label="Statistics", style=discord.ButtonStyle.secondary)
     async def statistics_button(self, interaction: discord.Interaction,
                                 button: discord.ui.Button):
         await interaction.response.edit_message(embed=statistics_embed())
-
-    @discord.ui.button(label="Utilities", style=discord.ButtonStyle.primary)
-    async def utilities_button(self, interaction: discord.Interaction,
-                               button: discord.ui.Button):
-        await interaction.response.edit_message(embed=utilities_embed())
 
 
 async def get_forecast_async():
@@ -138,7 +201,7 @@ class WeatherView(discord.ui.View):
         embed = discord.Embed(
             title='Forecast Weather Conditions',
             description=
-            '*Data from [https://www.pagasa.dost.gov.ph/](https://www.pagasa.dost.gov.ph/)*',
+            '> All data and information belong to [PAGASA](https://www.pagasa.dost.gov.ph/).',
             color=discord.Color.dark_teal())
         embed.add_field(name='Place',
                         value=location_forecast.find_all('td')[0].text)
@@ -263,7 +326,7 @@ class Utilities(commands.Cog):
 
     @commands.hybrid_command()
     async def help(self, ctx):
-        await ctx.send(embed=minigames_embed(), view=HelpButtons(ctx.author))
+        await ctx.send(embed=utilities_embed(), view=HelpButtons(ctx.author))
         await database.set_attribute(self.bot.database, ctx.author, 1,
                                      'command_count')
 
@@ -294,7 +357,7 @@ class Utilities(commands.Cog):
         embed = discord.Embed(
             title='Forecast Weather Conditions',
             description=
-            '*Data from [https://www.pagasa.dost.gov.ph/](https://www.pagasa.dost.gov.ph/)*',
+            '> All data and information belong to [PAGASA](https://www.pagasa.dost.gov.ph/).',
             color=discord.Color.dark_teal())
         embed.add_field(name='Place',
                         value=location_forecast.find_all('td')[0].text)

@@ -19,7 +19,7 @@ async def get_mee6_level(member):
             return player_level
 
 
-class FirstPageView(discord.ui.View):
+class DefaultSelectView(discord.ui.View):
 
     def __init__(self,
                  author: typing.Union[discord.Member, discord.User],
@@ -31,17 +31,29 @@ class FirstPageView(discord.ui.View):
         self.cog = cog
         super().__init__(timeout=timeout)
 
-    @discord.ui.button(label="← Back", style=discord.ButtonStyle.primary)
-    async def first_button(self, interaction: discord.Interaction,
-                           button: discord.ui.Button):
-        embed = await UserProfile.first_page(self.cog, self.member)
-        await interaction.response.edit_message(embed=embed,
-                                                view=SecondPageView(
-                                                    self.author, self.member,
-                                                    self.cog))
+    @discord.ui.select(cls=discord.ui.Select,
+                       options=[
+                           discord.SelectOption(label=label)
+                           for label in ('Profile Summary',
+                                         '[BOT] C4 Statistics',
+                                         '[BOT] CF Statistics')
+                       ])
+    async def page_select(self, interaction: discord.Interaction,
+                          select: discord.ui.Select):
+        if select.values[0] == 'Profile Summary':
+            embed = await UserProfile.profile_summary(self.cog, self.member)
+            view = DefaultSelectView(self.author, self.member, self.cog)
+        elif select.values[0] == '[BOT] C4 Statistics':
+            embed = await UserProfile.first_page_c4_statistics(
+                self.cog, self.member)
+            view = C4FirstPageView(self.author, self.member, self.cog)
+        elif select.values[0] == '[BOT] CF Statistics':
+            embed = await UserProfile.cf_statistics(self.cog, self.member)
+            view = DefaultSelectView(self.author, self.member, self.cog)
+        await interaction.response.edit_message(embed=embed, view=view)
 
 
-class SecondPageView(discord.ui.View):
+class C4FirstPageView(discord.ui.View):
 
     def __init__(self,
                  author: typing.Union[discord.Member, discord.User],
@@ -53,14 +65,76 @@ class SecondPageView(discord.ui.View):
         self.cog = cog
         super().__init__(timeout=timeout)
 
-    @discord.ui.button(label="Next Page →", style=discord.ButtonStyle.primary)
-    async def second_button(self, interaction: discord.Interaction,
-                            button: discord.ui.Button):
-        embed = await UserProfile.second_page(self.cog, self.member)
-        await interaction.response.edit_message(embed=embed,
-                                                view=FirstPageView(
-                                                    self.author, self.member,
-                                                    self.cog))
+    @discord.ui.button(label='Next →', style=discord.ButtonStyle.secondary)
+    async def next_page(self, interaction: discord.Interaction,
+                        button: discord.ui.Button):
+        embed = await UserProfile.second_page_c4_statistics(
+            self.cog, self.member)
+        view = C4SecondPageView(self.author, self.member, self.cog)
+        await interaction.response.edit_message(embed=embed, view=view)
+
+    @discord.ui.select(cls=discord.ui.Select,
+                       options=[
+                           discord.SelectOption(label=label)
+                           for label in ('Profile Summary',
+                                         '[BOT] C4 Statistics',
+                                         '[BOT] CF Statistics')
+                       ])
+    async def page_select(self, interaction: discord.Interaction,
+                          select: discord.ui.Select):
+        if select.values[0] == 'Profile Summary':
+            embed = await UserProfile.profile_summary(self.cog, self.member)
+            view = DefaultSelectView(self.author, self.member, self.cog)
+        elif select.values[0] == '[BOT] C4 Statistics':
+            embed = await UserProfile.first_page_c4_statistics(
+                self.cog, self.member)
+            view = C4FirstPageView(self.author, self.member, self.cog)
+        elif select.values[0] == '[BOT] CF Statistics':
+            embed = await UserProfile.cf_statistics(self.cog, self.member)
+            view = DefaultSelectView(self.author, self.member, self.cog)
+        await interaction.response.edit_message(embed=embed, view=view)
+
+
+class C4SecondPageView(discord.ui.View):
+
+    def __init__(self,
+                 author: typing.Union[discord.Member, discord.User],
+                 member,
+                 cog,
+                 timeout=180):
+        self.author = author
+        self.member = member
+        self.cog = cog
+        super().__init__(timeout=timeout)
+
+    @discord.ui.button(label='← Back', style=discord.ButtonStyle.secondary)
+    async def isekai_page(self, interaction: discord.Interaction,
+                          button: discord.ui.Button):
+        embed = await UserProfile.first_page_c4_statistics(
+            self.cog, self.member)
+        view = C4FirstPageView(self.author, self.member, self.cog)
+        await interaction.response.edit_message(embed=embed, view=view)
+
+    @discord.ui.select(cls=discord.ui.Select,
+                       options=[
+                           discord.SelectOption(label=label)
+                           for label in ('Profile Summary',
+                                         '[BOT] C4 Statistics',
+                                         '[BOT] CF Statistics')
+                       ])
+    async def page_select(self, interaction: discord.Interaction,
+                          select: discord.ui.Select):
+        if select.values[0] == 'Profile Summary':
+            embed = await UserProfile.profile_summary(self.cog, self.member)
+            view = DefaultSelectView(self.author, self.member, self.cog)
+        elif select.values[0] == '[BOT] C4 Statistics':
+            embed = await UserProfile.first_page_c4_statistics(
+                self.cog, self.member)
+            view = C4FirstPageView(self.author, self.member, self.cog)
+        elif select.values[0] == '[BOT] CF Statistics':
+            embed = await UserProfile.cf_statistics(self.cog, self.member)
+            view = DefaultSelectView(self.author, self.member, self.cog)
+        await interaction.response.edit_message(embed=embed, view=view)
 
 
 class UserProfile(commands.Cog):
@@ -69,7 +143,7 @@ class UserProfile(commands.Cog):
         self.bot = bot
         self.member_last_message = {}
 
-    async def first_page(self, member):
+    async def profile_summary(self, member):
         embed = discord.Embed(color=discord.Colour.random(
             seed=member.display_name))
         if member.avatar is not None:
@@ -144,8 +218,6 @@ class UserProfile(commands.Cog):
             mee6_level = await get_mee6_level(member)
         except IndexError:
             mee6_level = 0
-        current_xp = await database.get_attribute(self.bot.database, member,
-                                                  'current_xp')
         total_messages = await database.get_attribute(self.bot.database,
                                                       member, 'total_messages')
         if total_messages >= 1000:
@@ -154,25 +226,38 @@ class UserProfile(commands.Cog):
                                                       member, 'total_vc_hours')
         command_count = await database.get_attribute(self.bot.database, member,
                                                      'command_count')
+        positive_coin_count = await database.get_attribute(
+            self.bot.database, member, 'positive_coin_count')
+        negative_coin_count = await database.get_attribute(
+            self.bot.database, member, 'negative_coin_count')
+        positive_gem_count = await database.get_attribute(
+            self.bot.database, member, 'positive_gem_count')
+        negative_gem_count = await database.get_attribute(
+            self.bot.database, member, 'negative_gem_count')
 
         embed.description = f'**Rank**: {rank}\n**Icons**: {icon}\n'
         embed.description += f'''{active_string}
         
 **__Levels__**
-**HOPS LEVEL**: Level {hopscotch_level} ({current_xp}XP/{5 * hopscotch_level ** 2}XP)
+**HOPS LEVEL**: Level {hopscotch_level}
 **MEE6 LEVEL**: Level {mee6_level}
 
 **__Server Statistics__**
-- You have sent approximately **{total_messages}** messages. (6/26/2021 onwards)
-- You have spent a total of **{total_vc_hours}** hours in voice channels. (1/7/2023 onwards)
-- You have sent a total of **{command_count}** Hopscotch commands. (1/7/2023 onwards)
-> **Information here may not be accurate.**
+- You have sent approximately **{total_messages}** messages. 
+- You have spent **{total_vc_hours}** hours in voice channels. (1/7/23 onwards) 
+> **Information listed above may not be accurate.**
 
-**Roles Last Saved**: <t:{int(last_saved)}>'''
-        embed.set_footer(text='Page 1/2')
+**__Hopscotch Statistics__**
+- You have sent a total of **{command_count}** Hopscotch commands. 
+- You have spent **₱0** on Hopscotch Purchases.
+- You have earned **{positive_coin_count}** :coin: and **{positive_gem_count}** 💎.
+- You have spent/lost **{negative_coin_count}** :coin: and **{negative_gem_count}** 💎.
+
+**Roles Last Saved**: <t:{int(last_saved)}>
+*Your roles will be automtically added back upon re-joining!'''
         return embed
 
-    async def second_page(self, member):
+    async def first_page_c4_statistics(self, member):
         embed = discord.Embed(color=discord.Colour.random(
             seed=member.display_name))
         if member.avatar is not None:
@@ -182,14 +267,6 @@ class UserProfile(commands.Cog):
             embed.set_author(name=f'{member.display_name}\'s profile')
 
         await database.initialize_member(self.bot.database, member)
-        positive_coin_count = await database.get_attribute(
-            self.bot.database, member, 'positive_coin_count')
-        negative_coin_count = await database.get_attribute(
-            self.bot.database, member, 'negative_coin_count')
-        positive_gem_count = await database.get_attribute(
-            self.bot.database, member, 'positive_gem_count')
-        negative_gem_count = await database.get_attribute(
-            self.bot.database, member, 'negative_gem_count')
         normal_c4_count = await database.get_attribute(self.bot.database,
                                                        member,
                                                        'normal_c4_count')
@@ -223,12 +300,6 @@ class UserProfile(commands.Cog):
             self.bot.database, member, 'swift_c4_win_streak')
         swift_c4_coin_count = await database.get_attribute(
             self.bot.database, member, 'swift_c4_coin_count')
-        cf_count = await database.get_attribute(self.bot.database, member,
-                                                'cf_count')
-        cf_win_count = await database.get_attribute(self.bot.database, member,
-                                                    'cf_win_count')
-        cf_coin_count = await database.get_attribute(self.bot.database, member,
-                                                     'cf_coin_count')
         normal_streak = ''
         extreme_streak = ''
         invisible_streak = ''
@@ -264,35 +335,156 @@ class UserProfile(commands.Cog):
         else:
             swift_winrate = int(swift_c4_win_count / swift_c4_count * 100)
 
-        embed.description = f'''**__Hopscotch Statistics__**
-- You have earned a total of **{positive_coin_count}** :coin:. 
-- You have earned a total of **{positive_gem_count}** :gem:.
-------------------
-- You have used/lost a total of **{negative_coin_count}** :coin:. 
-- You have used/lost a total of **{negative_gem_count}** :gem:.
+        embed.description = f'''**__Hopscotch C4 Statistics__**
 
-**__Hopscotch C4 Statistics__**
+**Normal Games**
 - You have played a total of **{normal_c4_count}** normal games.
 - You have won **{normal_c4_win_count}** normal games. (Winrate: **{normal_winrate}%**)
 - You have earned a total of **{normal_c4_coin_count}** :coin: from normal games.{normal_streak}
-------------------
+
+**Extreme Games**
 - You have played a total of **{extreme_c4_count}** extreme games.
 - You have won **{extreme_c4_win_count}** extreme games. (Winrate: **{extreme_winrate}%**)
 - You have earned a total of **{extreme_c4_coin_count}** :coin: from extreme games.{extreme_streak}
-------------------
+
+**Invisible Games**
 - You have played a total of **{invisible_c4_count}** invisible games.
 - You have won **{invisible_c4_win_count}** invisible games. (Winrate: **{invisible_winrate}%**)
 - You have earned a total of **{invisible_c4_coin_count}** :coin: from invisible games.{invisible_streak}
-------------------
+
+**Swiftplay Games**
 - You have played a total of **{swift_c4_count}** swiftplay games.
 - You have won **{swift_c4_win_count}** swiftplay games. (Winrate: **{swift_winrate}%**)
-- You have earned a total of **{swift_c4_coin_count}** :coin: from swiftplay games.{swift_streak}
+- You have earned a total of **{swift_c4_coin_count}** :coin: from swiftplay games.{swift_streak}'''
+        embed.set_footer(text='Page 1/2')
+        return embed
 
+    async def second_page_c4_statistics(self, member):
+        embed = discord.Embed(color=discord.Colour.random(
+            seed=member.display_name))
+        if member.avatar is not None:
+            embed.set_author(name=f'{member.display_name}\'s profile',
+                             icon_url=member.avatar.url)
+        else:
+            embed.set_author(name=f'{member.display_name}\'s profile')
+
+        await database.initialize_member(self.bot.database, member)
+        easy_ai_count = await database.get_attribute(self.bot.database, member, 'easy_ai_count')
+        easy_ai_win = await database.get_attribute(self.bot.database, member, 'easy_ai_win')
+        easy_ai_win_streak = await database.get_attribute(self.bot.database, member, 'easy_ai_win_streak')
+        normal_ai_count = await database.get_attribute(self.bot.database, member, 'normal_ai_count')
+        normal_ai_win = await database.get_attribute(self.bot.database, member, 'normal_ai_win')
+        normal_ai_win_streak = await database.get_attribute(self.bot.database, member, 'normal_ai_win_streak')
+        medium_ai_count = await database.get_attribute(self.bot.database, member, 'medium_ai_count')
+        medium_ai_win = await database.get_attribute(self.bot.database, member, 'medium_ai_win')
+        medium_ai_win_streak = await database.get_attribute(self.bot.database, member, 'medium_ai_count')
+        hard_ai_count = await database.get_attribute(self.bot.database, member, 'hard_ai_count')
+        hard_ai_win = await database.get_attribute(self.bot.database, member, 'hard_ai_win')
+        hard_ai_win_streak = await database.get_attribute(self.bot.database, member, 'hard_ai_win_streak')
+        expert_ai_count = await database.get_attribute(self.bot.database, member, 'expert_ai_count')
+        expert_ai_win = await database.get_attribute(self.bot.database, member, 'expert_ai_win')
+        expert_ai_win_streak = await database.get_attribute(self.bot.database, member, 'expert_ai_win_streak')
+        impossible_ai_count = await database.get_attribute(self.bot.database, member, 'impossible_ai_count')
+        impossible_ai_win = await database.get_attribute(self.bot.database, member, 'impossible_ai_win')
+        impossible_ai_win_streak = await database.get_attribute(self.bot.database, member, 'impossible_ai_win_streak')
+        ai_coin_count = await database.get_attribute(self.bot.database, member, 'ai_coin_count')
+        ai_gem_count = await database.get_attribute(self.bot.database, member, 'ai_gem_count')
+        easy_ai_streak = ''
+        normal_ai_streak = ''
+        medium_ai_streak = ''
+        hard_ai_streak = ''
+        expert_ai_streak = ''
+        impossible_ai_streak = ''
+        if easy_ai_win_streak > 0:
+            easy_ai_streak += f'\n*You currently have a {easy_ai_win_streak} winstreak!*'
+        if normal_ai_win_streak > 0:
+            normal_ai_streak += f'\n*You currently have a {normal_ai_win_streak} winstreak!*'
+        if medium_ai_win_streak > 0:
+            medium_ai_streak += f'\n*You currently have a {medium_ai_win_streak} winstreak!*'
+        if hard_ai_win_streak > 0:
+            hard_ai_streak += f'\n*You currently have a {hard_ai_win_streak} winstreak!*'
+        if expert_ai_win_streak > 0:
+            expert_ai_streak += f'\n*You currently have a {expert_ai_win_streak} winstreak!*'
+        if impossible_ai_win_streak > 0:
+            impossible_ai_streak += f'\n*You currently have a {impossible_ai_win_streak} winstreak!*'
+        if easy_ai_count == 0:
+            easy_ai_winrate = int(easy_ai_win /
+                                    (easy_ai_count + 1) * 100)
+        else:
+            easy_ai_winrate = int(easy_ai_win /
+                                    easy_ai_count * 100)
+        if normal_ai_count == 0:
+            normal_ai_winrate = int(normal_ai_win /
+                                    (normal_ai_count + 1) * 100)
+        else:
+            normal_ai_winrate = int(normal_ai_win /
+                                    normal_ai_count * 100)
+        if medium_ai_count == 0:
+            medium_ai_winrate = int(medium_ai_win /
+                                    (medium_ai_count + 1) * 100)
+        else:
+            medium_ai_winrate = int(medium_ai_win /
+                                    medium_ai_count * 100)
+        if hard_ai_count == 0:
+            hard_ai_winrate = int(hard_ai_win /
+                                    (hard_ai_count + 1) * 100)
+        else:
+            hard_ai_winrate = int(hard_ai_win /
+                                    hard_ai_count * 100)
+        if expert_ai_count == 0:
+            expert_ai_winrate = int(expert_ai_win /
+                                    (expert_ai_count + 1) * 100)
+        else:
+            expert_ai_winrate = int(expert_ai_win /
+                                    expert_ai_count * 100)
+        if impossible_ai_count == 0:
+            impossible_ai_winrate = int(impossible_ai_win /
+                                    (impossible_ai_count + 1) * 100)
+        else:
+            impossible_ai_winrate = int(impossible_ai_win /
+                                    impossible_ai_count * 100)
+        embed.description = f'''**__Hopscotch C4 (VS AI Games) Statistics__**
+
+**Easy**: **{easy_ai_count}** games played, **{easy_ai_win}** wins. (Winrate: **{easy_ai_winrate}%**){easy_ai_streak}
+**Normal**: **{normal_ai_count}** games played, **{normal_ai_win}** wins. (Winrate: **{normal_ai_winrate}%**){normal_ai_streak}
+**Medium**: **{medium_ai_count}** games played, **{medium_ai_win}** wins. (Winrate: **{medium_ai_winrate}%**){medium_ai_streak}
+**Hard**: **{hard_ai_count}** games played, **{hard_ai_win}** wins. (Winrate: **{hard_ai_winrate}%**){hard_ai_streak}
+**Expert**: **{expert_ai_count}** games played, **{expert_ai_win}** wins. (Winrate: **{expert_ai_winrate}%**){expert_ai_streak}
+**Impossible**: **{impossible_ai_count}** games played, **{impossible_ai_win}** wins. (Winrate: **{impossible_ai_winrate}%**){impossible_ai_streak}
+
+- You have earned a total of **{ai_coin_count}** :coin: and **{ai_gem_count}** :gem: from C4 (VS AI Games).'''
+        embed.set_footer(text='Page 2/2')
+        return embed
+
+    
+    async def cf_statistics(self, member):
+        embed = discord.Embed(color=discord.Colour.random(
+            seed=member.display_name))
+        if member.avatar is not None:
+            embed.set_author(name=f'{member.display_name}\'s profile',
+                             icon_url=member.avatar.url)
+        else:
+            embed.set_author(name=f'{member.display_name}\'s profile')
+
+        await database.initialize_member(self.bot.database, member)
+        cf_count = await database.get_attribute(self.bot.database, member,
+                                                'cf_count')
+        cf_win_count = await database.get_attribute(self.bot.database, member,
+                                                    'cf_win_count')
+        cf_coin_count = await database.get_attribute(self.bot.database, member,
+                                                     'cf_coin_count')
+        if cf_count == 0:
+            cf_winrate = int(cf_win_count /
+                                  (cf_count + 1) * 100)
+        else:
+            cf_winrate = int(cf_win_count / cf_count *
+                                  100)
+        
+        embed.description = f'''
 **__Hopscotch CF Statistics__**
 - You have played a total of **{cf_count}** games.
-- You have won **{cf_win_count}** games.
+- You have won **{cf_win_count}** games. (Winrate: **{cf_winrate}**)
 - You have earned a total of **{cf_coin_count}** :coin:.'''
-        embed.set_footer(text='Page 2/2')
         return embed
 
     @commands.command(aliases=tuple('p'))
@@ -308,15 +500,9 @@ class UserProfile(commands.Cog):
                 )
                 return
 
-        if member == 2:
-            member = ctx.author
-            embed = await self.second_page(member)
-            await ctx.send(embed=embed,
-                           view=FirstPageView(ctx.author, member, self))
-        else:
-            embed = await self.first_page(member)
-            await ctx.send(embed=embed,
-                           view=SecondPageView(ctx.author, member, self))
+        embed = await self.profile_summary(member)
+        await ctx.send(embed=embed,
+                       view=DefaultSelectView(ctx.author, member, self))
         await database.set_attribute(self.bot.database, ctx.author, 1,
                                      'command_count')
         await database.set_xp(self.bot.database, ctx.author, 1)

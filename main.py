@@ -6,9 +6,22 @@ import os
 from assets import database
 from dotenv import load_dotenv
 
+
+class HopscotchBot(commands.Bot):
+
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+    async def is_owner(self, user: discord.User):
+        if user.id in [member.id for member in self.application.team.members]:
+            return True
+
+        return await super().is_owner(user)
+
+
 load_dotenv()
 discord.utils.setup_logging(level=logging.INFO, root=False)
-bot = commands.Bot(command_prefix=('j.', 'J.', 'j,', 'J,', 'j', 'J'),
+bot = HopscotchBot(command_prefix=('j.', 'J.', 'j,', 'J,', 'j', 'J'),
                    case_insensitive=True,
                    intents=discord.Intents.all(),
                    help_command=None)
@@ -21,16 +34,8 @@ async def fix_database(ctx):
         return
     await ctx.send('Fixing database...')
     await database.create_nonexistent_keys(bot.database)
+    await database.create_settings(bot.database)
     await ctx.send('Done')
-
-
-@bot.command(aliases=('eval', '÷*', 'calc', 'calculate'))
-async def evaluate(ctx, *, expression):
-    if ctx.author.id not in (748388929631289436, 556307832241389581,
-                             994223267462258688):
-        return
-    b = eval(expression)
-    await ctx.send(b)
 
 
 @bot.command()
@@ -40,28 +45,6 @@ async def sync_tree(ctx):
         return
     await bot.tree.sync()
     await ctx.send('Synced')
-
-
-@bot.command()
-async def reload(ctx):
-    if ctx.author.id not in (748388929631289436, 556307832241389581,
-                             994223267462258688):
-        return
-    try:
-        await bot.reload_extension('cogs.user_profile')
-        await bot.reload_extension('cogs.stats')
-        await bot.reload_extension('cogs.minigames')
-        await bot.reload_extension('cogs.role_organizer')
-        # await bot.reload_extension('cogs.utilities')
-        await bot.reload_extension('cogs.grab_fun')
-        await bot.reload_extension('cogs.school')
-        await bot.reload_extension('cogs.inventory')
-        await bot.reload_extension('cogs.ai')
-        await bot.reload_extension('jishaku')
-    except Exception as e:
-        raise e
-    bot.database = await database.load_json()
-    await ctx.send('Done reloading')
 
 
 @bot.event
@@ -76,17 +59,22 @@ async def on_command_error(ctx, error):
 
 
 async def main():
+    await bot.load_extension('jishaku')
+    await bot.load_extension('cogs.utilities')
     await bot.load_extension('cogs.user_profile')
     await bot.load_extension('cogs.stats')
     await bot.load_extension('cogs.minigames')
     await bot.load_extension('cogs.role_organizer')
-    await bot.load_extension('cogs.utilities')
     await bot.load_extension('cogs.channel_desc')
     await bot.load_extension('cogs.grab_fun')
     await bot.load_extension('cogs.school')
     await bot.load_extension('cogs.inventory')
     await bot.load_extension('cogs.ai')
-    await bot.load_extension('jishaku')
+    await bot.load_extension('cogs.music')
+    await bot.load_extension('cogs.nft')
+    await bot.load_extension('cogs.settings')
+    await bot.load_extension('cogs.hardcode')
+    await bot.load_extension('cogs.daily_challenge')
     bot.database = await database.load_json()
     await bot.start(os.getenv('token'))
 

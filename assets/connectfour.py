@@ -123,6 +123,7 @@ def is_terminal_node(board):
 
 
 def minimax(board, depth, alpha, beta, maximizingPlayer):
+    x = 7
     valid_locations = get_valid_locations(board)
     is_terminal = is_terminal_node(board)
     if depth == 0 or is_terminal:
@@ -143,10 +144,11 @@ def minimax(board, depth, alpha, beta, maximizingPlayer):
             b_copy = board.copy()
             drop_piece(b_copy, row, col, AI_PIECE)
             if hash(tuple([tuple(row) for row in b_copy])) not in transpo:
-                new_score = minimax(b_copy, depth - 1, alpha, beta, False)[1]
+                new_score = minimax(b_copy, depth - 1, alpha, beta,
+                                    False)[1] + random.randint(-x, x)
             else:
-                new_score = transpo[hash(tuple([tuple(row)
-                                                for row in b_copy]))]
+                new_score = transpo[hash(tuple([tuple(row) for row in b_copy
+                                                ]))] + random.randint(-x, x)
             if new_score > value:
                 value = new_score
                 column = col
@@ -163,10 +165,11 @@ def minimax(board, depth, alpha, beta, maximizingPlayer):
             b_copy = board.copy()
             drop_piece(b_copy, row, col, PLAYER_PIECE)
             if hash(tuple([tuple(row) for row in b_copy])) not in transpo:
-                new_score = minimax(b_copy, depth - 1, alpha, beta, True)[1]
+                new_score = minimax(b_copy, depth - 1, alpha, beta,
+                                    True)[1] + random.randint(-x, x)
             else:
-                new_score = transpo[hash(tuple([tuple(row)
-                                                for row in b_copy]))]
+                new_score = transpo[hash(tuple([tuple(row) for row in b_copy
+                                                ]))] + random.randint(-x, x)
             if new_score < value:
                 value = new_score
                 column = col
@@ -198,11 +201,40 @@ class ConnectFour:
         self.move_count = 0
 
     def print_board(self):
+        if self.gamemode == Gamemode.EXTREME:
+            game_theme = self.bot.database['members'][str(
+                self.turn.id)]['settings']['c4extremetheme']
+            theme_map = {
+                'Default': ':c4_fire:',
+                'Sakura': '<:THEME_sakura:1065929561419825162>',
+                'Pink-Blue': '<a:THEME_colorful:1065931156685606973>',
+                'Anika In Space': '<:THEME_anika:1073873897360982076>',
+                'Galaxy': '<:THEME_galaxy:1073875133925699624>',
+                'Charles': '<:THEME_charles:1073876973824266351>'
+            }
+        else:
+            game_theme = self.bot.database['members'][str(
+                self.turn.id)]['settings']['c4gametheme']
+            theme_map = {
+                'Default': ':blue_square:',
+                'Sakura': '<:THEME_sakura:1065929561419825162>',
+                'Pink-Blue': '<a:THEME_colorful:1065931156685606973>',
+                'Anika In Space': '<:THEME_anika:1073873897360982076>',
+                'Galaxy': '<:THEME_galaxy:1073875133925699624>',
+                'Charles': '<:THEME_charles:1073876973824266351>'
+            }
         text = ''
         for ind, row in enumerate(self.gameboard):
             for ind2, col in enumerate(row):
-                text += col
+                if col == self.empty:  # fix for custom board theme
+                    text += theme_map[game_theme]
+                else:
+                    text += col
             text += '\n'
+        number_row = self.bot.database['members'][str(
+            self.turn.id)]['settings']['number_row']
+        if number_row == 'Enabled':
+            text += ':one::two::three::four::five::six::seven:'
         return text
 
     def place(self, num, color):
@@ -270,13 +302,13 @@ class ConnectFourAI:
         text = ''
         for ind, row in enumerate(self.gameboard[::-1]):
             for ind2, col in enumerate(row):
-                d = {
-                    0: ':blue_square:',
-                    1: ':red_circle:',
-                    2: ':yellow_circle:'
-                }
+                d = {0: self.empty, 1: ':red_circle:', 2: ':yellow_circle:'}
                 text += d[col]
             text += '\n'
+        number_row = self.bot.database['members'][str(
+            self.user.id)]['settings']['number_row']
+        if number_row == 'Enabled':
+            text += ':one::two::three::four::five::six::seven:'
         return text
 
     def place(self, num, color):
