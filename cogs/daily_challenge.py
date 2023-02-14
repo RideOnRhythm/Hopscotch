@@ -19,7 +19,7 @@ class DailyChallenge(commands.Cog):
         except KeyError:
             member_amount = 0
 
-        if member_amount >= required_amount:
+        if member_amount < required_amount:
             embed.description = f'**__DAILY QUEST__**\n> Send **{required_amount}** messages\n*Resets everyday at 12:00AM'
         else:
             reward = await database.get_other_attribute(self.bot.database, 'daily_quest_rewards')
