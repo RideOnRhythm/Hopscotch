@@ -48,6 +48,8 @@ class Ai(commands.Cog):
                         if time.time() - timer >= 3:
                             timer = time.time()
                             await temp.edit(content=f'> Generating response...\n\n{response}')
+                    if 'Your ChatGPT session is not usable.' in response:
+                        raise Exception
                     await temp.edit(content=response)
                 except:
                     response = openai.Completion.create(
