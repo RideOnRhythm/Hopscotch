@@ -104,6 +104,22 @@ async def set_coins(database, member, value, increment=True):
     else:
         database['members'][str(member.id)]['coins'] = value
 
+async def set_gems(database, member, value, increment=True):
+    await initialize_member(database, member)
+    if increment:
+        database['members'][str(member.id)]['gems'] = database['members'][str(
+            member.id)]['gems'] + value
+        # Update positive and negative gem counts
+        if value >= 0:
+            database['members'][str(
+                member.id)]['positive_gem_count'] = database['members'][str(
+                    member.id)]['positive_gem_count'] + value
+        else:
+            database['members'][str(
+                member.id)]['negative_gem_count'] = database['members'][str(
+                    member.id)]['negative_gem_count'] + -1 * value
+    else:
+        database['members'][str(member.id)]['gems'] = value
 
 async def lottery_coins(database, member, value, increment=True):
     if increment:
@@ -180,6 +196,13 @@ async def add_reminder(database, value):
 
 async def remove_reminder(database, value):
     database['reminders'].remove(value)
+
+async def add_calendar(database, value):
+    database['calendar'].append(value)
+
+
+async def remove_calendar(database, value):
+    database['calendar'].remove(value)
 
 
 async def add_tdl(database, member, value, attribute):
