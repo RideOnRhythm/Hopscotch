@@ -43,7 +43,7 @@ class DailyChallenge(commands.Cog):
             rng = random.randint(500, 1000)
             await database.set_daily_reward(self.bot.database, message.author, rng, increment=False)
             await database.set_coins(self.bot.database, message.author, rng)
-            complete_message = await database.get_settings(cog.bot.database, ctx.author,
+            complete_message = await database.get_settings(self.bot.database, ctx.author,
                                              'complete_message')
             if complete_message == 'Enabled':
                 await message.reply(f'You have completed today\'s daily challenge and have earned **{rng}** 🪙.')

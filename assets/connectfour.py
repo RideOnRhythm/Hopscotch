@@ -297,6 +297,7 @@ class ConnectFourAI:
         self.empty = empty
         self.difficulty = depth
         self.gameboard = np.zeros((ROW_COUNT, COLUMN_COUNT))
+        self.move_count = 0
 
     def print_board(self):
         text = ''
