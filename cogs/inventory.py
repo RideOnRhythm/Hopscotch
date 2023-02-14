@@ -72,7 +72,7 @@ async def category_inventory(ctx, cog, member, category):
     member_items = await database.get_items(cog.bot.database, member)
     category_items = filter(lambda x: x['category'] == category, member_items)
     for item in category_items:
-        if item['category'] == 'C4 Themes':
+        if item['category'] in ('C4 Themes', 'Name Colors'):
             embed.add_field(name=f'{item["icon"]} {item["name"]}',
                             value=f'`ID: {item["id"]}`\n{item["description"]}')
         else:

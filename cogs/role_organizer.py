@@ -50,7 +50,7 @@ async def name_colors_embed(cog, ctx):
         'legend': 1041704006709411880
     }
     inventory_roles = [
-        roles.get(id)
+        roles.get(id['id'])
         for id in filter(lambda item: item['id'] in roles, inventory)
     ]
     for ind, role in enumerate(inventory_roles):
