@@ -180,17 +180,19 @@ class SelectMemberView(discord.ui.View):
                     if self.cog.games[
                             self.ctx.author].gamemode == Gamemode.SWIFTPLAY:
                         rng = random.randint(100, 200)
+                        gem_rng = random.randint(0, 3)
                         embed = discord.Embed(
                             title=
                             f'{self.cog.games[self.ctx.author].players[0].display_name} and {self.cog.games[self.ctx.author].players[1].display_name}\'s game:',
                             description=
-                            f'You ran out of time! {self.cog.games[self.ctx.author].players[1]} wins the game!\n{rng:,} :coin: has been added to your account.',
+                            f'You ran out of time! {self.cog.games[self.ctx.author].players[1]} wins the game!\n{rng:,} :coin: and {gem_rng} :gem: has been added to your account.',
                             color=self.cog.hexes[self.cog.colors[
                                 self.cog.games[self.ctx.author].turn]])
                         await self.cog.database_operations(
                             self.cog.games[self.ctx.author].players[1],
                             self.cog.games[self.ctx.author].players[0], rng,
                             'swift')
+                        await database.set_gems(self.cog.bot.database, self.cog.games[self.ctx.author].players[1], gem_rng)
                         embed.description += f'Game:\n{self.cog.games[self.ctx.author].print_board()}'
                         await self.ctx.send(embed=embed)
                     temp = self.cog.games[self.ctx.author]
@@ -233,6 +235,7 @@ class SelectMemberView(discord.ui.View):
                     if self.cog.games[msg.author].win_check(
                             self.cog.colors[msg.author]):
                         rng = random.randint(300, 400)
+                        gem_rng = random.randint(0, 5)
                         if self.cog.games[
                                 self.ctx.
                                 author].gamemode == Gamemode.INVISIBLE:
@@ -240,7 +243,7 @@ class SelectMemberView(discord.ui.View):
                                 title=
                                 f'{self.ctx.author.display_name} and {member.display_name}\'s game:',
                                 description=
-                                f'{msg.author.display_name} has **won!**\n{rng:,} :coin: has been added to your account.\n\n**Game:**\n{self.cog.games[self.ctx.author].print_board()}',
+                                f'{msg.author.display_name} has **won!**\n{rng:,} :coin: and {gem_rng} :gem: has been added to your account.\n\n**Game:**\n{self.cog.games[self.ctx.author].print_board()}',
                                 color=self.cog.hexes[self.cog.colors[
                                     self.cog.games[self.ctx.author].turn]])
 
@@ -248,21 +251,24 @@ class SelectMemberView(discord.ui.View):
                                 self.cog.games[msg.author].players[1],
                                 self.cog.games[msg.author].players[0], rng,
                                 'invisible')
+                            await database.set_gems(self.cog.bot.database, self.cog.games[self.ctx.author].players[1], gem_rng)
                         elif self.cog.games[
                                 self.ctx.author].gamemode == Gamemode.EXTREME:
                             embed = discord.Embed(
                                 title=
                                 f'{self.ctx.author.display_name} and {member.display_name}\'s game:',
                                 description=
-                                f'{msg.author.display_name} has **won!**\n{rng:,} :coin: has been added to your account.\n\n**Game:**\n{self.cog.games[self.ctx.author].print_board()}',
+                                f'{msg.author.display_name} has **won!**\n{rng:,} :coin: and {gem_rng} :gem: has been added to your account.\n\n**Game:**\n{self.cog.games[self.ctx.author].print_board()}',
                                 color=self.cog.hexes[self.cog.colors[
                                     self.cog.games[self.ctx.author].turn]])
                             await self.cog.database_operations(
                                 self.cog.games[msg.author].players[1],
                                 self.cog.games[msg.author].players[0], rng,
                                 'extreme')
+                            await database.set_gems(self.cog.bot.database, self.cog.games[self.ctx.author].players[1], gem_rng)
                         else:
                             rng = random.randint(300, 400)
+                            gem_rng = random.randing(0, 5)
                             embed = discord.Embed(
                                 title=
                                 f'{self.ctx.author.display_name} and {member.display_name}\'s game:',
@@ -274,15 +280,18 @@ class SelectMemberView(discord.ui.View):
                                     self.ctx.
                                     author].gamemode == Gamemode.SWIFTPLAY:
                                 rng = random.randint(100, 200)
+                                gem_rng = random.randint(0, 3)
                                 await self.cog.database_operations(
                                     self.cog.games[msg.author].players[1],
                                     self.cog.games[msg.author].players[0], rng,
                                     'swift')
+                                await database.set_gems(self.cog.bot.database, self.cog.games[self.ctx.author].players[1], gem_rng)
                             else:
                                 await self.cog.database_operations(
                                     self.cog.games[msg.author].players[1],
                                     self.cog.games[msg.author].players[0], rng,
                                     'normal')
+                                await database.set_gems(self.cog.bot.database, self.cog.games[self.ctx.author].players[1], gem_rng)
                         await msg.channel.send(embed=embed)
 
                         temp = self.cog.games[msg.author]
@@ -366,15 +375,17 @@ class SelectMemberView(discord.ui.View):
                     if self.cog.games[
                             self.ctx.author].gamemode == Gamemode.SWIFTPLAY:
                         rng = random.randint(100, 200)
+                        gem_rng = random.randint(0, 3)
                     else:
                         rng = random.randint(300, 400)
+                        gem_rng = random.randint(0, 5)
                     if self.cog.games[
                             self.ctx.author].gamemode == Gamemode.INVISIBLE:
                         embed = discord.Embed(
                             title=
                             f'{self.cog.games[msg.author].players[0].display_name} and {self.cog.games[msg.author].players[1].display_name}\'s game:',
                             description=
-                            f'🔴 ― {self.cog.games[self.ctx.author].red.mention}\n🟡 ― {self.cog.games[self.ctx.author].yellow.mention}\n\n{self.cog.games[msg.author].players[1].display_name} has **won!**\n{rng:,} :coin: has been added to your account.',
+                            f'🔴 ― {self.cog.games[self.ctx.author].red.mention}\n🟡 ― {self.cog.games[self.ctx.author].yellow.mention}\n\n{self.cog.games[msg.author].players[1].display_name} has **won!**\n{rng:,} :coin: and {gem_rng} :gem: has been added to your account.',
                             color=self.cog.hexes[self.cog.colors[
                                 self.cog.games[self.ctx.author].turn]])
                         embed.add_field(name='Game:',
@@ -384,25 +395,27 @@ class SelectMemberView(discord.ui.View):
                             self.cog.games[msg.author].players[1],
                             self.cog.games[msg.author].players[0], rng,
                             'invisible')
+                        await database.set_gems(self.cog.bot.database, self.cog.games[self.ctx.author].players[1], gem_rng)
                     elif self.cog.games[
                             self.ctx.author].gamemode == Gamemode.EXTREME:
                         embed = discord.Embed(
                             title=
                             f'{self.ctx.author.display_name} and {member.display_name}\'s game:',
                             description=
-                            f'{self.cog.games[msg.author].players[1].display_name} has **won!**\n{rng:,} :coin: has been added to your account.\n\n**Game:**\n{self.cog.games[self.ctx.author].print_board()}',
+                            f'{self.cog.games[msg.author].players[1].display_name} has **won!**\n{rng:,} :coin: and {gem_rng} :gem: has been added to your account.\n\n**Game:**\n{self.cog.games[self.ctx.author].print_board()}',
                             color=self.cog.hexes[self.cog.colors[
                                 self.cog.games[self.ctx.author].turn]])
                         await self.cog.database_operations(
                             self.cog.games[msg.author].players[1],
                             self.cog.games[msg.author].players[0], rng,
                             'extreme')
+                        await database.set_gems(self.cog.bot.database, self.cog.games[self.ctx.author].players[1], gem_rng)
                     else:
                         embed = discord.Embed(
                             title=
                             f'{self.ctx.author.display_name} and {member.display_name}\'s game:',
                             description=
-                            f'{self.cog.games[msg.author].players[1].display_name} has **won!**\n{rng:,} :coin: has been added to your account.\n\n**Game:**\n{self.cog.games[self.ctx.author].print_board()}',
+                            f'{self.cog.games[msg.author].players[1].display_name} has **won!**\n{rng:,} :coin: and {gem_rng} :gem: has been added to your account.\n\n**Game:**\n{self.cog.games[self.ctx.author].print_board()}',
                             color=self.cog.hexes[self.cog.colors[
                                 self.cog.games[self.ctx.author].turn]])
                         if self.cog.games[
@@ -412,11 +425,13 @@ class SelectMemberView(discord.ui.View):
                                 self.cog.games[msg.author].players[1],
                                 self.cog.games[msg.author].players[0], rng,
                                 'swift')
+                            await database.set_gems(self.cog.bot.database, self.cog.games[self.ctx.author].players[1], gem_rng)
                         else:
                             await self.cog.database_operations(
                                 self.cog.games[msg.author].players[1],
                                 self.cog.games[msg.author].players[0], rng,
                                 'normal')
+                            await database.set_gems(self.cog.bot.database, self.cog.games[self.ctx.author].players[1], gem_rng)
                     await msg.channel.send(embed=embed)
 
                     temp = self.cog.games[msg.author]
@@ -557,12 +572,54 @@ class RelationshipStatusView(discord.ui.View):
                 self.cog.aigames[msg.author].place(int(msg.content), 1)
 
                 if self.cog.aigames[msg.author].win_check(1):
+                    if difficulty == 1:
+                      coins = random.randint(0, 10)
+                      gems = 0
+                    elif difficulty == 2:
+                      coins = random.randint(10, 15)
+                      gems = 0
+                    elif difficulty == 3:
+                      coins = random.randint(20, 30)
+                      gems = 0
+                    elif difficulty == 4:
+                      coins = random.randint(50, 60)
+                      gems = 0  
+                    elif difficulty == 5:
+                      coins = random.randint(100, 200)
+                      gems = random.randint(0, 5)
+                    elif difficulty == 6:
+                      coins = random.randint(200, 400)
+                      gems = random.randint(0, 10)
+                    coin_text = ''
+                    gem_text = ''
+                    if coins > 0:
+                      coin_text += f'\n{coins} :coin: has been added to your account.'
+                    if gems > 0:
+                      gem_text += f'\n{gems} :gem: has been added to your account.'
                     embed = discord.Embed(
                         title=f'{msg.author.display_name}\'s game:',
                         description=
-                        f'{msg.author.display_name} has **won!**\n\nGame:\n{self.cog.aigames[self.ctx.author].print_board()}',
+                        f'{msg.author.display_name} has **won!**{coin_text}{gem_text}\n\nGame:\n{self.cog.aigames[self.ctx.author].print_board()}',
                         color=0xff0000)
                     await msg.channel.send(embed=embed)
+                    difficulty_mapping = {
+                        1: 'Easy',
+                        2: 'Normal',
+                        3: 'Medium',
+                        4: 'Hard',
+                        5: 'Expert',
+                        6: 'Impossible'
+                    } 
+                    diff = f'{difficulty_mapping[self.cog.aigames[self.ctx.author].difficulty].lower()}_ai_count'
+                    diff_win = f'{difficulty_mapping[self.cog.aigames[self.ctx.author].difficulty].lower()}_ai_win'
+                    diff_streak = f'{diff_win}_streak'
+                    await database.set_attribute(self.cog.bot.database, msg.author, 1, diff)
+                    await database.set_attribute(self.cog.bot.database, msg.author, 1, diff_win)
+                    await database.set_attribute(self.cog.bot.database, msg.author, 1, diff_streak)
+                    await database.set_coins(self.cog.bot.database, msg.author, coins)
+                    await database.set_attribute(self.cog.bot.database, msg.author, coins, 'ai_coin_count')
+                    await database.set_attribute(self.cog.bot.database, msg.author, gems, 'ai_gem_count') 
+                    await database.set_gems(self.cog.bot.database, msg.author, gems)
 
                     self.cog.aigames.pop(msg.author)
                     return
@@ -594,6 +651,10 @@ class RelationshipStatusView(discord.ui.View):
                         description=
                         f'> The AI placed on column {col + 1} and has **won!**\n\nGame:\n{self.cog.aigames[self.ctx.author].print_board()}',
                         color=0xff0000)
+                    diff = f'{difficulty_mapping[self.cog.aigames[self.ctx.author].difficulty].lower()}_ai_count'
+                    diff_streak = f'{difficulty_mapping[self.cog.aigames[self.ctx.author].difficulty].lower()}_ai_win_streak'
+                    await database.set_attribute(self.cog.bot.database, msg.author, 1, diff)
+                    await database.set_attribute(self.cog.bot.database, msg.author, 0, diff_streak, increment=False)
                     if message is None:
                         await msg.channel.send(embed=embed)
                     else:
@@ -608,6 +669,8 @@ class RelationshipStatusView(discord.ui.View):
                         description=
                         f'🔴 ― {msg.author.display_name}\n🟡 ― AI\nThe game has ended in a tie.\n\nGame:\n{self.cog.aigames[self.ctx.author].print_board()}',
                         color=0xff0000)
+                    diff = f'{difficulty_mapping[self.cog.aigames[self.ctx.author].difficulty].lower()}_ai_count'
+                    await database.set_attribute(self.cog.bot.database, msg.author, 1, diff)
                     if message is None:
                         await msg.channel.send(embed=embed)
                     else:
@@ -627,6 +690,10 @@ class RelationshipStatusView(discord.ui.View):
                     f'> The AI has **won!**\n\nGame:\n{self.cog.aigames[self.ctx.author].print_board()}',
                     color=0xff0000)
                 await msg.channel.send(embed=embed)
+                diff = f'{difficulty_mapping[self.cog.aigames[self.ctx.author].difficulty].lower()}_ai_count'
+                diff_streak = f'{difficulty_mapping[self.cog.aigames[self.ctx.author].difficulty].lower()}_ai_win_streak'
+                await database.set_attribute(self.cog.bot.database, msg.author, 1, diff)
+                await database.set_attribute(self.cog.bot.database, msg.author, 0, diff_streak, increment=False)
 
                 self.cog.aigames.pop(msg.author)
                 return
