@@ -187,7 +187,7 @@ class DefaultView(discord.ui.View):
             if self.ctx.author in name_colors_locks:
                 return
 
-            valid_letters = 'ABCDEFGH'
+            valid_letters = 'ABCDEFGHI'
             inventory = await database.get_attribute(self.cog.bot.database,
                                                      self.ctx.author,
                                                      'inventory')
@@ -207,7 +207,7 @@ class DefaultView(discord.ui.View):
                 for id in filter(lambda item: item['id'] in roles, inventory)
             ]
             for ind, role in enumerate(inventory_roles):
-                valid_letters += string.ascii_uppercase[7:][ind]
+                valid_letters += string.ascii_uppercase[9:][ind]
             if msg.content.upper() not in valid_letters:
                 await self.ctx.send('Please send a valid option.')
                 continue
