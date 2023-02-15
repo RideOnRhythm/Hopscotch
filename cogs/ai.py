@@ -49,11 +49,9 @@ class Ai(commands.Cog):
                             timer = time.time()
                             await temp.edit(content=f'> Generating response...\n\n{response}')
                     if 'Your ChatGPT session is not usable.' in response:
-                        await temp.edit(content='Unusable session.')
                         raise Exception
                     await temp.edit(content=response)
                 except Exception as e:
-                    await temp.edit(content=str(e))
                     response = openai.Completion.create(
                         model='text-davinci-003',
                         prompt=f'The following is a conversation with an AI chatbot. The chatbot is helpful, creative, clever, very friendly, and humorous.\n\nHuman: {msg.content}\nAI:',
@@ -73,6 +71,34 @@ class Ai(commands.Cog):
             await ctx.send(f'Ended the conversation with ChatGPT for {ctx.author.mention}.')
         else:
             await ctx.send('You are not currently in a conversation.')
+    
+    @commands.hybrid_command()
+    async def ai(self, ctx, *, prompt):
+        response = ''
+        temp = await ctx.send(content='> Generating response...')
+        timer = time.time()
+
+        try:
+            async for chunk in self.gpt.ask_stream(prompt):
+                response += chunk
+                if time.time() - timer >= 3:
+                    timer = time.time()
+                    await temp.edit(content=f'> Generating response...\n\n{response}')
+            if 'Your ChatGPT session is not usable.' in response:
+                raise Exception
+            await temp.edit(content=response)
+        except Exception as e:
+            response = openai.Completion.create(
+                model='text-davinci-003',
+                prompt=f'The following is a conversation with an AI chatbot. The chatbot is helpful, creative, clever, very friendly, and humorous.\n\nHuman: {prompt}\nAI:',
+                temperature=0.9,
+                max_tokens=150,
+                top_p=1,
+                frequency_penalty=0.0,
+                presence_penalty=0.6,
+                stop=['AI:']
+            )
+            await temp.edit(content=response['choices'][0]['text'])
     
 
 async def setup(bot):

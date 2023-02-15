@@ -65,18 +65,16 @@ def evaluate_window(window, piece):
         opp_piece = AI_PIECE
 
     if window.count(piece) == 4:
-        score += 100
+        score += 1000
     elif window.count(piece) == 3 and window.count(EMPTY) == 1:
         score += 5
-    elif window.count(piece) == 4:
-        score += 1000
     elif window.count(piece) == 2 and window.count(EMPTY) == 2:
         score += 2
 
     if window.count(opp_piece) == 2 and window.count(EMPTY) == 2:
-        score -= 2
+        score -= 5
     elif window.count(opp_piece) == 3 and window.count(EMPTY) == 1:
-        score -= 100
+        score -= 1000
 
     return score
 
@@ -123,7 +121,7 @@ def is_terminal_node(board):
 
 
 def minimax(board, depth, alpha, beta, maximizingPlayer):
-    x = 7
+    x = 3
     valid_locations = get_valid_locations(board)
     is_terminal = is_terminal_node(board)
     if depth == 0 or is_terminal:
