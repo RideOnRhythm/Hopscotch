@@ -20,7 +20,9 @@ class Ai(commands.Cog):
     
     @commands.Cog.listener()
     async def on_ready(self):
+        print('amongus sussy')
         await self.gpt.async_init()
+        print('sussy balls')
 
     @commands.hybrid_command()
     async def enable_ai(self, ctx):
