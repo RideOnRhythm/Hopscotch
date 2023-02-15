@@ -21,10 +21,7 @@ class Ai(commands.Cog):
     @commands.Cog.listener()
     async def on_ready(self):
         print('amongus sussy')
-        try:
-            await self.gpt.async_init()
-        except Exception as e:
-            print(str(e))
+        await self.gpt.async_init()
         print('sussy balls')
 
     @commands.hybrid_command()
