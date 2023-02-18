@@ -11,7 +11,6 @@ EMPTY = 0
 PLAYER_PIECE = 1
 AI_PIECE = 2
 WINDOW_LENGTH = 4
-transpo = {}
 
 
 def drop_piece(board, row, col, piece):
@@ -143,12 +142,8 @@ def minimax(board, depth, alpha, beta, maximizingPlayer):
             row = get_next_open_row(board, col)
             b_copy = board.copy()
             drop_piece(b_copy, row, col, AI_PIECE)
-            if hash(tuple([tuple(row) for row in b_copy])) not in transpo:
-                new_score = minimax(b_copy, depth - 1, alpha, beta,
-                                    False)[1] + random.randint(-x, x)
-            else:
-                new_score = transpo[hash(tuple([tuple(row) for row in b_copy
-                                                ]))] + random.randint(-x, x)
+            new_score = minimax(b_copy, depth - 1, alpha, beta,
+                                False)[1] + random.randint(-x, x)
             if new_score > value:
                 value = new_score
                 column = col
@@ -164,12 +159,8 @@ def minimax(board, depth, alpha, beta, maximizingPlayer):
             row = get_next_open_row(board, col)
             b_copy = board.copy()
             drop_piece(b_copy, row, col, PLAYER_PIECE)
-            if hash(tuple([tuple(row) for row in b_copy])) not in transpo:
-                new_score = minimax(b_copy, depth - 1, alpha, beta,
-                                    True)[1] + random.randint(-x, x)
-            else:
-                new_score = transpo[hash(tuple([tuple(row) for row in b_copy
-                                                ]))] + random.randint(-x, x)
+            new_score = minimax(b_copy, depth - 1, alpha, beta,
+                                True)[1] + random.randint(-x, x)
             if new_score < value:
                 value = new_score
                 column = col
