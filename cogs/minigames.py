@@ -520,6 +520,15 @@ class RelationshipStatusView(discord.ui.View):
             self.cog.aigames[self.ctx.author].user = self.ctx.author
             self.cog.aigames[self.ctx.author].turn = self.ctx.author
 
+            if self.cog.aigames[msg.author].difficulty >= 5:
+                self.cog.aigames[self.ctx.author].turn = None
+                message = await self.ctx.send(
+                    '**The AI is thinking...**\n> Other commands may not respond.'
+                )
+                mover = 'ai'
+                col = self.cog.aigames[msg.author].ai_place()
+                self.cog.aigames[msg.author].place(col + 1, 2)
+                self.cog.aigames[self.ctx.author].turn = self.ctx.author
             embed = discord.Embed(
                 title=f'{self.ctx.author.display_name}\'s AI game:',
                 description=

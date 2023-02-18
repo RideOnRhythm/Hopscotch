@@ -65,16 +65,18 @@ def evaluate_window(window, piece):
         opp_piece = AI_PIECE
 
     if window.count(piece) == 4:
-        score += 1000
+        score += 100
     elif window.count(piece) == 3 and window.count(EMPTY) == 1:
         score += 5
     elif window.count(piece) == 2 and window.count(EMPTY) == 2:
         score += 2
 
     if window.count(opp_piece) == 2 and window.count(EMPTY) == 2:
-        score -= 5
+        score -= 10
     elif window.count(opp_piece) == 3 and window.count(EMPTY) == 1:
-        score -= 1000
+        score -= 20
+    elif window.count(opp_piece) == 4:
+        score -= 100
 
     return score
 
