@@ -669,8 +669,6 @@ class RelationshipStatusView(discord.ui.View):
                         description=
                         f'🔴 ― {msg.author.display_name}\n🟡 ― AI\nThe game has ended in a tie.\n\nGame:\n{self.cog.aigames[self.ctx.author].print_board()}',
                         color=0xff0000)
-                    diff = f'{difficulty_mapping[self.cog.aigames[self.ctx.author].difficulty].lower()}_ai_count'
-                    await database.set_attribute(self.cog.bot.database, msg.author, 1, diff)
                     if message is None:
                         await msg.channel.send(embed=embed)
                     else:
