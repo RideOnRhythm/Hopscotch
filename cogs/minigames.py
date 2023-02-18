@@ -575,21 +575,27 @@ class RelationshipStatusView(discord.ui.View):
                     if difficulty == 1:
                       coins = random.randint(0, 10)
                       gems = 0
+                      xp = 5
                     elif difficulty == 2:
                       coins = random.randint(10, 15)
                       gems = 0
+                      xp = 10
                     elif difficulty == 3:
                       coins = random.randint(20, 30)
                       gems = 0
+                      xp = 15
                     elif difficulty == 4:
                       coins = random.randint(50, 60)
                       gems = 0  
+                      xp = 25
                     elif difficulty == 5:
                       coins = random.randint(100, 200)
                       gems = random.randint(0, 5)
+                      xp = 40
                     elif difficulty == 6:
                       coins = random.randint(200, 400)
                       gems = random.randint(0, 10)
+                      xp = 50
                     coin_text = ''
                     gem_text = ''
                     if coins > 0:
@@ -620,6 +626,7 @@ class RelationshipStatusView(discord.ui.View):
                     await database.set_attribute(self.cog.bot.database, msg.author, coins, 'ai_coin_count')
                     await database.set_attribute(self.cog.bot.database, msg.author, gems, 'ai_gem_count') 
                     await database.set_gems(self.cog.bot.database, msg.author, gems)
+                    await database.set_xp(self.cog.bot.database, msg.author, xp)
 
                     self.cog.aigames.pop(msg.author)
                     return
