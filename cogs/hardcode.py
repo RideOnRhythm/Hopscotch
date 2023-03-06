@@ -7,18 +7,20 @@ async def function_1():
     embed.description = '''Welcome to **Events**! Here we list the active and upcoming events for the server as well as the requirements to participate.
 
 **__Ongoing Events__**
-**GRADE COMPETITION (2nd Quarter - Grade 8)**
-Event Duration: October 24, 2022 - February 6, 2023
+**GRADE COMPETITION (3rd Quarter - Grade 8)**
+Event Duration: January 23, 2023 - March 24, 2023  (Results will be on April 14)
 Requirements: Must be a Chit Chatter.
-Chit Chatter with the best grades in their remeport card wins a mystery prize!
+Chit Chatter with the best grades in their report card wins a mystery prize!
 
-**[SP. EVENT] Mr. Cua "Thank You Letter" in HTML**
-Event Duration: March 3, 2023 - March 11, 2023
-Requirements: Must be a Chit-Chatter 
-Contribute as we create an HTML code for our previous computer teacher, Mr. Cua!
+**[SP. EVT]: Mr. Cua "Thank You Letter" in HTML**
+Event Duration: March 5, 2023 - March 11, 2023
+Requirements: Must be a Chit-Chatter or Mini Chit-Chatter
+Contribute as we create an HTML code for our previous computer teacher, Mr. Cua! 
 
 **__Upcoming Events__**
-**-** There are no upcoming events.
+**GRADE COMPETITION (4th Quarter - Grade 8)**
+Event Duration: March 27, 2023 - June 2, 2023 
+Requirements: Must be a Chit Chatter.
     '''
     return embed
 
