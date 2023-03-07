@@ -64,6 +64,19 @@ class Ai(commands.Cog):
         )
         await temp.edit(content=response['choices'][0]['message']['content'])
     
+    @commands.hybrid_command()
+    async def aicustom(self, ctx, model, *, prompt):
+        response = ''
+        temp = await ctx.send(content='> Generating response...')
+
+        response = openai.ChatCompletion.create(
+            model=model,
+            messages=[
+                {'role': 'user', 'content': prompt}
+            ]
+        )
+        await temp.edit(content=response['choices'][0]['message']['content'])
+    
 
 async def setup(bot):
     await bot.add_cog(Ai(bot))
