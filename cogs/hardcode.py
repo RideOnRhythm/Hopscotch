@@ -91,7 +91,7 @@ class Hardcode(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
 
-    @commands.command(aliases=('event', 'evt')
+    @commands.command(aliases=('event', 'evt'))
     async def events(self, ctx):
         embed = await function_1()
         await ctx.send(embed=embed, view=EventsView())
