@@ -111,7 +111,7 @@ async def schedule(self, section):
     colors = {'violet': 0x8f00ff, 'aqua': 0x00ffff}
     image = {
         'violet':
-        'https://media.discordapp.net/attachments/858167284069302292/1075009649503375411/image.png',
+        'https://media.discordapp.net/attachments/1055814810459193426/1082125418020220968/violet.png',
         'aqua':
         'https://media.discordapp.net/attachments/858167284069302292/1075009672597225472/image.png'
     }
