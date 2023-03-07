@@ -65,17 +65,20 @@ class Ai(commands.Cog):
         await temp.edit(content=response['choices'][0]['message']['content'])
     
     @commands.hybrid_command()
-    async def aicustom(self, ctx, model, *, prompt):
+    async def aicode(self, ctx, *, prompt):
         response = ''
         temp = await ctx.send(content='> Generating response...')
 
-        response = openai.ChatCompletion.create(
-            model=model,
-            messages=[
-                {'role': 'user', 'content': prompt}
-            ]
+        response = openai.Completion.create(
+            model='code-davinci-002',
+            prompt=prompt,
+            temperature=0,
+            max_tokens=256,
+            top_p=1,
+            frequency_penalty=0,
+            presence_penalty=0
         )
-        await temp.edit(content=response['choices'][0]['message']['content'])
+        await temp.edit(content=response['choices'][0]['text'])
     
 
 async def setup(bot):
