@@ -34,19 +34,14 @@ class Ai(commands.Cog):
             else:
                 response = ''
                 temp = await ctx.send(content='> Generating response...')
-                timer = time.time()
 
-                response = openai.Completion.create(
-                    model='text-davinci-003',
-                    prompt=f'The following is a conversation with an AI chatbot. The chatbot is helpful, creative, clever, very friendly, and humorous.\n\nHuman: {msg.content}\nAI:',
-                    temperature=0.9,
-                    max_tokens=150,
-                    top_p=1,
-                    frequency_penalty=0.0,
-                    presence_penalty=0.6,
-                    stop=['AI:']
+                response = openai.ChatCompletion.create(
+                    model='gpt-3.5-turbo',
+                    messages=[
+                        {'role': 'user', 'content': msg.content}
+                    ]
                 )
-                await temp.edit(content=response['choices'][0]['text'])
+                await temp.edit(content=response['choices'][0]['message']['content'])
 
     @commands.hybrid_command()
     async def disable_ai(self, ctx):
@@ -60,19 +55,14 @@ class Ai(commands.Cog):
     async def ai(self, ctx, *, prompt):
         response = ''
         temp = await ctx.send(content='> Generating response...')
-        timer = time.time()
 
-        response = openai.Completion.create(
-            model='text-davinci-003',
-            prompt=f'The following is a conversation with an AI chatbot. The chatbot is helpful, creative, clever, very friendly, and humorous.\n\nHuman: {prompt}\nAI:',
-            temperature=0.9,
-            max_tokens=150,
-            top_p=1,
-            frequency_penalty=0.0,
-            presence_penalty=0.6,
-            stop=['AI:']
+        response = openai.ChatCompletion.create(
+            model='gpt-3.5-turbo',
+            messages=[
+                {'role': 'user', 'content': prompt}
+            ]
         )
-        await temp.edit(content=response['choices'][0]['text'])
+        await temp.edit(content=response['choices'][0]['message']['content'])
     
 
 async def setup(bot):
