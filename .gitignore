@@ -130,3 +130,4 @@ dmypy.json
 
 database.json
 # nft_list.txt
+.env

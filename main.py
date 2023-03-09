@@ -75,6 +75,7 @@ async def main():
     await bot.load_extension('cogs.settings')
     await bot.load_extension('cogs.hardcode')
     await bot.load_extension('cogs.daily_challenge')
+    await bot.load_extension('cogs.news')
     bot.database = await database.load_json()
     await bot.start(os.getenv('token'))
 
