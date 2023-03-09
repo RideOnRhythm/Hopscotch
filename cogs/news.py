@@ -45,7 +45,7 @@ class News(commands.Cog):
             return
         self.latest_quake = quake_info
         
-        # Calculate distance in km and return if the magnitude is less than 5 and the epicenter is more than 500 kilometers away
+        # Calculate distance in km and return if the magnitude is less than 5 and the epicenter is more than 500 kilometers away from Manila
         coords_1 = (float(quake_info['latitude']), float(quake_info['longitude']))
         coords_2 = (14.5995, 120.9842)
         km_distance = geopy.distance.geodesic(coords_1, coords_2).km
