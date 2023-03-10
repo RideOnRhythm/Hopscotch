@@ -79,7 +79,7 @@ class Ai(commands.Cog):
         response = openai.ChatCompletion.create(
             model='gpt-3.5-turbo',
             messages=[
-                {'role': 'user', 'content': prompt}
+                {'role': 'user', 'content': prompt_to_send}
             ]
         )
         await temp.edit(content=response['choices'][0]['message']['content'])
