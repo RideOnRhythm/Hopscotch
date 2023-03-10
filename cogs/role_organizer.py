@@ -70,6 +70,7 @@ async def school_roles_embed(cog, ctx):
     special_pe = [
         1039871025845907526, 1039871059379359774, 1039871334416650320
     ]
+    chinese = [1014844875058982983, 1039452681888083998, 1014845262734311516]
 
     embed.description += '**Sections**: (You can only have 1 Section role)\n'
     for ind, role in enumerate(sections):
@@ -91,8 +92,15 @@ async def school_roles_embed(cog, ctx):
         if role in [r.id for r in ctx.author.roles]:
             embed.description += ' **CURRENTLY USING**'
         embed.description += '\n'
+    
+    embed.description += '\n**Chinese**: (You can only have 1 Chinese role):\n'
+    for ind, role in enumerate(chinese):
+        embed.description += f'{string.ascii_uppercase[5:][ind]} ― <@&{role}>'
+        if role in [r.id for r in ctx.author.roles]:
+            embed.description += ' **CURRENTLY USING**'
+        embed.description += '\n'
 
-    embed.description += '\n> To add Section/Honors Class/Special PE roles, type and send the letter of the Section/Honors Class/Special PE roles you want. Note that Sections and Special PE roles can only have ONE role at once. Selecting another one will change the current one you\'re using.'
+    embed.description += '\n> To add Section/Honors Class/Special PE/Chinese roles, type and send the letter of the Section/Honors Class/Special PE roles you want. Note that Sections and Special PE roles can only have ONE role at once. Selecting another one will change the current one you\'re using.'
     return embed
 
 
@@ -246,7 +254,7 @@ class DefaultView(discord.ui.View):
             await temp.edit(embed=embed)
             continue
 
-    @discord.ui.button(label='Section/Honors Class/Special PE',
+    @discord.ui.button(label='Section/Honors Class/Special PE/Chinese',
                        style=discord.ButtonStyle.secondary)
     async def school_roles(self, interaction: discord.Interaction,
                            button: discord.ui.Button):
@@ -274,7 +282,7 @@ class DefaultView(discord.ui.View):
             if self.ctx.author in school_locks:
                 return
 
-            valid_letters = 'ABCDEFGH'
+            valid_letters = 'ABCDEFGHIJK'
             if msg.content.upper() not in valid_letters:
                 await self.ctx.send('Please send a valid option.')
                 continue
@@ -285,6 +293,9 @@ class DefaultView(discord.ui.View):
             honors_class = [1027097851119013908, 1044512060379254805]
             special_pe = [
                 1039871025845907526, 1039871059379359774, 1039871334416650320
+            ]
+            chinese = [
+                1014844875058982983, 1039452681888083998, 1014845262734311516
             ]
             all_roles = sections + honors_class + special_pe
             current_role = next(
@@ -299,6 +310,9 @@ class DefaultView(discord.ui.View):
             special_current = next(
                 (item for item in [role.id for role in self.ctx.author.roles]
                  if item in special_pe), None)
+            chinese_current = next(
+                (item for item in [role.id for role in self.ctx.author.roles]
+                 if item in chinese), None)
             try:
                 if msg.content.upper() == string.ascii_uppercase[
                         all_roles.index(section_current)]:
@@ -330,6 +344,16 @@ class DefaultView(discord.ui.View):
                     embed = await school_roles_embed(self.cog, self.ctx)
                     await temp.edit(embed=embed)
                     continue
+                elif msg.content.upper() == string.ascii_uppercase[
+                        all_roles.index(chinese_current)]:
+                    await self.ctx.author.remove_roles(
+                        self.ctx.guild.get_role(chinese_current))
+                    await self.ctx.send(
+                        f'Successfully removed role: {self.ctx.guild.get_role(chinese_current).name}!'
+                    )
+                    embed = await school_roles_embed(self.cog, self.ctx)
+                    await temp.edit(embed=embed)
+                    continue
             except ValueError:
                 pass
             if string.ascii_uppercase.index(
@@ -353,6 +377,17 @@ class DefaultView(discord.ui.View):
                     await self.ctx.author.remove_roles(
                         self.ctx.guild.get_role(special_current))
                     category = 'Special PE'
+                    await self.ctx.author.add_roles(new_role)
+                    await self.ctx.send(
+                        f'Successfully changed your {category} to {new_role.name}!'
+                    )
+                    embed = await school_roles_embed(self.cog, self.ctx)
+                    await temp.edit(embed=embed)
+                    continue
+                elif new_role.id in chinese and chinese_current is not None:
+                    await self.ctx.author.remove_roles(
+                        self.ctx.guild.get_role(chinese_current))
+                    category = 'Chinese'
                     await self.ctx.author.add_roles(new_role)
                     await self.ctx.send(
                         f'Successfully changed your {category} to {new_role.name}!'
@@ -625,14 +660,15 @@ class RoleOrganizer(commands.Cog):
             1025730412003209236, 999924808500379739, 1025732223216914473,
             999924745069936660, 1002843836927721522, 858224685686325268,
             858224260856938518, 858224148248788996, 1039871025845907526,
-            1039871059379359774, 1039871334416650320, 1026791699361562684
+            1039871059379359774, 1039871334416650320, 1026791699361562684, 
+            1014844875058982983, 1039452681888083998, 1014845262734311516
         ]
         one_at_once_groups = [[
             999924337882697728, 999924519592534146, 999924445319798935,
             1025730412003209236, 999924808500379739, 1025732223216914473,
             999924745069936660, 1026791699361562684, 1002843836927721522
         ], [858224685686325268, 858224260856938518, 858224148248788996
-            ], [1039871025845907526, 1039871059379359774, 1039871334416650320]]
+            ], [1039871025845907526, 1039871059379359774, 1039871334416650320], [1014844875058982983, 1039452681888083998, 1014845262734311516]]
         added_role = next(
             (role for role in after.roles if role not in before.roles), None)
         hops_dev = after.guild.get_role(934678477825802270)

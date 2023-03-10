@@ -1,5 +1,4 @@
 from discord.ext import commands
-import discord
 import aiohttp
 import time
 from bs4 import BeautifulSoup
