@@ -38,7 +38,6 @@ class Ai(commands.Cog):
                 for m in conversation_history:
                     prompt_to_send += m + '\n\n'
                 prompt_to_send += msg.content
-                print(prompt_to_send)
                 response = openai.ChatCompletion.create(
                     model='gpt-3.5-turbo',
                     messages=[
