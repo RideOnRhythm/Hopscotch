@@ -65,7 +65,9 @@ presets = {
         'c4extremetheme': 'Default',
         'number_row': 'Disabled',
         'complete_message': 'Disabled'
-    }
+    },
+    'hash': None,
+    'security_level': None
 }
 
 

@@ -1,9 +1,9 @@
-from discord.ext import commands
-import aiohttp
 import time
+from discord.ext import commands
+from discord.ext import tasks
+import aiohttp
 from bs4 import BeautifulSoup
 from geopy.geocoders import Nominatim
-from discord.ext import tasks
 import geopy.distance
 
 
