@@ -35,14 +35,17 @@ async def lock_user(guild, member):
     smp_player = guild.get_role(1085464616018120744)
     mc_player = guild.get_role(1085463856995913819)
     tr_player = guild.get_role(1085463960133840948)
+    dev_team = guild.get_role(934678477825802270)
+    mod = guild.get_role(1059763760056782858)
     # A list of the permission roles the member has
-    member_roles = [role for role in [cc_role, mini_cc, smp_player, mc_player, tr_player] if role in member.roles]
+    member_roles = [role for role in [cc_role, mini_cc, smp_player, mc_player, tr_player, dev_team, mod] if role in member.roles]
     cached_roles[member] = member_roles
+    print('cached')
 
     _2fa_role = guild.get_role(1089032862461857893)
     # Removing these roles removes the member's access to all channels
     # The 2FA role will give the member access to a single channel
-    await member.remove_roles(cc_role, mini_cc, smp_player, mc_player, tr_player)
+    await member.remove_roles(*member_roles)
     await member.add_roles(_2fa_role)
 
 
@@ -159,6 +162,7 @@ Super Secure
             await interaction.response.send_message('> You are already logged in.', ephemeral=True)
             return
         
+        # Check the inputted password with the user's hash
         hash = await database.get_attribute(self.bot.database, interaction.user, 'hash')
         bytes = password.encode('utf-8')
         result = bcrypt.checkpw(bytes, hash)
@@ -169,6 +173,7 @@ Super Secure
         
         # Remove the 2FA role from the user and give them back their original roles
         await interaction.user.remove_roles(_2fa_role)
+        print(cached_roles)
         await interaction.user.add_roles(*cached_roles[interaction.user])
     
     @app_commands.command(name='lock')
