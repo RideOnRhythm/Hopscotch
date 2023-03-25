@@ -29,6 +29,23 @@ async def user_password(cog, password, security_level, interaction, og_embed):
     await interaction.response.edit_message(embed=embed, view=None)
 
 
+async def lock_user(guild, member):
+    cc_role = guild.get_role(910723707578753074)
+    mini_cc = guild.get_role(1020889035901780018)
+    smp_player = guild.get_role(1085464616018120744)
+    mc_player = guild.get_role(1085463856995913819)
+    tr_player = guild.get_role(1085463960133840948)
+    # A list of the permission roles the member has
+    member_roles = [role for role in [cc_role, mini_cc, smp_player, mc_player, tr_player] if role in member.roles]
+    cached_roles[member] = member_roles
+
+    _2fa_role = guild.get_role(1089032862461857893)
+    # Removing these roles removes the member's access to all channels
+    # The 2FA role will give the member access to a single channel
+    await member.remove_roles(cc_role, mini_cc, smp_player, mc_player, tr_player)
+    await member.add_roles(_2fa_role)
+
+
 class RegisterView(discord.ui.View):
     def __init__(self, cog, password, og_embed, timeout=180):
         self.cog = cog
@@ -92,20 +109,7 @@ class TwoFactor(commands.Cog):
             }
             # Check if the member has been inactive for an amount of time specified by their security level
             if time.time() - timers[member] >= time_limits[security_level]:
-                cc_role = guild.get_role(910723707578753074)
-                mini_cc = guild.get_role(1020889035901780018)
-                smp_player = guild.get_role(1085464616018120744)
-                mc_player = guild.get_role(1085463856995913819)
-                tr_player = guild.get_role(1085463960133840948)
-                # A list of the permission roles the member has
-                member_roles = [role for role in [cc_role, mini_cc, smp_player, mc_player, tr_player] if role in member.roles]
-                cached_roles[member] = member_roles
-
-                _2fa_role = guild.get_role(1089032862461857893)
-                # Removing these roles removes the member's access to all channels
-                # The 2FA role will give the member access to a single channel
-                await member.remove_roles(cc_role, mini_cc, smp_player, mc_player, tr_player)
-                await member.add_roles(_2fa_role)
+                await lock_user(guild, member)
 
     @commands.hybrid_command(name='2fa')  # Workaround to have a command that starts with a number
     async def _2fa(self, ctx):
@@ -131,9 +135,12 @@ Stay safe!'''
         if password != confirm:
             await interaction.response.send_message('> The password you inputted are not the same. Please try again.', ephemeral=True)
             return
-        if await database.get_attribute(self.bot.database, interaction.user, 'security_level') is not None:
-            await interaction.response.send_message('> You have already registered. If you want to change your password, contact a developer.', ephemeral=True)
-            return
+        try:
+            if await database.get_attribute(self.bot.database, interaction.user, 'security_level') is not None:
+                await interaction.response.send_message('> You have already registered. If you want to change your password, contact a developer.', ephemeral=True)
+                return
+        except KeyError:  # Ignore KeyError as it means the user has not registered
+            pass
         
         embed = discord.Embed(title='2FA Setup', color=discord.Color.random())
         embed.description = '''**Please select the level of security**:
@@ -163,7 +170,10 @@ Super Secure
         # Remove the 2FA role from the user and give them back their original roles
         await interaction.user.remove_roles(_2fa_role)
         await interaction.user.add_roles(*cached_roles[interaction.user])
-
+    
+    @app_commands.command(name='lock')
+    async def lock(self, interaction: discord.Interaction):
+       await lock_user(interaction.guild, interaction.user)
 
     @_2fa_register.error
     async def register_error(self, ctx, error):
