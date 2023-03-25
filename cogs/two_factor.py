@@ -40,7 +40,6 @@ async def lock_user(guild, member):
     # A list of the permission roles the member has
     member_roles = [role for role in [cc_role, mini_cc, smp_player, mc_player, tr_player, dev_team, mod] if role in member.roles]
     cached_roles[member] = member_roles
-    print('cached')
 
     _2fa_role = guild.get_role(1089032862461857893)
     # Removing these roles removes the member's access to all channels
@@ -173,13 +172,19 @@ Super Secure
         
         # Remove the 2FA role from the user and give them back their original roles
         await interaction.user.remove_roles(_2fa_role)
-        print(cached_roles)
         await interaction.user.add_roles(*cached_roles[interaction.user])
     
     @app_commands.command(name='lock')
     async def lock(self, interaction: discord.Interaction):
-       await lock_user(interaction.guild, interaction.user)
-       await interaction.response.send_message('Locked.')
+        try:
+            if await database.get_attribute(self.bot.database, interaction.user, 'security_level') is None:
+                await interaction.response.send_message('> You have not registered. Do `/2fa` for information on how to enable 2FA.', ephemeral=True)
+                return
+        except KeyError:  # Ignore KeyError as it means the user has not registered
+            return
+       
+        await lock_user(interaction.guild, interaction.user)
+        await interaction.response.send_message('Locked.')
 
     @_2fa_register.error
     async def register_error(self, ctx, error):
