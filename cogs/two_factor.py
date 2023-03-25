@@ -68,7 +68,9 @@ class TwoFactor(commands.Cog):
         guild = self.bot.get_guild(763218643843678288)
         non_bot_members = [member for member in guild.members if not member.bot]
         for member in non_bot_members:
-            if  not member.voice.self_mute:
+            if member.voice is None:
+                continue
+            if not member.voice.self_mute:
                 # Reset the timer of the member if they are unmuted
                 timers[member] = time.time()
 
