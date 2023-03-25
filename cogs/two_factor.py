@@ -155,7 +155,7 @@ Super Secure
     @app_commands.command(name='login')
     async def login(self, interaction: discord.Interaction, password: str):
         _2fa_role = interaction.guild.get_role(1089032862461857893)
-        if _2fa_role in interaction.user.roles:
+        if _2fa_role not in interaction.user.roles:
             await interaction.response.send_message('> You are already logged in.', ephemeral=True)
             return
         
