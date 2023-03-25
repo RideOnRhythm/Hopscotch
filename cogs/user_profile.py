@@ -178,7 +178,9 @@ class UserProfile(commands.Cog):
             1063688787722522666:
             str(discord.utils.get(self.bot.emojis, name='ICON_3')),
             1048233290143907900:
-            str(discord.utils.get(self.bot.emojis, name='ICON_1'))
+            str(discord.utils.get(self.bot.emojis, name='ICON_1')),
+            1082306933505130546:
+            str(discord.utils.get(self.bot.emojis, name='ICON_5'))
         }
         icon = ''
         for role in icons:
