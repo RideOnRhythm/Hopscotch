@@ -60,6 +60,8 @@ class RegisterView(discord.ui.View):
 class TwoFactor(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+        self.mute_detector.start()
+        self._2fa_checker.start()
     
     @tasks.loop(seconds=5)
     async def mute_detector(self):
