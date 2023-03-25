@@ -173,6 +173,8 @@ Super Secure
         # Remove the 2FA role from the user and give them back their original roles
         await interaction.user.remove_roles(_2fa_role)
         await interaction.user.add_roles(*cached_roles[interaction.user])
+
+        await interaction.response.send_message('Successfuly logged in.', ephemeral=True)
     
     @app_commands.command(name='lock')
     async def lock(self, interaction: discord.Interaction):
@@ -184,7 +186,7 @@ Super Secure
             return
        
         await lock_user(interaction.guild, interaction.user)
-        await interaction.response.send_message('Locked.')
+        await interaction.response.send_message('Locked.', ephemeral=True)
     
     @app_commands.command(name='disable_2fa')
     async def disable_2fa(self, interaction: discord.Interaction, password: str):
@@ -199,6 +201,8 @@ Super Secure
         # Disable the user's 2FA by setting their 'hash' and 'security_level' to None
         await database.set_attribute(self.bot.database, interaction.user, None, 'hash', increment=False)
         await database.set_attribute(self.bot.database, interaction.user, None, 'security_level', increment=False)
+
+        await interaction.response.send_message('Successfuly disabled 2FA.', ephemeral=True)
 
 
     @_2fa_register.error
