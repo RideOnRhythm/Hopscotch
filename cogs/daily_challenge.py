@@ -46,7 +46,7 @@ class DailyChallenge(commands.Cog):
             rng = random.randint(500, 1000)
             await database.set_daily_reward(self.bot.database, message.author, rng, increment=False)
             await database.set_coins(self.bot.database, message.author, rng)
-            complete_message = await database.get_settings(self.bot.database, ctx.author,
+            complete_message = await database.get_settings(self.bot.database, message.author,
                                              'complete_message')    
             await database.set_daily_message(self.bot.database, message.author, 0, increment=False)
             if complete_message == 'Enabled':
