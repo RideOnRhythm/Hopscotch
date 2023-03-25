@@ -60,13 +60,17 @@ class RegisterView(discord.ui.View):
 class TwoFactor(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
+        self.mute_detector.start()
+        self._2fa_checker.start()
     
     @tasks.loop(seconds=5)
     async def mute_detector(self):
         guild = self.bot.get_guild(763218643843678288)
         non_bot_members = [member for member in guild.members if not member.bot]
         for member in non_bot_members:
-            if  not member.voice.self_mute:
+            if member.voice is None:
+                continue
+            if not member.voice.self_mute:
                 # Reset the timer of the member if they are unmuted
                 timers[member] = time.time()
 
