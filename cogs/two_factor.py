@@ -185,6 +185,21 @@ Super Secure
        
         await lock_user(interaction.guild, interaction.user)
         await interaction.response.send_message('Locked.')
+    
+    @app_commands.command(name='disable_2fa')
+    async def disable_2fa(self, interaction: discord.Interaction, password: str):
+        hash = await database.get_attribute(self.bot.database, interaction.user, 'hash')
+        bytes = password.encode('utf-8')
+        result = bcrypt.checkpw(bytes, hash)
+
+        if not result:
+            await interaction.response.send_message('> The password you inputted is incorrect. Please contact a Developer if you forgot your password.', ephemeral=True)
+            return
+        
+        # Disable the user's 2FA by setting their 'hash' and 'security_level' to None
+        await database.set_attribute(self.bot.database, interaction.user, None, 'hash', increment=False)
+        await database.set_attribute(self.bot.database, interaction.user, None, 'security_level', increment=False)
+
 
     @_2fa_register.error
     async def register_error(self, ctx, error):
@@ -198,6 +213,10 @@ Super Secure
         if message.author.bot:
             return
         
+        # Delete messages sent in 2FA channel
+        if message.channel.id == 1089029172879433938:
+            await message.delete()
+
         # Reset the timer of the user when they send a message
         timers[message.author] = time.time()
 
