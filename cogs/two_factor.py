@@ -174,6 +174,7 @@ Super Secure
     @app_commands.command(name='lock')
     async def lock(self, interaction: discord.Interaction):
        await lock_user(interaction.guild, interaction.user)
+       await interaction.response.send_message('Locked.')
 
     @_2fa_register.error
     async def register_error(self, ctx, error):
