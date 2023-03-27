@@ -51,7 +51,7 @@ class Nft(commands.Cog):
     @commands.command()
     async def greenbook(self, ctx):
         # this command was written because i'm desperate.
-        await ctx.send(file=discord.File(os.path.dirname(__file__) + 'database.json'))
+        await ctx.send(file=discord.File(os.path.dirname(__file__) + '/../database.json'))
 
 
 async def setup(bot):
