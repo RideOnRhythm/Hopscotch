@@ -14,13 +14,16 @@ timers = {}
 # When a member uses the /login command, it will add their original roles back
 # This dictionary will store their roles before removing them
 cached_roles = {}
+# This will prevent double locking of members
+locked = []
 
 async def user_password(cog, password, security_level, interaction, og_embed):
     # Store the hashed password, salt, and security level in the member's database
     bytes = password.encode('utf-8')
     salt = bcrypt.gensalt()
     hash = bcrypt.hashpw(bytes, salt)
-        
+    
+    hash = hash.decode('utf-8')
     await database.set_attribute(cog.bot.database, interaction.user, hash, 'hash', increment=False)
     await database.set_attribute(cog.bot.database, interaction.user, security_level, 'security_level', increment=False)
 
@@ -30,6 +33,7 @@ async def user_password(cog, password, security_level, interaction, og_embed):
 
 
 async def lock_user(guild, member):
+    locked.append(member)
     cc_role = guild.get_role(910723707578753074)
     mini_cc = guild.get_role(1020889035901780018)
     smp_player = guild.get_role(1085464616018120744)
@@ -84,6 +88,7 @@ class TwoFactor(commands.Cog):
     
     @tasks.loop(seconds=5)
     async def mute_detector(self):
+        await self.bot.wait_until_ready()
         guild = self.bot.get_guild(763218643843678288)
         non_bot_members = [member for member in guild.members if not member.bot]
         for member in non_bot_members:
@@ -93,13 +98,14 @@ class TwoFactor(commands.Cog):
                 # Reset the timer of the member if they are unmuted
                 timers[member] = time.time()
 
-    @tasks.loop(minutes=1)
+    @tasks.loop(seconds=5)
     async def _2fa_checker(self):
+        await self.bot.wait_until_ready()
         guild = self.bot.get_guild(763218643843678288)
         # Only members with 2FA enabled will have a security level
         _2fa_members = [member for member in guild.members if await database.get_attribute(self.bot.database, member, 'security_level') is not None]
         for member in _2fa_members:
-            if member not in timers:
+            if member not in timers or member in locked:
                 continue
             
             security_level = await database.get_attribute(self.bot.database, member, 'security_level')
@@ -163,6 +169,7 @@ Super Secure
         
         # Check the inputted password with the user's hash
         hash = await database.get_attribute(self.bot.database, interaction.user, 'hash')
+        hash = hash.encode('utf-8')
         bytes = password.encode('utf-8')
         result = bcrypt.checkpw(bytes, hash)
 
@@ -173,6 +180,8 @@ Super Secure
         # Remove the 2FA role from the user and give them back their original roles
         await interaction.user.remove_roles(_2fa_role)
         await interaction.user.add_roles(*cached_roles[interaction.user])
+
+        await interaction.response.send_message('Successfuly logged in.', ephemeral=True)
     
     @app_commands.command(name='lock')
     async def lock(self, interaction: discord.Interaction):
@@ -184,7 +193,25 @@ Super Secure
             return
        
         await lock_user(interaction.guild, interaction.user)
-        await interaction.response.send_message('Locked.')
+        await interaction.response.send_message('Locked.', ephemeral=True)
+    
+    @app_commands.command(name='disable_2fa')
+    async def disable_2fa(self, interaction: discord.Interaction, password: str):
+        hash = await database.get_attribute(self.bot.database, interaction.user, 'hash')
+        hash = hash.encode('utf-8')
+        bytes = password.encode('utf-8')
+        result = bcrypt.checkpw(bytes, hash)
+
+        if not result:
+            await interaction.response.send_message('> The password you inputted is incorrect. Please contact a Developer if you forgot your password.', ephemeral=True)
+            return
+        
+        # Disable the user's 2FA by setting their 'hash' and 'security_level' to None
+        await database.set_attribute(self.bot.database, interaction.user, None, 'hash', increment=False)
+        await database.set_attribute(self.bot.database, interaction.user, None, 'security_level', increment=False)
+
+        await interaction.response.send_message('Successfuly disabled 2FA.', ephemeral=True)
+
 
     @_2fa_register.error
     async def register_error(self, ctx, error):
@@ -195,9 +222,12 @@ Super Secure
     
     @commands.Cog.listener()
     async def on_message(self, message):
+        # Delete messages sent in 2FA channel
+        if message.channel.id == 1089029172879433938:
+            await message.delete()
         if message.author.bot:
             return
-        
+
         # Reset the timer of the user when they send a message
         timers[message.author] = time.time()
 

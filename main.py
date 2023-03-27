@@ -59,7 +59,7 @@ async def on_command_error(ctx, error):
 
 
 async def main():
-    # await bot.load_extension('jishaku')
+    await bot.load_extension('jishaku')
     await bot.load_extension('cogs.utilities')
     await bot.load_extension('cogs.user_profile')
     await bot.load_extension('cogs.stats')
