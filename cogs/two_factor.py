@@ -222,12 +222,11 @@ Super Secure
     
     @commands.Cog.listener()
     async def on_message(self, message):
-        if message.author.bot:
-            return
-        
         # Delete messages sent in 2FA channel
         if message.channel.id == 1089029172879433938:
             await message.delete()
+        if message.author.bot:
+            return
 
         # Reset the timer of the user when they send a message
         timers[message.author] = time.time()
