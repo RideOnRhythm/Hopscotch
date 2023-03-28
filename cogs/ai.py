@@ -1,7 +1,5 @@
 from discord.ext import commands
 import os
-import discord
-import time
 import asyncio
 import openai
 from dotenv import load_dotenv
@@ -40,7 +38,6 @@ class Ai(commands.Cog):
                 for m in conversation_history:
                     prompt_to_send += m + '\n\n'
                 prompt_to_send += msg.content
-                print(prompt_to_send)
                 response = openai.ChatCompletion.create(
                     model='gpt-3.5-turbo',
                     messages=[
@@ -82,7 +79,7 @@ class Ai(commands.Cog):
         response = openai.ChatCompletion.create(
             model='gpt-3.5-turbo',
             messages=[
-                {'role': 'user', 'content': prompt}
+                {'role': 'user', 'content': prompt_to_send}
             ]
         )
         await temp.edit(content=response['choices'][0]['message']['content'])
