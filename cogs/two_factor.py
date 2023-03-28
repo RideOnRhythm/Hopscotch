@@ -217,7 +217,7 @@ Super Secure
     async def invite(self, ctx):
         chit_chat = ctx.guild.get_channel(858167284069302292)
         invite = await chit_chat.create_invite(max_age=1800)
-        await ctx.send(f'**Here is the invite link**: {invite.url}\n > This invitation link will expire in 30 minutes.')
+        await ctx.send(f'**Here is the invite link**: {invite.url} > This invitation link will expire in 30 minutes.')
 
     @_2fa_register.error
     async def _2fa_register_error(self, ctx, error):
