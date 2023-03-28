@@ -215,12 +215,6 @@ Super Secure
     @commands.cooldown(1, 1800, commands.BucketType.user)
     @commands.command()
     async def invite(self, ctx):
-        guild_invites = await ctx.guild.invites()
-        # Filter the invites to remove the ones created by the bot
-        guild_invites = [invite for invite in guild_invites if invite.inviter != ctx.guild.me]
-        for invite in guild_invites:
-            await invite.delete()
-        
         chit_chat = ctx.guild.get_channel(858167284069302292)
         invite = await chit_chat.create_invite(max_age=1800)
         await ctx.send(f'**Here is the invite link**: {invite.url}\n > This invitation link will expire in 30 minutes.')
@@ -246,9 +240,14 @@ Super Secure
             await message.delete()
         if message.author.bot:
             return
-
         # Reset the timer of the user when they send a message
         timers[message.author] = time.time()
+    
+    @commands.Cog.listener()
+    async def on_invite_create(self, invite):
+        # Delete all invites not created by the bot for security
+        if invite.inviter != invite.guild.me:
+            await invite.delete()
 
 
 async def setup(bot):
