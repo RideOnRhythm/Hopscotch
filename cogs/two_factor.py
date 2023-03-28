@@ -212,11 +212,30 @@ Super Secure
 
         await interaction.response.send_message('Successfuly disabled 2FA.', ephemeral=True)
 
+    @commands.cooldown(1, 1800, commands.BucketType.user)
+    @commands.command()
+    async def invite(self, ctx):
+        guild_invites = await ctx.guild.invites()
+        # Filter the invites to remove the ones created by the bot
+        guild_invites = [invite for invite in guild_invites if invite.inviter != ctx.guild.me]
+        for invite in guild_invites:
+            await invite.delete()
+        
+        chit_chat = ctx.guild.get_channel(858167284069302292)
+        invite = await chit_chat.create_invite(max_age=1800)
+        await ctx.send(f'**Here is the invite link**: {invite.url}\n > This invitation link will expire in 30 minutes.')
 
     @_2fa_register.error
-    async def register_error(self, ctx, error):
+    async def _2fa_register_error(self, ctx, error):
         if isinstance(error, commands.errors.MissingRequiredArgument):
             await ctx.send('> The correct format is `/2fa_register <password> <password>`')
+        else:
+            raise error
+    
+    @invite.error
+    async def invite_error(self, ctx, error):
+        if isinstance(error, commands.errors.CommandOnCooldown):
+            await ctx.send('> You just created an invite link. Try again later.')
         else:
             raise error
     
