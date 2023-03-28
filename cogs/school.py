@@ -117,6 +117,7 @@ async def schedule(self, section):
     }
     embed = discord.Embed(title=titles[section], color=colors[section])
     embed.set_image(url=image[section])
+    embed.set_footer(text='Nov. 2022 VERSION')
     return embed
 
 
