@@ -111,9 +111,9 @@ async def schedule(self, section):
     colors = {'violet': 0x8f00ff, 'aqua': 0x00ffff}
     image = {
         'violet':
-        'https://cdn.discordapp.com/attachments/1055814810459193426/1090246000200917082/Untitled3.png',
+        'https://cdn.discordapp.com/attachments/1055814810459193426/1090250415746072596/violet.png',
         'aqua':
-        'https://cdn.discordapp.com/attachments/1055814810459193426/1090246047701405778/Untitled5.png'
+        'https://media.discordapp.net/attachments/1055814810459193426/1090246047701405778/Untitled5.png?width=1238&height=662'
     }
     embed = discord.Embed(title=titles[section], color=colors[section])
     embed.set_image(url=image[section])
