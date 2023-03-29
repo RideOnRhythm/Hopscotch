@@ -67,7 +67,7 @@ async def name_colors_embed(cog, ctx):
 
 async def school_roles_embed(cog, ctx):
     embed = discord.Embed(title='Roles', timestamp=datetime.datetime.now(), color=discord.Color.random())
-    embed.description = '**__Editing Section/Honors Class/Special PE__**\n\n'
+    embed.description = '**__Editing Section/Honors Class/Special PE/Chinese__**\n\n'
 
     sections = [858224685686325268, 858224260856938518, 858224148248788996]
     honors_class = [1027097851119013908, 1044512060379254805]
@@ -104,7 +104,7 @@ async def school_roles_embed(cog, ctx):
             embed.description += ' **CURRENTLY USING**'
         embed.description += '\n'
 
-    embed.description += '\n> To add Section/Honors Class/Special PE/Chinese roles, type and send the letter of the Section/Honors Class/Special PE roles you want. Note that Sections and Special PE roles can only have ONE role at once. Selecting another one will change the current one you\'re using.'
+    embed.description += '\n> To add Section/Honors Class/Special PE/Chinese roles, type and send the letter of the Section/Honors Class/Special PE/Chinese roles you want. Note that Sections, Special PE, and Chinese roles can only have ONE role at once. Selecting another one will change the current one you\'re using.'
     return embed
 
 
