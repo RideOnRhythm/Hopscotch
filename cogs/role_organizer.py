@@ -99,7 +99,7 @@ async def school_roles_embed(cog, ctx):
     
     embed.description += '\n**Chinese**: (You can only have 1 Chinese role):\n'
     for ind, role in enumerate(chinese):
-        embed.description += f'{string.ascii_uppercase[5:][ind]} ― <@&{role}>'
+        embed.description += f'{string.ascii_uppercase[8:][ind]} ― <@&{role}>'
         if role in [r.id for r in ctx.author.roles]:
             embed.description += ' **CURRENTLY USING**'
         embed.description += '\n'
