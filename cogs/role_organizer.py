@@ -1,15 +1,18 @@
 from discord.ext import commands
 from assets import database
+from discord import ButtonStyle
 import discord
 import datetime
 import asyncio
 import string
 
+# very messy code coming up ahead
 name_colors_locks = set([])
 school_locks = set([])
 pronoun_locks = set([])
 gaming_locks = set([])
 server_locks = set([])
+smp_locks = set([])
 sleep = 0.75
 
 
@@ -138,7 +141,7 @@ async def server_embed(cog, ctx):
         1010112913983410197, 1010113161392832543, 1010113746364026900,
         858228627157024780, 1010113868430852218, 960381580617080904,
         858166828194201640, 858228761955008533, 1015233233333538847,
-        858166829847543859
+        858166829847543859, 1090514249564033114
     ]
     for ind, role in enumerate(server):
         embed.description += f'{string.ascii_uppercase[ind]} ― <@&{role}>'
@@ -148,6 +151,83 @@ async def server_embed(cog, ctx):
 
     embed.description += '> To add these roles, type and send the letter of the roles you want.'
     return embed
+
+
+async def smp_embed(cog, ctx):
+    embed = discord.Embed(title='Roles', timestamp=datetime.datetime.now(), color=discord.Color.random())
+    embed.description = '**__Editing SMP Roles__**\n'
+
+    smp = [1086510190297358396, 1086510237839806536, 1086510068675129477, 1086510326025048065, 1085477806839955516, 1086510551129129031, 1086896061425127544]
+    for ind, role in enumerate(smp):
+        embed.description += f'{string.ascii_uppercase[ind]} ― <@&{role}>'
+        if role in [r.id for r in ctx.author.roles]:
+            embed.description += ' **CURRENTLY USING**'
+        embed.description += '\n'
+
+    embed.description += '> To add these roles, type and send the letter of the roles you want.'
+    return embed
+
+
+class SMPButton(discord.ui.Button):
+    def __init__(self, *, style: ButtonStyle = ButtonStyle.secondary, label: Optional[str] = None, disabled: bool = False, custom_id: Optional[str] = None, url: Optional[str] = None, emoji: Optional[Union[str, Emoji, PartialEmoji]] = None, row: Optional[int] = None):
+        super().__init__(style=style, label=label, disabled=disabled, custom_id=custom_id, url=url, emoji=emoji, row=row)
+    
+    async def callback(self, interaction: discord.Interaction):
+        await asyncio.sleep(sleep)
+        name_colors_locks.add(self.ctx.author)
+        school_locks.add(self.ctx.author)
+        pronoun_locks.add(self.ctx.author)
+        gaming_locks.add(self.ctx.author)
+        server_locks.add(self.ctx.author)
+        if self.ctx.author in smp_locks:
+            smp_locks.remove(self.ctx.author)
+        else:
+            smp_locks.add(self.ctx.author)
+
+        embed = await smp_embed(self.cog, self.ctx)
+        await interaction.response.edit_message(embed=embed)
+        temp = await interaction.original_response()
+
+        while True:
+            def check(m):
+                return m.author == self.ctx.author and m.channel == self.ctx.channel
+
+            msg = await self.cog.bot.wait_for('message', check=check)
+
+            if self.ctx.author in server_locks:
+                return
+
+            valid_letters = 'ABCDEFG'
+            if msg.content.upper() not in valid_letters:
+                await self.ctx.send('Please send a valid option.')
+                continue
+
+            smp = [1086510190297358396, 1086510237839806536, 1086510068675129477, 1086510326025048065, 1085477806839955516, 1086510551129129031, 1086896061425127544]
+            try:
+                if smp[string.ascii_uppercase.index(
+                        msg.content.upper())] in [
+                            role.id for role in self.ctx.author.roles
+                        ]:
+                    await self.ctx.author.remove_roles(
+                        self.ctx.guild.get_role(
+                            smp[string.ascii_uppercase.index(
+                                msg.content.upper())]))
+                    await self.ctx.send(
+                        f'Successfully removed role: {self.ctx.guild.get_role(smp[string.ascii_uppercase.index(msg.content.upper())]).name}!'
+                    )
+                    embed = await server_embed(self.cog, self.ctx)
+                    await temp.edit(embed=embed)
+                    continue
+            except ValueError:
+                pass
+            new_role = self.ctx.guild.get_role(
+                smp[string.ascii_uppercase.index(msg.content.upper())])
+            await self.ctx.author.add_roles(new_role)
+            await self.ctx.send(f'Successfully added role: {new_role.name}!')
+
+            embed = await smp_embed(self.cog, self.ctx)
+            await temp.edit(embed=embed)
+            continue
 
 
 class DefaultView(discord.ui.View):
@@ -173,6 +253,7 @@ class DefaultView(discord.ui.View):
         pronoun_locks.add(self.ctx.author)
         gaming_locks.add(self.ctx.author)
         server_locks.add(self.ctx.author)
+        smp_locks.add(self.ctx.author)
 
         embed = await name_colors_embed(self.cog, self.ctx)
         await interaction.response.edit_message(embed=embed)
@@ -259,6 +340,7 @@ class DefaultView(discord.ui.View):
         pronoun_locks.add(self.ctx.author)
         gaming_locks.add(self.ctx.author)
         server_locks.add(self.ctx.author)
+        smp_locks.add(self.ctx.author)
 
         embed = await school_roles_embed(self.cog, self.ctx)
         await interaction.response.edit_message(embed=embed)
@@ -381,6 +463,7 @@ class DefaultView(discord.ui.View):
             pronoun_locks.add(self.ctx.author)
         gaming_locks.add(self.ctx.author)
         server_locks.add(self.ctx.author)
+        smp_locks.add(self.ctx.author)
 
         embed = await pronouns_embed(self.cog, self.ctx)
         await interaction.response.edit_message(embed=embed)
@@ -442,6 +525,7 @@ class DefaultView(discord.ui.View):
         else:
             gaming_locks.add(self.ctx.author)
         server_locks.add(self.ctx.author)
+        smp_locks.add(self.ctx.author)
 
         embed = await gaming_embed(self.cog, self.ctx)
         await interaction.response.edit_message(embed=embed)
@@ -506,6 +590,7 @@ class DefaultView(discord.ui.View):
             server_locks.remove(self.ctx.author)
         else:
             server_locks.add(self.ctx.author)
+        smp_locks.add(self.ctx.author)
 
         embed = await server_embed(self.cog, self.ctx)
         await interaction.response.edit_message(embed=embed)
@@ -521,7 +606,7 @@ class DefaultView(discord.ui.View):
             if self.ctx.author in server_locks:
                 return
 
-            valid_letters = 'ABCDEFGHIJKLM'
+            valid_letters = 'ABCDEFGHIJKLMN'
             if msg.content.upper() not in valid_letters:
                 await self.ctx.send('Please send a valid option.')
                 continue
@@ -531,7 +616,7 @@ class DefaultView(discord.ui.View):
                 1010112913983410197, 1010113161392832543, 1010113746364026900,
                 858228627157024780, 1010113868430852218, 960381580617080904,
                 858166828194201640, 858228761955008533, 1015233233333538847,
-                858166829847543859
+                858166829847543859, 1090514249564033114
             ]
             try:
                 if server[string.ascii_uppercase.index(
@@ -698,7 +783,11 @@ class RoleOrganizer(commands.Cog):
     async def roles(self, ctx):
         name_colors_locks.add(ctx.author)
         embed = await roles_embed()
-        await ctx.send(embed=embed, view=DefaultView(self, ctx))
+        view = DefaultView(self, ctx)
+        smp_role = ctx.guild.get_role(1085464616018120744)
+        if smp_role in ctx.author.roles:
+            view.add_item(SMPButton(label='SMP Roles'))
+        await ctx.send(embed=embed, view=view)
 
 async def setup(bot):
     await bot.add_cog(RoleOrganizer(bot))
