@@ -56,7 +56,8 @@ class News(commands.Cog):
         # Get epicenter address
         geolocator = Nominatim(user_agent='Hopscotch Quake Info')
         location = geolocator.reverse(f'{quake_info["latitude"].strip()} {quake_info["longitude"]}')
-        description = f'''@everyone
+        description = f'''<@&1090514249564033114>
+        
 An earthquake has recently occurred near **{location.address}** with magnitude **{quake_info['magnitude']}**. You are expected to feel shaking in your area soon.
 
 - **DROP** down onto your hands and knees before the earthquake knocks you down. This position protects you from falling but allows you to still move if necessary.
