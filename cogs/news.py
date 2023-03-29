@@ -54,14 +54,17 @@ class News(commands.Cog):
         # Get epicenter address
         geolocator = Nominatim(user_agent='Hopscotch Quake Info')
         location = geolocator.reverse(f'{quake_info["latitude"].strip()} {quake_info["longitude"]}')
-        description = f'''An earthquake has recently occurred near **{location.address}** with magnitude **{quake_info['magnitude']}**. You are expected to feel shaking <t:{time.time() + int(km_distance / 7) - 15}:R>.
+        description = f'''@everyone
+An earthquake has recently occurred near **{location.address}** with magnitude **{quake_info['magnitude']}**. You are expected to feel shaking <t:{time.time() + int(km_distance / 7) - 15}:R>.
 
-        - **DROP** down onto your hands and knees before the earthquake knocks you down. This position protects you from falling but allows you to still move if necessary.
-        - **COVER** your head and neck (and your entire body if possible) underneath a sturdy table or desk. If there is no shelter nearby, get down near an interior wall or next to low-lying furniture that won't fall on you, and cover your head and neck with your arms and hands.
-        - **HOLD ON** to your shelter (or to your head and neck) until the shaking stops. Be prepared to move with your shelter if the shaking shifts it around.
-        '''
+- **DROP** down onto your hands and knees before the earthquake knocks you down. This position protects you from falling but allows you to still move if necessary.
+- **COVER** your head and neck (and your entire body if possible) underneath a sturdy table or desk. If there is no shelter nearby, get down near an interior wall or next to low-lying furniture that won't fall on you, and cover your head and neck with your arms and hands.
+- **HOLD ON** to your shelter (or to your head and neck) until the shaking stops. Be prepared to move with your shelter if the shaking shifts it around.'''
 
-        # do stuff with description here
+        # Make a post in the #server-forums channel
+        forum_channel = self.bot.get_channel(1085469323952402442)
+        news_tag = next(tag for tag in forum_channel.available_tags if tag.name == 'News')
+        await forum_channel.create_thread(name='Earthquake Warning', content=description, applied_tags=[news_tag])
 
 
 async def setup(bot):
