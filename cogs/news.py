@@ -1,4 +1,3 @@
-import time
 from discord.ext import commands
 from discord.ext import tasks
 import aiohttp
@@ -18,7 +17,10 @@ async def get_quake_info():
 
             quake_tds = quake_tr.find_all('td')
             # Gets the quake info by navigating each <td> element in the <tr>
-            date = quake_tds[0].find_all('span')[1].find_all('a')[0].find_all('span')[0]
+            try:
+                date = quake_tds[0].find_all('span')[1].find_all('a')[0].find_all('span')[0]
+            except IndexError:  # Workaround as the website can either put the text inside the <a> directly or in a <span>
+                date = quake_tds[0].find_all('span')[1].find_all('a')[0]
             quake_info = {
                 'date': date.text,
                 'latitude': quake_tds[1].text.strip(),
@@ -48,7 +50,7 @@ class News(commands.Cog):
         coords_1 = (float(quake_info['latitude']), float(quake_info['longitude']))
         coords_2 = (14.5995, 120.9842)
         km_distance = geopy.distance.geodesic(coords_1, coords_2).km
-        if float(quake_info['magnitude']) < 5 and km_distance < 500:
+        if float(quake_info['magnitude']) < 5 and km_distance < 300:
             return
         
         # Get epicenter address
