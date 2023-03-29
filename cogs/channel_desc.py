@@ -122,6 +122,9 @@ class ChannelDesc(commands.Cog):
         await chit_chat.edit(topic=chit_description)
         logging.info('Edited Chit-Chat channel description')
 
+        activity = discord.Game(name=f'</help:1059398165842903040> | {int(self.bot.latency * 1000)}ms')
+        await self.bot.change_presence(activity=activity)
+
     @commands.command(aliases=('edsc', 'edc'))
     async def edit_description(self, ctx, *, text):
         if ctx.author.id not in (748388929631289436, 556307832241389581,
