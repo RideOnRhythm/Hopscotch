@@ -122,7 +122,7 @@ class ChannelDesc(commands.Cog):
         await chit_chat.edit(topic=chit_description)
         logging.info('Edited Chit-Chat channel description')
 
-        activity = discord.Game(name=f'</help:1059398165842903040> | {int(self.bot.latency * 1000)}ms')
+        activity = discord.Game(name=f'/help | {int(self.bot.latency * 1000)}ms')
         await self.bot.change_presence(activity=activity)
 
     @commands.command(aliases=('edsc', 'edc'))
