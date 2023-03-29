@@ -21,10 +21,12 @@ class HopscotchBot(commands.Bot):
 
 load_dotenv()
 discord.utils.setup_logging(level=logging.INFO, root=False)
+activity = discord.Game(name='/play | 51ms')
 bot = HopscotchBot(command_prefix=('j.', 'J.', 'j,', 'J,', 'j', 'J'),
                    case_insensitive=True,
                    intents=discord.Intents.all(),
-                   help_command=None)
+                   help_command=None,
+                   activity=activity)
 
 
 @bot.command()
