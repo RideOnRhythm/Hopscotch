@@ -47,17 +47,6 @@ async def sync_tree(ctx):
     await ctx.send('Synced')
 
 
-@bot.event
-async def on_command_error(ctx, error):
-    if isinstance(error, commands.CommandOnCooldown):
-        await ctx.send(
-            f'This command is on cooldown. Please wait {int(error.retry_after)} seconds.'
-        )
-    elif not isinstance(error, ImportError) and not isinstance(
-            error, ModuleNotFoundError):
-        raise error
-
-
 async def main():
     await bot.load_extension('jishaku')
     await bot.load_extension('cogs.utilities')
@@ -75,6 +64,7 @@ async def main():
     await bot.load_extension('cogs.settings')
     await bot.load_extension('cogs.hardcode')
     await bot.load_extension('cogs.daily_challenge')
+    await bot.load_extension('cogs.news')
     await bot.load_extension('cogs.two_factor')
     bot.database = await database.load_json()
     await bot.start(os.getenv('token'))
