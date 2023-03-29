@@ -55,7 +55,7 @@ class News(commands.Cog):
         geolocator = Nominatim(user_agent='Hopscotch Quake Info')
         location = geolocator.reverse(f'{quake_info["latitude"].strip()} {quake_info["longitude"]}')
         description = f'''@everyone
-An earthquake has recently occurred near **{location.address}** with magnitude **{quake_info['magnitude']}**. You are expected to feel shaking <t:{time.time() + int(km_distance / 7) - 15}:R>.
+An earthquake has recently occurred near **{location.address}** with magnitude **{quake_info['magnitude']}**. You are expected to feel shaking in your area soon.
 
 - **DROP** down onto your hands and knees before the earthquake knocks you down. This position protects you from falling but allows you to still move if necessary.
 - **COVER** your head and neck (and your entire body if possible) underneath a sturdy table or desk. If there is no shelter nearby, get down near an interior wall or next to low-lying furniture that won't fall on you, and cover your head and neck with your arms and hands.
