@@ -382,7 +382,7 @@ class DefaultView(discord.ui.View):
             chinese = [
                 1014844875058982983, 1039452681888083998, 1014845262734311516
             ]
-            all_roles = sections + honors_class + special_pe
+            all_roles = sections + honors_class + special_pe + chinese
             current_role = next(
                 (item for item in [role.id for role in self.ctx.author.roles]
                  if item in all_roles), None)
