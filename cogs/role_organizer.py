@@ -1,6 +1,7 @@
 from discord.ext import commands
 from assets import database
-from discord import ButtonStyle
+from discord import ButtonStyle, Emoji, PartialEmoji
+from typing import Optional, Union
 import discord
 import datetime
 import asyncio
@@ -177,8 +178,10 @@ async def smp_embed(cog, ctx):
 
 
 class SMPButton(discord.ui.Button):
-    def __init__(self, *, style: ButtonStyle = ButtonStyle.secondary, label: Optional[str] = None, disabled: bool = False, custom_id: Optional[str] = None, url: Optional[str] = None, emoji: Optional[Union[str, Emoji, PartialEmoji]] = None, row: Optional[int] = None):
+    def __init__(self, *, style: ButtonStyle = ButtonStyle.secondary, label: Optional[str] = None, disabled: bool = False, custom_id: Optional[str] = None, url: Optional[str] = None, emoji: Optional[Union[str, Emoji, PartialEmoji]] = None, row: Optional[int] = None, cog, ctx):
         super().__init__(style=style, label=label, disabled=disabled, custom_id=custom_id, url=url, emoji=emoji, row=row)
+        self.cog = cog
+        self.ctx = ctx
     
     async def callback(self, interaction: discord.Interaction):
         await asyncio.sleep(sleep)
@@ -822,7 +825,7 @@ class RoleOrganizer(commands.Cog):
         view = DefaultView(self, ctx)
         smp_role = ctx.guild.get_role(1085464616018120744)
         if smp_role in ctx.author.roles:
-            view.add_item(SMPButton(label='SMP Roles'))
+            view.add_item(SMPButton(label='SMP Roles', cog=self, ctx=ctx))
         await ctx.send(embed=embed, view=view)
 
 async def setup(bot):
