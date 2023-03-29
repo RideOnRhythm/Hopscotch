@@ -205,7 +205,7 @@ class SMPButton(discord.ui.Button):
 
             msg = await self.cog.bot.wait_for('message', check=check)
 
-            if self.ctx.author in server_locks:
+            if self.ctx.author in smp_locks:
                 return
 
             valid_letters = 'ABCDEFG'
