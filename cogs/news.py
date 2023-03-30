@@ -44,6 +44,7 @@ class News(commands.Cog):
 
         # Return if no new quake has occurred
         if self.latest_quake is None or quake_info == self.latest_quake:
+            self.latest_quake = quake_info
             return
         self.latest_quake = quake_info
         
