@@ -64,7 +64,6 @@ async def main():
     await bot.load_extension('cogs.school')
     await bot.load_extension('cogs.inventory')
     await bot.load_extension('cogs.ai')
-    await bot.load_extension('cogs.music')
     await bot.load_extension('cogs.nft')
     await bot.load_extension('cogs.settings')
     await bot.load_extension('cogs.hardcode')
