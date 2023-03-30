@@ -20,7 +20,7 @@ class HopscotchBot(commands.Bot):
 
 
 load_dotenv()
-discord.utils.setup_logging(level=logging.INFO, root=False)
+chandler = logging.FileHandler(filename='discord.log', encoding='utf-8', mode='w')
 activity = discord.Game(name='/help | 51ms')
 bot = HopscotchBot(command_prefix=('j.', 'J.', 'j,', 'J,', 'j', 'J'),
                    case_insensitive=True,
@@ -69,7 +69,7 @@ async def main():
     await bot.load_extension('cogs.news')
     await bot.load_extension('cogs.two_factor')
     bot.database = await database.load_json()
-    await bot.start(os.getenv('token'))
+    await bot.start(os.getenv('token'), log_handler=chandler, log_level=logging.DEBUG)
 
 
 asyncio.run(main())
