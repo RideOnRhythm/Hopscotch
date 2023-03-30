@@ -21,7 +21,7 @@ class HopscotchBot(commands.Bot):
 
 load_dotenv()
 logger = logging.getLogger('discord')
-logger.setLevel(logging.DEBUG)
+logger.setLevel(logging.INFO)
 chandler = logging.FileHandler(filename='../discord.log', encoding='utf-8', mode='w')
 logger.addHandler(chandler)
 activity = discord.Game(name='/help | 51ms')
