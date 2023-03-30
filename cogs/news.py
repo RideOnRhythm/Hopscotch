@@ -1,3 +1,4 @@
+import math
 from discord.ext import commands
 from discord.ext import tasks
 import aiohttp
@@ -46,11 +47,13 @@ class News(commands.Cog):
             return
         self.latest_quake = quake_info
         
-        # Calculate distance in km and return if the magnitude is less than 5 and the epicenter is more than 500 kilometers away from Manila
+        # Calculate distance in kilometers
         coords_1 = (float(quake_info['latitude']), float(quake_info['longitude']))
         coords_2 = (14.5995, 120.9842)
         km_distance = geopy.distance.geodesic(coords_1, coords_2).km
-        if float(quake_info['magnitude']) < 5 and km_distance < 300:
+        # Formula to estimate the intensity of the earthquake in Modified Mercalli Intensity Scale
+        # ty chatgpt
+        if 1/2 * float(quake_info['magnitude']) + math.log10(km_distance/10) < 3:
             return
         
         # Get epicenter address
