@@ -17,7 +17,7 @@ class Ai(commands.Cog):
     @commands.hybrid_command()
     async def enable_ai(self, ctx):
         self.ai_list.append(ctx.author)
-        conversation_history = []
+        conversation_history = [{"role": "system", "content": "You are a helpful assistant chatbot."}]
         await ctx.send(f'Started a conversation with ChatGPT for {ctx.author.mention}.')
         
         while ctx.author in self.ai_list:
@@ -34,18 +34,12 @@ class Ai(commands.Cog):
                 response = ''
                 temp = await ctx.send(content='> Generating response...')
 
-                prompt_to_send = ''
-                for m in conversation_history:
-                    prompt_to_send += m + '\n\n'
-                prompt_to_send += msg.content
+                conversation_history.append({'role': 'user', 'content': msg.content})
                 response = openai.ChatCompletion.create(
                     model='gpt-3.5-turbo',
-                    messages=[
-                        {'role': 'user', 'content': prompt_to_send}
-                    ]
+                    messages=conversation_history
                 )
-                conversation_history.append(msg.content)
-                conversation_history.append(response['choices'][0]['message']['content'])
+                conversation_history.append({'role': 'assistant', 'content': response['choices'][0]['message']['content']})
                 await temp.edit(content=response['choices'][0]['message']['content'])
 
     @commands.hybrid_command()
